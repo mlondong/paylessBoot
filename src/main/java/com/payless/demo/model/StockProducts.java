@@ -11,6 +11,8 @@ import javax.persistence.MapsId;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 
 
 
@@ -29,11 +31,13 @@ public class StockProducts {
 
 	@ManyToOne(fetch = FetchType.LAZY)
     @MapsId("STOCK_ID")
+	@JsonBackReference
 	private Stock stock;
 	
 	
 	@ManyToOne(fetch = FetchType.LAZY)
     @MapsId("PRODUCT_ID")
+	@JsonBackReference
 	private Product product;
 
 

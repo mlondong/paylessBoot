@@ -26,12 +26,8 @@ public interface BaseUserRepository<T extends Usser> extends Repository<T, Long>
 	<S extends T> S save(S entity);
 
 //	<S extends T> S save(Iterable<S> entities); tiene problemas sale uneror no sabmos porq
-
-	
 	
 	Optional<T> findById(Long id);
-
-	
 	
 	Iterable<T> findAll();
 

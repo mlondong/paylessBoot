@@ -60,6 +60,12 @@ public class Address {
 	public void setCity(int city) {
 		this.city = city;
 	}
+
+
+	@Override
+	public String toString() {
+		return "Address [description=" + description + ", city=" + city + ", zona=" + zona + "]";
+	}
 	
 	
 }

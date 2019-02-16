@@ -18,6 +18,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 
 /**
@@ -46,11 +49,13 @@ public class Stock {
 	@OneToMany(mappedBy="stock", 
 			   cascade=CascadeType.ALL,
 			   orphanRemoval=true)
-	private Collection<StockProducts> products;
+	@JsonManagedReference
+	private Collection<StockProducts> stockproducts;
 	
 	
 	@OneToOne(fetch = FetchType.LAZY,orphanRemoval=true,optional=false)
 	@JoinColumn(name = "USER_ID")	
+	@JsonBackReference//esto evita problemas en el json ver el ref en trader
 	private Trader trader;
 	
 
@@ -59,7 +64,7 @@ public class Stock {
 	
 	
 	public Stock(){
-		this.products = new ArrayList<StockProducts>();
+		this.stockproducts = new ArrayList<StockProducts>();
 		this.dateStock= new Date();
 	}
 	
@@ -74,17 +79,17 @@ public class Stock {
 	
 	public void addProduct(Product p, int quantity){
 		StockProducts stockproducs = new StockProducts(this,p, quantity);
-		products.add(stockproducs);
+		stockproducts.add(stockproducs);
 	}
 	
 	public void removeProduct(Product p){
-		 for (Iterator<StockProducts> iterator = products.iterator(); iterator.hasNext(); ) {
+		 for (Iterator<StockProducts> iterator = stockproducts.iterator(); iterator.hasNext(); ) {
 			     StockProducts stockproducs = iterator.next();
 		 
 		        if (stockproducs.getProduct().equals(this) && stockproducs.getStock().equals(p)) {
 		            iterator.remove();
-		            stockproducs.setProduct(null);
-		            stockproducs.setStock(null);
+		            System.out.println("stocks .." + stockproducs.getStock());
+		            //stockproducs.setProduct(null);
 		        }
 		 }
 	}
@@ -120,13 +125,18 @@ public class Stock {
 		this.dateStock = dateStock;
 	}
 
-	public Collection<StockProducts> getProducts() {
-		return products;
+
+
+	public Collection<StockProducts> getStockproducts() {
+		return stockproducts;
 	}
 
-	public void setProducts(Collection<StockProducts> products) {
-		this.products = products;
+
+
+	public void setStockproducts(Collection<StockProducts> stockproducts) {
+		this.stockproducts = stockproducts;
 	}
+
 
 
 

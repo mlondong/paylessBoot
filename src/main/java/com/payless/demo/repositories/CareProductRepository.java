@@ -8,10 +8,8 @@ import com.payless.demo.model.CareProduct;
 
 
 
-
-
 @Repository
 @Transactional
-public interface CareProductRepository extends ProductBaseRepository<CareProduct> {
+public interface CareProductRepository extends ProductRepository {
 
 }

@@ -9,7 +9,7 @@ import com.payless.demo.model.Product;
 
 
 @NoRepositoryBean
-public interface ProductBaseRepository<T extends Product> extends CrudRepository<T, Long> {
+public interface BaseProductRepository<T extends Product> extends CrudRepository<T, Long> {
 
 
 	<S extends T> S save(S entity);

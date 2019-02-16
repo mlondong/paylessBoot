@@ -8,6 +8,8 @@ import javax.persistence.Embedded;
 
 import javax.persistence.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 /**
  * @author root
  * ESTA TABLA ES UNA TABLAID de ESTRATEGIA MUCHOS A MUCHOS CON CAMPOS ADICIONALES 
@@ -21,9 +23,11 @@ import javax.persistence.Entity;
 public class StockProducId implements Serializable{
 
 	@Column(name="STOCK_ID")	
+	@JsonBackReference
 	private long STOCK_ID;
 	
-	@Column(name="PRODUCT_ID")	
+	@Column(name="PRODUCT_ID")
+	@JsonBackReference
 	private long PRODUCT_ID;
 
 	

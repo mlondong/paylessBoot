@@ -16,6 +16,8 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 @Entity
 public class Trader extends Usser {
@@ -25,13 +27,14 @@ public class Trader extends Usser {
 
 
 	@Column(name="SCORE",nullable=false,updatable=true)
-	private int score;
+	private int score=0;
 
 
 	/*SE CREA UN SOLO STOCK POR TRADER Y SE AGREGAR PRODUCTOS AL STOCK*/
 	@OneToOne(mappedBy="trader",
 			fetch=FetchType.LAZY,
 			cascade=CascadeType.ALL)
+	@JsonManagedReference//esto evita mal formacion en el json como es el ref de stock en trader
 	private Stock stock;
 
 
@@ -149,6 +152,7 @@ public class Trader extends Usser {
 	public void setScore(int score) {
 		this.score = score;
 	}
+
 
 
 

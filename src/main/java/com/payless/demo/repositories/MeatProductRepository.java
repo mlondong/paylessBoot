@@ -10,8 +10,8 @@ import com.payless.demo.model.MeatProduct;
 
 @Repository
 @Transactional
-public interface MeatProductRepository extends ProductBaseRepository<MeatProduct>  {
+public interface MeatProductRepository extends ProductRepository  {
 
-	List<MeatProduct> findByTypeAnimal(String animal);
+
 	
 }
