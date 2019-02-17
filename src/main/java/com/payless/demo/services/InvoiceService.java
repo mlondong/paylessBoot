@@ -130,11 +130,11 @@ public class InvoiceService {
 				int size = invoidedb.getProducts().size();
 				
 				for(int i=0; i< size;i++){
-					if(stockProducts.get(i).getProduct().getId()==idprod){
+					/*if(stockProducts.get(i).getProduct().getId()==idprod){
 						stockProducts.get(i).setQuantity(cantidad);
 						flag=true;
 						traderRepository.save(traderdb);
-					}	
+					}	*/
 				}
 			}
 
