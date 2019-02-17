@@ -24,6 +24,10 @@ public class InvoiceProductId implements Serializable{
 
 	
 	
+	public InvoiceProductId(){
+		
+	}
+	
 	public InvoiceProductId(long idinvoice, long idproduct) {
 		super();
 		this.INVOICE_ID = idinvoice;

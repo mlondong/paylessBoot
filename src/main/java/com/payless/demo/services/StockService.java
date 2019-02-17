@@ -32,15 +32,28 @@ import com.payless.demo.repositories.TraderRepository;
 
 
 
+/**
+ * THIS SERVICE IS FOR STOCK AND BEHAVIOR WITH TRADER:
+ * -ADD STOCK I TRADER
+ * -DELETE STOCK IN TRADER
+ * -ADD PRODUCTS IN STOCK FOR TRADER
+ * -REMOVE PRODUCTS IN STOCK FOR TRADER
+ * -DELETE ALL PRODUCRS IN STOCK FOR TRADER
+ * - UPDATE QUANTITY PRODUCTS IN STOCK
+ * */
+
+
+
 @RestController
 @RequestMapping(path="/paylessboot") 
-
 public class StockService {
 
 	@Autowired
-	private StockRepository stockRepository;
-	@Autowired
 	private TraderRepository traderRepository;
+
+	@Autowired
+	private StockRepository stockRepository;
+
 
 	@Autowired
 	private ProductRepository productRepository;

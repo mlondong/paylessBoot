@@ -21,6 +21,18 @@ import com.payless.demo.repositories.TraderRepository;
 import com.payless.demo.model.Address;
 
 
+/**
+ * THIS SERVICE IS FOR TRADER IN GENERAL:
+ * -FINDALL TRADERS
+ * -GET A TRADER
+ * -ADD A NEW TRADER
+ * -UPDATE ADDRESS IN TRADER
+ * -UPDATE TRADER
+ * -DELETE TRADER
+ * -DELETE ADDRESS
+ * */
+
+
 @RestController
 @RequestMapping(path="/paylessboot") 
 public class TraderService {
@@ -28,7 +40,6 @@ public class TraderService {
 
 	@Autowired
 	private TraderRepository traderRepository;
-
 
 
 

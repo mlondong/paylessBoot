@@ -49,6 +49,7 @@ public class Trader extends Usser {
 			 fetch=FetchType.LAZY,
 			 cascade = CascadeType.ALL, 
 			 orphanRemoval = true)
+	@JsonManagedReference//esto evita mal formacion en el json como es el ref de stock en trader
 	private Collection<Invoice> invoice = new ArrayList<>();
 	
 	

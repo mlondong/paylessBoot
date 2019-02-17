@@ -17,6 +17,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 /**
  * @author root
  * ENTIDAD INVOICE DENTRO DE INVOICE HAY MUCHOS PRODUCTOS
@@ -43,6 +46,7 @@ public class Invoice {
 	/*MAPEO BIDIRECCIONAL DE MUCHOS INVOICES A 1 TRADER*/
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "USER_ID")
+	@JsonBackReference//esto evita problemas en el json ver el ref en trader
 	private Trader trader;
 
 	
@@ -50,6 +54,7 @@ public class Invoice {
 	/*MAPEO BIDIRECCIONAL HACIA PRODUCTOS DADO QUE MUCHOS INVOICES PUEDEN 
 	 * TENER MUCHOS PRODCTOS Y MUCHOS PRODUCTOS PUEDEN ESTAR EN MCUHOS INVOICES DE DIFERENTES TRADER*/
 	@OneToMany(mappedBy="invoice",cascade= CascadeType.ALL, orphanRemoval=true)
+	@JsonManagedReference
 	private Collection<InvoiceProduct> products;
 	
 	

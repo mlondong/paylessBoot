@@ -11,6 +11,8 @@ import javax.persistence.MapsId;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 /**
  * @author root
  * ESTABLA TABLA ES DE MUCHOS A MUCHOS A TRAVES DELA TABLA INVOICEPRODUCTS + 
@@ -28,11 +30,13 @@ public class InvoiceProduct {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
     @MapsId("INVOICE_ID")
+	@JsonBackReference
 	private Invoice invoice;
 
 	
 	@ManyToOne(fetch = FetchType.LAZY)
     @MapsId("PRODUCT_ID")
+	@JsonBackReference
 	private Product poduct;
 	
 	@Column(name="CUANTITY")
@@ -40,6 +44,8 @@ public class InvoiceProduct {
 	
 
 
+	public InvoiceProduct(){}
+	
 	
 	public InvoiceProduct(Invoice invoice, Product poduct, int quantity) {
 		super();

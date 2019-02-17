@@ -12,10 +12,8 @@ import com.payless.demo.model.Stock;
 
 
 
-
 @Repository
 @Transactional
-@NoRepositoryBean
 public interface InvoiceRepository extends CrudRepository<Invoice, Long>{
 
 	<S extends Invoice> S save(S entity);
@@ -34,7 +32,7 @@ public interface InvoiceRepository extends CrudRepository<Invoice, Long>{
 
 	void deleteById(Long id);
 
-	void delete(Stock entity);
+	void delete(Invoice entity);
 
 	void deleteAll();
 
