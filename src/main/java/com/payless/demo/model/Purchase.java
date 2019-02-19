@@ -20,6 +20,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 
 @Entity
 public class Purchase {
@@ -41,6 +43,7 @@ public class Purchase {
 	/*MAPEO DE MUCHOS PURCHASE HAVE ONE CONSUMER, con la VARIABLE CONSUMER MAPPEDBY="CONSUMER" DESDE CONSUMER*/
 	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name = "USER_ID")	
+	@JsonBackReference
 	private Consumer consumer;
 	
 	

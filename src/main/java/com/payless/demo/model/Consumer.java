@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 @Entity
 public class Consumer extends Usser {
@@ -28,6 +30,7 @@ public class Consumer extends Usser {
 			fetch=FetchType.LAZY,
 			cascade = CascadeType.ALL, 
 			orphanRemoval = true)
+	@JsonManagedReference
 	private Collection<Purchase> purchase= new ArrayList<Purchase>();
 
 

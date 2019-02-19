@@ -17,17 +17,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.payless.demo.model.Consumer;
+import com.payless.demo.model.Purchase;
 import com.payless.demo.repositories.ConsumerRepository;
+import com.payless.demo.repositories.PurchaseRepository;
 
 
 /**
  * @RequestMapping use GET
  * @RequestParam
- * 
  * @RequestBody - to create
  * 
  * @Controller
  * @ResponseBody desde posman se envia el json con todos los campos de user y consumer
+ * 
+ * THIS SERVICE IS FOR CONSUMER USERS:
+ * - GET CONSUMER INFORMATION
+ * - UPDATE CONSUMER
+ * - DELETE CONSUMER
  * */
 
 
@@ -40,14 +46,19 @@ public class ConsumerService {
 	@Autowired
 	private ConsumerRepository consumerRepository;
 
-	
+
+	@Autowired
+	private PurchaseRepository purchaseRepository;
+
+
+
 	/**GET ALL CONSUMERS CON PAGE AND LIMIT**/
-	@GetMapping()
+	/*@GetMapping()
 	public String getConsumers(@RequestParam(value="page") int page , @RequestParam(value="limit") int limit){
 		return "page " + page + "Limit " + limit;
-	}
+	}*/
 
-	
+
 	/**GETMAPING FOR GET CONSUMER*/
 	@GetMapping(path="/consumer")
 	public Iterable<Consumer> findAll(){
@@ -65,35 +76,38 @@ public class ConsumerService {
 	public Consumer create(@RequestBody Consumer requestConsumer){
 		return consumerRepository.save(requestConsumer);
 	}
-	
-	
+
+
 	/***PUTMMAPING FOR UPDATE*/
 	@PutMapping(path="/consumer/update/{id}")
 	public Consumer updateConsumer(@RequestBody Consumer consumer , @PathVariable("id") long id ){
-		
+
 		Optional <Consumer> opt = consumerRepository.findById(id);
 		Consumer storeConsumer = opt.get();
 		storeConsumer.setName(consumer.getName());
 		storeConsumer.setPassword(consumer.getPassword());
 		storeConsumer.setState(consumer.isState());
-		
+
 		storeConsumer.setDni(consumer.getDni());
 		storeConsumer.setFirstName(consumer.getFirstName());
 		storeConsumer.setLastName(consumer.getLastName());
-		
+
 		consumerRepository.save(storeConsumer);
-		
+
 		return storeConsumer;
-		
+
 	} 
 
 	/***DELETE MAPING AN OBJECT*/
 	@DeleteMapping(path="/consumer/delete/{id}")
-    public boolean delete(@PathVariable long id){
-        consumerRepository.deleteById(id);
-        return true;
-    }
-	
-	
-	
+	public boolean delete(@PathVariable long id){
+		consumerRepository.deleteById(id);
+		return true;
+	}
+
+
+
+
+
+
 }
