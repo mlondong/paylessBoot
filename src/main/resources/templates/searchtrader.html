@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+<title>ADMIN TRADER</title>
+<th:block th:include="layout/header"></th:block>
+</head>
+
+<body>
+
+	<div id="div_search">
+		<h2>Search Trader</h2>
+		<form th:action="@{/main/search}" th:object="${trader}" method="post">
+			<table>
+				<tbody>
+					<tr>
+						<td><label>Cuit to Search:</label></td>
+						<td><input type="text" th:field="*{cuit}" /></td>
+						<td>
+							<button type="submit">Search</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+	</div>
+
+
+	<div id="div_list" th:if="${not #lists.isEmpty(results)}">
+		<h2>Find it</h2>
+		<table>
+			<tr>
+				<th>Id</th>
+				<th>Name</th>
+				<th>Password</th>
+				<th>State</th>
+				<th>Cuit</th>
+				<th>Score</th>
+				<th></th>
+				<th></th>
+
+
+			</tr>
+			<tr th:each="trader : ${results}">
+				<td th:text="${trader.id}"></td>
+				<td th:text="${trader.name}"></td>
+				<td th:text="${trader.password}"></td>
+				<td th:text="${trader.state}"></td>
+				<td th:text="${trader.cuit}"></td>
+				<td th:text="${trader.score}"></td>
+				<td><img src="../images/refresh-256.png" height="30px"
+					width="30px" alt="Update" /></td>
+				<td><img src="../images/delete-xxl.png" height="30px"
+					width="30px" alt="Delete" /></td>
+				<td><a th:href="@{'/main/addaddress/'+${trader.id}}"> <img
+						src="../images/addressbook-icon.png" height="30px" width="30px"
+						alt="Add Address" /></a></td>
+				<td><a th:href="@{'/main/stock/'+${trader.id}}">
+				<img src="../images/stock-icon.png" height="30px"
+					width="30px" alt="Add Stock" />
+					</a></td>
+				<td></td>
+
+			</tr>
+		</table>
+	</div>
+
+
+</body>
+</html>

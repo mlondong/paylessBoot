@@ -1,4 +1,4 @@
-package com.payless.demo.services;
+package com.payless.demo.restfull;
 
 import java.util.Collection;
 import java.util.List;

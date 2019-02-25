@@ -18,7 +18,7 @@ import com.payless.demo.model.Trader;
 @Transactional
 public interface TraderRepository extends BaseUserRepository<Trader>{
 
-	Trader findByCuit(long cuit);
+	List<Trader> findByCuit(long cuit);
 	List<Trader> findByStock(Stock stock);
 
 }

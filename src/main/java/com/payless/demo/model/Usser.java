@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.validation.constraints.NotBlank;
 
 /* 
  * Clase Abstracta User
@@ -26,9 +27,11 @@ public abstract class Usser {
 	@Column(name="USER_ID",nullable=false,updatable=false)
 	private long id;
 
-	@Column(name="NAME",nullable=false,updatable=true)
+	@NotBlank(message = "Name is mandatory")
+	@Column(name="NAME",nullable=false,updatable=true )
 	private String name;
 	
+	@NotBlank(message = "Password is mandatory")
 	@Column(name="PASSWORD", nullable=false,updatable=true)
 	private String password;
 	

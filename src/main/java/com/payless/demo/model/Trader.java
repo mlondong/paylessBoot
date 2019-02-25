@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
 public class Trader extends Usser {
 
-	@Column(name="CUIT",nullable=false,updatable=true)
+	@Column(name="CUIT",nullable=false,updatable=true,unique=true)
 	private long cuit;
 
 
@@ -152,6 +152,12 @@ public class Trader extends Usser {
 	}
 	public void setScore(int score) {
 		this.score = score;
+	}
+
+	@Override
+	public String toString() {
+		return "Trader [cuit=" + cuit + ", score=" + score + ", stock=" + stock + ", address=" + address + ", invoice="
+				+ invoice + "]";
 	}
 
 

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+<title>ADMIN TRADER</title>
+<th:block th:include="layout/header"></th:block>
+</head>
+
+<body>
+	<div id="div_info" th:if="${infoTrader!=null}">
+		<h2>General Information</h2>
+		<table>
+			<tbody>
+				<tr>
+					<td>User:</label></td>
+					<td th:text="${infoTrader.name}"></td>
+					<td>|State:</label></td>
+					<div th:if="${infoTrader.state==false}">
+						<td>Inactivo |</td>
+					</div>
+					<div th:if="${infoTrader.state==true}">
+						<td>Activo |</td>
+					</div>
+					<td>Cuit:</label></td>
+					<td th:text="${infoTrader.cuit}"></td>
+					<td>|Score:</label></td>
+					<td th:text="${infoTrader.score}"></td>
+				</tr>
+			</tbody>
+		</table>
+		<table>
+			<tr>
+				<td>Address added</td>
+			</tr>
+
+			<tr th:each="address: ${infoTrader.address}">
+				<td></td>
+				<td th:text="${address.description}" />
+				<td th:text="${address.city}" />
+				<td th:text="${address.zona}" />
+			</tr>
+		</table>
+	</div>
+
+	<!-- OTRA FORMA DE ENVIAR DATOS POR PARAMETORSOS @{'/add-address/'+${infoTrader.id}}
+		@{/add-address/{id}(id=${infoTrader.id})}
+		th:action="@{'/hotels/'+${search.location}+'/'+${search.adults}+'/'+${search.dateCheckOut}+'/'+${search.dateCheckIn}}"  id="search-hotel-form">
+		-->
+
+	<div id="div_address">
+		<h2>Add Address</h2>
+
+		<form action="#"
+			th:action="@{/add-address/{id}(id=${__infoTrader.id__})}"
+			th:object="${address}" method=post>
+			<table>
+				<tbody>
+					<tr>
+						<td><label>Description Address </label></td>
+						<td><input type="text" id="description"
+							th:field="*{description}" /></td>
+					</tr>
+					<tr>
+						<td><label>City Code</label></td>
+						<td><input type="text" id="city" th:field="*{city}" /></td>
+					</tr>
+					<tr>
+						<td><label>Zone Code</label></td>
+						<td><input type="text" id="zona" th:field="*{zona}" /></td>
+					</tr>
+
+
+					<tr>
+						<td>&nbsp;</td>
+						<td>
+							<button type="submit">Add Address</button>
+							<button type="reset">Clear</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+
+
+		</form>
+	</div>
+
+
+
+</body>
+</html>
