@@ -34,30 +34,48 @@
 				<th>State</th>
 				<th>Cuit</th>
 				<th>Score</th>
-				<th></th>
-				<th></th>
-
+				<th>Stock</th>
+				
 
 			</tr>
 			<tr th:each="trader : ${results}">
 				<td th:text="${trader.id}"></td>
 				<td th:text="${trader.name}"></td>
 				<td th:text="${trader.password}"></td>
-				<td th:text="${trader.state}"></td>
+				
+				<td th:if="${trader.state==false}"  th:text="Inacive"></td>
+				<td th:if="${trader.state==true}" th:text="Active"></td>
+				
+				
 				<td th:text="${trader.cuit}"></td>
 				<td th:text="${trader.score}"></td>
-				<td><img src="../images/refresh-256.png" height="30px"
-					width="30px" alt="Update" /></td>
-				<td><img src="../images/delete-xxl.png" height="30px"
-					width="30px" alt="Delete" /></td>
-				<td><a th:href="@{'/main/addaddress/'+${trader.id}}"> <img
-						src="../images/addressbook-icon.png" height="30px" width="30px"
-						alt="Add Address" /></a></td>
-				<td><a th:href="@{'/main/stock/'+${trader.id}}">
+				<td th:if="${trader.stock!=null}" th:text="${trader.stock.dateStock}"></td>
+				<td th:if="${trader.stock==null}" th:text="na_stock"></td>
+				
+				
+				<td>
+				<a th:href="@{'/main/formupdate/'+${trader.id}}">
+				<img src="../images/refresh-256.png" height="30px"
+					width="30px" alt="Update" title="Update Trader"/>
+				</a></td>
+					
+				<td>
+				<a th:href="@{'/main/delete/'+${trader.id}}">
+				<img src="../images/delete-xxl.png" height="30px" width="30px" alt="Delete" title="Delete Trader"/>
+				</a>
+				</td>
+				
+				<td><a th:href="@{'/main/addaddress/'+${trader.id}}"> 
+				   <img src="../images/addressbook-icon.png" height="30px" width="30px"	alt="Add Address" title="Add Address" /></a></td>
+			
+				<td>
+				<a th:if="${trader.stock==null}" th:href="@{'/main/stock/'+${trader.id}}">
 				<img src="../images/stock-icon.png" height="30px"
-					width="30px" alt="Add Stock" />
+					width="30px" alt="Add Stock" title="Add Stock"/>
 					</a></td>
 				<td></td>
+				
+				
 
 			</tr>
 		</table>

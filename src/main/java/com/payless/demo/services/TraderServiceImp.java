@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.payless.demo.model.Stock;
 import com.payless.demo.model.Trader;
 import com.payless.demo.repositories.TraderRepository;
 import com.payless.demo.repositories.UsserRepository;
@@ -30,9 +31,11 @@ public class TraderServiceImp implements TraderService{
 
 	@Override
 	public Trader save(Trader trader) {
+		System.out.println("el el serviceimpl " + trader.toString());	
 		return traderRepository.save(trader);
 	}
 
+		
 	@Override
 	public Trader getTrader(Long id) {
 		return traderRepository.findById(id).get();
@@ -40,7 +43,7 @@ public class TraderServiceImp implements TraderService{
 
 	@Override
 	public Trader editTrader(Trader trader) {
-		return null;
+		return traderRepository.save(trader);
 	}
 
 	@Override
@@ -49,6 +52,7 @@ public class TraderServiceImp implements TraderService{
 
 	@Override
 	public void deleteTrader(Long id) {
+		traderRepository.deleteById(id);
 	}
 
 	@Override
@@ -68,6 +72,7 @@ public class TraderServiceImp implements TraderService{
 			
 		return list;
 	}
+
 
 
 }

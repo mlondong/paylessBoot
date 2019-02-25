@@ -2,11 +2,13 @@ package com.payless.demo.services;
 
 import java.util.List;
 
+import com.payless.demo.model.Stock;
 import com.payless.demo.model.Trader;
 
 public interface TraderService {
 	
 	Trader save(Trader trader);
+	
 	List<Trader> searchByCuit(long cuit);
 
 	Trader getTrader(Long id);

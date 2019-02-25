@@ -32,7 +32,7 @@ public class MainController {
 
 
 
-	/*HOME WITH LIST*/
+	/**HOME WITH LIST*/
 	@RequestMapping(path="/")
 	public String home(Model model){
 		model.addAttribute("message", "SpringBoot Thymeleaf rocks");
@@ -75,7 +75,12 @@ public class MainController {
 		return "result";
 	}*/
 
-	/**VIEW OF SEARCH*/
+	
+	
+	
+	
+	
+	/**VIEW OF GENERAL SEARCH*/
 	@GetMapping(path="/main/search")
 	public String showsearchTrader(Trader trader) {
 		return "searchtrader";
@@ -90,7 +95,13 @@ public class MainController {
 		return "searchtrader";
 	}
 
+	
+	
 
+	
+	
+	
+	
 
 	/**VIEW ADDRES AFTER SEND PARAMETERS ID OF TRADER*/
 	@RequestMapping(value="/main/addaddress/{id}", method = {RequestMethod.POST, RequestMethod.GET})
@@ -120,20 +131,93 @@ public class MainController {
 
 
 
+	
+	
+	
+	
+	
+	
+	/**SEARCH STOCK FOR ADD RODUCTS /TRADERS*/
+	@GetMapping(path="/main/viewformsearchstoch")
+	public String viewFormSearchStockTrader(Trader trader) {
+		return "addproductinstock";
+	}
+	
+	@PostMapping(value="/main/viewformsearchstoch")
+	public String searchFormSearchStockTrader( @Valid Trader trader, BindingResult result, Model model  ) {
+		Trader traderdb = traderServiceImp.getTrader(trader.getCuit());
+		
+		
+		
+		return "index";
+	}	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**VIEW ADD STOCK OF TRADER*/
 	@RequestMapping(value="/main/stock/{id}", method = {RequestMethod.POST, RequestMethod.GET})
-	public String addProductStockTrader(@PathVariable("id") long id  ) {
+	public String addStockTrader(@PathVariable("id") long id  ) {
 			Trader traderdb = traderServiceImp.getTrader(id);
-			traderServiceImp.save(traderdb);
+			Stock st = new Stock();
+			st.setTrader(traderdb);
+			traderdb.setStock(st);
+			System.out.println(traderServiceImp.save(traderdb));
 			
 			return "redirect:/main/search";
-		
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	/**SHOW FORM UPDATE TRADER*/
+	@RequestMapping(value="/main/formupdate/{id}", method = {RequestMethod.POST, RequestMethod.GET})
+	public String formupdateTrader(@PathVariable("id") long id , Model model   ) {
+			Trader traderdb = traderServiceImp.getTrader(id);
+			model.addAttribute("traderdb", traderdb);	
+			return "updatetrader";
+	}
+
+	/** UPDATE TRADER*/
+	@PostMapping(path="/main/update/{id}")
+	public String updateTrader( @PathVariable("id") long id, @Valid Trader trader, BindingResult result, Model model  ) {
+		if (result.hasErrors()) {
+			return "index";
+		}else{
+			Trader taderdb= traderServiceImp.getTrader(id);
+			taderdb.setName(trader.getName());
+			taderdb.setPassword(trader.getPassword());
+			taderdb.setState(trader.isState());
+			taderdb.setCuit(trader.getCuit());
+			taderdb.setScore(trader.getScore());
+			traderServiceImp.save(taderdb);			
+			return "searchtrader";
+		}		
+	
 	}
 
 
-
-
-
+	
+	
+	
+	
+	/** DELETE TRADER*/
+	@RequestMapping(path="/main/delete/{id}")
+	public String deleteTrader( @PathVariable("id") long id) {
+		System.out.println("llego... "  +id);
+		traderServiceImp.deleteTrader(id);
+		return "redirect:/main/search";
+	}	
 
 
 
