@@ -10,10 +10,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.payless.demo.model.Address;
+import com.payless.demo.model.Product;
 import com.payless.demo.model.Stock;
+import com.payless.demo.model.StockProducts;
 import com.payless.demo.model.Trader;
+import com.payless.demo.repositories.ProductRepository;
 import com.payless.demo.services.TraderServiceImp;
+import com.payless.demo.services.ProductServiceImp;
 
+
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -29,6 +35,14 @@ public class MainController {
 
 	@Autowired
 	private  TraderServiceImp traderServiceImp;
+	@Autowired
+	private  ProductServiceImp productServiceImp;
+	@Autowired
+	private ProductRepository  productRepository;
+
+
+
+
 
 
 
@@ -75,11 +89,10 @@ public class MainController {
 		return "result";
 	}*/
 
-	
-	
-	
-	
-	
+
+
+
+
 	/**VIEW OF GENERAL SEARCH*/
 	@GetMapping(path="/main/search")
 	public String showsearchTrader(Trader trader) {
@@ -90,18 +103,28 @@ public class MainController {
 	 *sepuede usar  	//public String searchTrader(@ModelAttribute Trader trader)   */
 	@PostMapping(path="/main/search")
 	public String searchTrader(@Valid Trader trader, BindingResult result, Model model) {
-		System.out.println("llego trader.." + trader);
-		model.addAttribute("results", traderServiceImp.searchByCuit(trader.getCuit()));
+
+		List<Trader> list=  traderServiceImp.searchByCuit(trader.getCuit()); 
+
+		if(list.isEmpty()){
+			model.addAttribute("notfind", "Cuit: "+ trader.getCuit() + " not find it.. ");
+		}else{
+			model.addAttribute("results", list);
+
+
+
+		}
+
 		return "searchtrader";
 	}
 
-	
-	
 
-	
-	
-	
-	
+
+
+
+
+
+
 
 	/**VIEW ADDRES AFTER SEND PARAMETERS ID OF TRADER*/
 	@RequestMapping(value="/main/addaddress/{id}", method = {RequestMethod.POST, RequestMethod.GET})
@@ -131,61 +154,102 @@ public class MainController {
 
 
 
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
 	/**SEARCH STOCK FOR ADD RODUCTS /TRADERS*/
 	@GetMapping(path="/main/viewformsearchstoch")
 	public String viewFormSearchStockTrader(Trader trader) {
-		return "addproductinstock";
+		return "showproductinstock";
 	}
-	
+
 	@PostMapping(value="/main/viewformsearchstoch")
 	public String searchFormSearchStockTrader( @Valid Trader trader, BindingResult result, Model model  ) {
-		Trader traderdb = traderServiceImp.getTrader(trader.getCuit());
-		
-		
-		
-		return "index";
+		List<Trader> traderdb = traderServiceImp.searchByCuit(trader.getCuit());
+
+		if(!traderdb.isEmpty()){
+			model.addAttribute("traderInfo", traderdb);
+		}else{
+			model.addAttribute("notfind", "Cuit not find.. ");
+		}
+		return "showproductinstock";
 	}	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/**VIEW ADD STOCK OF TRADER*/
-	@RequestMapping(value="/main/stock/{id}", method = {RequestMethod.POST, RequestMethod.GET})
-	public String addStockTrader(@PathVariable("id") long id  ) {
-			Trader traderdb = traderServiceImp.getTrader(id);
-			Stock st = new Stock();
-			st.setTrader(traderdb);
-			traderdb.setStock(st);
-			System.out.println(traderServiceImp.save(traderdb));
-			
-			return "redirect:/main/search";
+
+
+	@RequestMapping(path="/main/sendproducttostock/{id}")
+	public String sendProductInStock(@PathVariable("id") long id  , @Valid Trader trader, BindingResult result, Model model ) {
+		Trader traderdb = traderServiceImp.getTrader(id);
+
+		if(traderdb!=null ){
+			model.addAttribute("traderInfo", traderdb);	
+			model.addAttribute("products", productServiceImp.findAll());
+			return "addproductinstock";
+		}else{
+				return "redirect:/main/viewformsearchstoch";	
+			}
+	}	
+
+
+	@RequestMapping(path="/main/putproductinstock" ,  method = {RequestMethod.POST, RequestMethod.GET})
+	public String putProductInStock(@RequestParam("trader") long idtrader, 
+			@RequestParam("product") long idprod,  
+			@RequestParam("quantity") int cant) {
+
+		Trader traderdb = traderServiceImp.getTrader(idtrader);
+
+		if(productRepository.existsById(idprod)){
+			System.out.println("existe");
+			Product mt =  productRepository.findById(idprod).get();
+			traderdb.getStock().addProduct(mt, cant);
+			traderServiceImp.save(traderdb);
+
+		}
+		return "redirect:/main/sendproducttostock/"+idtrader;
+	}	
+
+
+
+
+	@RequestMapping(path="/main/updateproduct")
+	public String uptadeProductInStock(){
+		
+		return "redirect:/main/sendproducttostock/{id}";
 	}
 
 	
 	
 	
 	
-	
-	
-	
-	
+
+	/**VIEW ADD STOCK OF TRADER*/
+	@RequestMapping(value="/main/stock/{id}", method = {RequestMethod.POST, RequestMethod.GET})
+	public String addStockTrader(@PathVariable("id") long id  ) {
+		Trader traderdb = traderServiceImp.getTrader(id);
+		Stock st = new Stock();
+		st.setTrader(traderdb);
+		traderdb.setStock(st);
+		System.out.println(traderServiceImp.save(traderdb));
+
+		return "redirect:/main/search";
+	}
+
+
+
+
+
+
+
+
+
 	/**SHOW FORM UPDATE TRADER*/
 	@RequestMapping(value="/main/formupdate/{id}", method = {RequestMethod.POST, RequestMethod.GET})
 	public String formupdateTrader(@PathVariable("id") long id , Model model   ) {
-			Trader traderdb = traderServiceImp.getTrader(id);
-			model.addAttribute("traderdb", traderdb);	
-			return "updatetrader";
+		Trader traderdb = traderServiceImp.getTrader(id);
+		model.addAttribute("traderdb", traderdb);	
+		return "updatetrader";
 	}
 
 	/** UPDATE TRADER*/
@@ -203,14 +267,14 @@ public class MainController {
 			traderServiceImp.save(taderdb);			
 			return "searchtrader";
 		}		
-	
+
 	}
 
 
-	
-	
-	
-	
+
+
+
+
 	/** DELETE TRADER*/
 	@RequestMapping(path="/main/delete/{id}")
 	public String deleteTrader( @PathVariable("id") long id) {

@@ -6,24 +6,83 @@
 </head>
 
 <body>
-
-	<div id="div_search">
-		<h2>Add Products in Stock</h2>
-		<form th:action="@{/main/viewformsearchstoch}" th:object="${trader}" method="post">
-			<table>
-				<tbody>
-					<tr>
-						<td><label>Cuit to Search:</label></td>
-						<td><input type="text" th:field="*{cuit}" /></td>
-						<td>
-							<button type="submit">Search</button>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</form>
+	<p></p>
+	<div id="div_stock" th:if="${traderInfo}">
+		<table>
+			<tr>
+				<td>Date Stock:</td>
+				<td th:text="${traderInfo.getStock().dateStock}"></td>
+			</tr>
+		</table>
+		<p></p>
+	
+		<table>
+			<tr>
+				<td>Products Assoccied:</td>
+			</tr>
+			<tr>
+				<td>Code</td>
+				<td>Description</td>
+				<td>Units</td>
+				<td>Date register</td>
+			</tr>
+		
+			<tr th:each="datos : ${traderInfo.getStock().stockproducts}">
+				<td th:text="${datos.product.code}"></td>
+				<td th:text="${datos.product.description}"></td>
+				<td th:text="${datos.quantity}"></td>
+				<td th:text="${datos.date}"></td>
+			
+				<td>
+				<a th:href="@{'/main/updateproduct/'+${trader.id}}">
+				<img src="/images/refresh-256.png" height="20px"
+					width="20px" alt="Update" title="Update Product"/>
+				</a>
+				</td>
+				
+				<td>
+				<a th:href="@{'/main/deleteproduct/'+${trader.id}}">
+				<img src="/images/eliminar-ico.png" height="30px" width="30px" alt="Delete" title="Delete Product"/>
+				</a>
+				</td>
+			
+			</tr>
+		</table>
 	</div>
 
+
+	<p></p>
+
+	<div id="div_stock" th:if="${products}">
+		<table>
+
+			<tr>
+				<th>Code</th>
+				<th>Description</th>
+				<th>Branch</th>
+				<th>Price</th>
+				<th>Units Availables</th>
+				<th>Units Required</th>				
+			</tr>
+
+
+			<tr th:each="product : ${products}">
+				<td th:text="${product.id}"></td>
+				<td th:text="${product.code}"></td>
+				<td th:text="${product.description}"></td>
+				<td th:text="${product.producer}"></td>
+				<td th:text="${product.priceUnit}"></td>
+				<td>
+						<form action="/main/putproductinstock"  method="post">
+								<input type="hidden" th:value="${traderInfo.id}"  name="trader"   />
+								<input type="hidden" th:value="${product.id}" name="product"      />
+								<input type="text" size=5  name="quantity"    />
+						<button type="submit">Add</button>
+						</form>
+				</td>
+			</tr>
+		</table>
+	</div>
 
 
 

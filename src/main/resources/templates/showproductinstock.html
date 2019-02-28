@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+<title>ADMIN TRADER</title>
+<th:block th:include="layout/header"></th:block>
+</head>
+
+<body>
+
+	<div id="div_search">
+		<h2>Add Products in Stock</h2>
+		<form th:action="@{/main/viewformsearchstoch}" th:object="${trader}" method="post">
+			<table>
+				<tbody>
+					<tr>
+						<td><label>Cuit to Search:</label></td>
+						<td><input type="text" th:field="*{cuit}" /></td>
+						<td>
+							<button type="submit">Search</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+
+
+<div id="div_not_find" th:if="${notfind}">
+	<h3 th:text="${notfind}"></h3>
+</div>
+
+<div id="div_list" th:if="${not #lists.isEmpty(traderInfo)}">
+		<table>
+			<tr>
+				<th>Name</th>
+				<th>State</th>
+				<th>Cuit</th>
+				<th>Score</th>
+				<th>Stock Date</th>
+				<th>Products in Stock</th>
+				
+				<th>Add more Products</th>
+		</tr>
+		
+				<tr th:each="trader : ${traderInfo}">
+				<td th:text="${trader.name}"></td>
+				
+				<td th:if="${trader.state==false}"  th:text="Inacive"></td>
+				<td th:if="${trader.state==true}" th:text="Active"></td>
+				
+				
+				<td th:text="${trader.cuit}"></td>
+				<td th:text="${trader.score}"></td>
+				<td th:text="${trader.getStock().dateStock}"></td>
+				
+				<td>
+					<table>
+					<tr th:each="products : ${trader.getStock().stockproducts}">
+					<td th:text="${products.product.code} +' - '+ ${products.product.description}  "></td>
+					</tr>
+					</table>
+				</td>
+				
+				
+				<td align="center" th:if="${trader.stock!=null}" >
+				<a th:href="@{'/main/sendproducttostock/'+${trader.id}}">
+					<img src="../images/add-product-ico.png" height="25px"	width="25px" alt="Add Stock" title="Add Product"/>
+				</a>			
+				</td>
+				
+				<td th:if="${trader.stock==null}" th:text="WithOut_Stock"></td>
+		</tr>
+		</table>		
+
+
+</div>
+
+
+</body>
+</html>

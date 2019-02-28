@@ -3,6 +3,7 @@ package com.payless.demo.services;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,14 +32,19 @@ public class TraderServiceImp implements TraderService{
 
 	@Override
 	public Trader save(Trader trader) {
-		System.out.println("el el serviceimpl " + trader.toString());	
 		return traderRepository.save(trader);
 	}
 
 		
 	@Override
 	public Trader getTrader(Long id) {
-		return traderRepository.findById(id).get();
+		
+		if(traderRepository.findById(id).isPresent()){
+			return traderRepository.findById(id).get();
+		}else{
+				return null;
+		}
+
 	}
 
 	@Override

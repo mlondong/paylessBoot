@@ -9,18 +9,19 @@
 
 	<div id="div_search">
 		<h2>Search Trader</h2>
-		<form th:action="@{/main/search}" th:object="${trader}" method="post">
+		<form action="#" th:action="@{/main/putproductinstock}" th:object="${stockproducts}" method="post" >
 			<table>
 				<tbody>
 					<tr>
-						<td><label>Cuit to Search:</label></td>
-						<td><input type="text" th:field="*{cuit}" /></td>
+						<td><label>canti:</label></td>
+						<td><input type="text"th:field="*{stock}"  /></td>
 						<td>
 							<button type="submit">Search</button>
 						</td>
 					</tr>
 				</tbody>
 			</table>
+			</form>
 	</div>
 
 
@@ -60,21 +61,23 @@
 				
 				<td>
 				<a th:href="@{'/main/formupdate/'+${trader.id}}">
-				<img src="../images/refresh-256.png" height="25px"	width="25px" alt="Update" title="Update Trader"/>
+				<img src="../images/refresh-256.png" height="30px"
+					width="30px" alt="Update" title="Update Trader"/>
 				</a></td>
 					
 				<td>
 				<a th:href="@{'/main/delete/'+${trader.id}}">
-				<img src="../images/delete-xxl.png" height="25px" width="25px" alt="Delete" title="Delete Trader"/>
+				<img src="../images/delete-xxl.png" height="30px" width="30px" alt="Delete" title="Delete Trader"/>
 				</a>
 				</td>
 				
 				<td><a th:href="@{'/main/addaddress/'+${trader.id}}"> 
-				   <img src="../images/addressbook-icon.png" height="25px" width="25px"	alt="Add Address" title="Add Address" /></a></td>
+				   <img src="../images/addressbook-icon.png" height="30px" width="30px"	alt="Add Address" title="Add Address" /></a></td>
 			
 				<td>
 				<a th:if="${trader.stock==null}" th:href="@{'/main/stock/'+${trader.id}}">
-				<img src="../images/stock-icon.png" height="25px" 	width="25px" alt="Add Stock" title="Add Stock"/>
+				<img src="../images/stock-icon.png" height="30px"
+					width="30px" alt="Add Stock" title="Add Stock"/>
 					</a></td>
 				<td></td>
 				
