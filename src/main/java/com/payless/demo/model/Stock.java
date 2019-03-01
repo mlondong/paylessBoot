@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -95,6 +96,18 @@ public class Stock {
 	}
 	
 	
+	
+	public StockProducts findProductInOwnStock(long idProduct){
+		List<StockProducts> stockProductsList= (List<StockProducts>) this.stockproducts; 
+		StockProducts stproduct=null;
+		for(StockProducts sp : stockProductsList){
+			if(sp.getProduct().getId()==idProduct){
+				stproduct= sp;
+			}
+		}
+		
+		return stproduct;
+	}
 	
 	
 	/**********************************************************************************************************************************/

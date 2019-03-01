@@ -38,9 +38,8 @@
 				<th>Score</th>
 				<th>Stock Date</th>
 				<th>Products in Stock</th>
-				
 				<th>Add more Products</th>
-		</tr>
+			</tr>
 		
 				<tr th:each="trader : ${traderInfo}">
 				<td th:text="${trader.name}"></td>
@@ -48,12 +47,11 @@
 				<td th:if="${trader.state==false}"  th:text="Inacive"></td>
 				<td th:if="${trader.state==true}" th:text="Active"></td>
 				
-				
 				<td th:text="${trader.cuit}"></td>
 				<td th:text="${trader.score}"></td>
-				<td th:text="${trader.getStock().dateStock}"></td>
+			 	<td th:if="${trader.getStock() != null }" th:text="${trader.getStock().dateStock}"></td> 
 				
-				<td>
+				<td th:if="${trader.getStock() != null }">
 					<table>
 					<tr th:each="products : ${trader.getStock().stockproducts}">
 					<td th:text="${products.product.code} +' - '+ ${products.product.description}  "></td>

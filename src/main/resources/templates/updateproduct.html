@@ -6,60 +6,40 @@
 </head>
 
 <body>
-	<div id="div_update" th:switch="${traderdb}">
-		<h2 th:case="null">No users yet!</h2>
-		<div th:case="*">
-			<h2>Update Trader Form</h2>
 
-			<form action="#" th:action="@{/main/update/{id}(id=${traderdb.id})}" 	th:object="${traderdb}" method="post">
-				<table>
-					<tbody>
+	<div th:if="${stproductdb}">
+		<h2>Update Product in Stock</h2>
+		<table>
+			<tbody>
+				<tr>
+					<td>Product</td>
+					<td th:text="${stproductdb.product.code}"></td>
+				</tr>
+				<tr>
+					<td>Description</td>
+					<td th:text="${stproductdb.product.description}"></td>
+				</tr>
+		</table>
 
-						<tr>
-							<td>Name</td>
-							<td><input type="text" id="name" th:field="*{name}"  th:value="${traderdb.name}" /></td>
-						</tr>
-						
-						
-						<tr>
-							<td>Password</td>
-							<td><input type="text" id="password" th:field="*{password}"  th:value="${traderdb.password}" /></td>
-						</tr>
-						
-						
-						<tr>
-							<td>State</td>
-							<td>
-							<select id="state" th:field="*{state}"  th:value="${traderdb.state}">
-									<option th:value="'0'" th:text="Inactive"></option>
-									<option th:value="'1'" th:text="Active"></option>
-							</select>
-							</td>
-						</tr>
-						<tr>
-							<td>Cuit</td>
-							<td><input type="text" id="cuit" th:field="*{cuit}"  th:value="${traderdb.cuit}" /></td>
-						</tr>
-						
-						<tr>
-							<td>Score</td>
-							<td><input type="text" id="score" th:field="*{score}"  th:value="${traderdb.score}" /></td>
-						</tr>
-						
-						
-						<tr>
-							<td>&nbsp;</td>
-							<td>
-								<button type="submit">Update</button>
-								<button type="reset">Clear</button>
-							</td>
-						
-							
-							
-					</tbody>
-				</table>
-			</form>
-		</div>
+		<form action="#" th:action="@{/main/save}" method="post">
+			<table>
+				<tr>
+					<td>Quantity</td>
+					<td>
+					   <input type="text"  name="quantity"  id="quantity"  th:value="${stproductdb.quantity}"  /> 
+					   <input type="hidden" name="idproduct"  id="idproduct"  th:value="${stproductdb.product.id}"  /> 
+					   <input type="hidden" name="idtrader"  id="idtrader"  th:value="${traderdb.id}" />
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>
+						<button type="submit">Update</button>
+					</td>
+				</tbody>
+			</table>
+		</form>
+
 	</div>
 
 
