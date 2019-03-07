@@ -10,53 +10,76 @@
 		<h2 th:case="null">No users yet!</h2>
 		<div th:case="*">
 			<h2>Update Trader Form</h2>
-
-			<form action="#" th:action="@{/main/update/{id}(id=${traderdb.id})}" 	th:object="${traderdb}" method="post">
+		
+			 
+			<form action="#" th:action="@{/main/update/{id}(id=${traderdb.id})}"  th:object="${traderdb}" method="post">
 				<table>
 					<tbody>
 
 						<tr>
-							<td>Name</td>
-							<td><input type="text" id="name" th:field="*{name}"  th:value="${traderdb.name}" /></td>
+							<td><label>Social Name</label></td>
+							<td><input type="text" th:field="*{nameEnterprise}" th:value="${traderdb.nameEnterprise}"/></td>
+							<td th:if="${#fields.hasErrors('nameEnterprise')}" th:errors="*{nameEnterprise}"></td>
 						</tr>
-						
-						
+
 						<tr>
-							<td>Password</td>
-							<td><input type="text" id="password" th:field="*{password}"  th:value="${traderdb.password}" /></td>
+							<td>Cuit</td>
+							<td><input type="text" id="cuit" th:field="*{cuit}" th:value="${traderdb.cuit}" /></td>
 						</tr>
 						
+
+						<tr>
+							<td>Email</td>
+							<td><input type="text" id="email" th:field="*{email}" th:value="${traderdb.email}" /></td>
+							<td th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></td>
+							
+						</tr>
 						
 						<tr>
 							<td>State</td>
-							<td>
-							<select id="state" th:field="*{state}"  th:value="${traderdb.state}">
+							<td><select id="state" th:field="*{state}" 	th:value="${traderdb.state}">
 									<option th:value="'0'" th:text="Inactive"></option>
 									<option th:value="'1'" th:text="Active"></option>
-							</select>
-							</td>
-						</tr>
-						<tr>
-							<td>Cuit</td>
-							<td><input type="text" id="cuit" th:field="*{cuit}"  th:value="${traderdb.cuit}" /></td>
+							</select></td>
 						</tr>
 						
 						<tr>
 							<td>Score</td>
-							<td><input type="text" id="score" th:field="*{score}"  th:value="${traderdb.score}" /></td>
+							<td><input type="text" id="score" th:field="*{score}" th:value="${traderdb.score}" /></td>
+							<td th:if="${#fields.hasErrors('score')}" th:errors="*{score}"></td>
+			
 						</tr>
-						
-						
+
+
+						<tr>
+							<td></td>				
+							<td><label>Information for login</label></td>
+						</tr>
+
+						<tr>
+							<td>Name</td>
+							<td><input type="text" id="name" th:field="*{name}" th:value="${traderdb.name}" /></td>
+						</tr>
+
+
+						<tr>
+							<td>Password</td>
+							<td><input type="text" id="password" th:field="*{password}" th:value="${traderdb.password}" /></td>
+						</tr>
+
+
+
 						<tr>
 							<td>&nbsp;</td>
 							<td>
 								<button type="submit">Update</button>
 								<button type="reset">Clear</button>
 							</td>
-						
-							
-							
 					</tbody>
+
+					<span th:if="${errors}" th:text="${errors}"></span>
+					
+
 				</table>
 			</form>
 		</div>

@@ -9,23 +9,24 @@
 
 	<div id="div_search">
 		<h2>Search Trader</h2>
-		<form th:action="@{/main/search}" th:object="${trader}" method="post">
+		<form th:action="@{/main/searchtrader}"  method="post">
 			<table>
 				<tbody>
 					<tr>
 						<td><label>Cuit to Search:</label></td>
-						<td><input type="text" th:field="*{cuit}" /></td>
+						<td><input type="text" id="cuit" name="cuit" /></td>
 						<td>
 							<button type="submit">Search</button>
 						</td>
 					</tr>
 				</tbody>
 			</table>
+			</form>
 	</div>
 
 
 <div id="div_not_find" th:if="${notfind}">
-	<h3 th:text="${notfind}"></h2>
+	<h2 th:text="${notfind}"></h2>
 </div>
 
 
@@ -33,29 +34,38 @@
 		<h2>Find it</h2>
 		<table>
 			<tr>
-				<th>Id</th>
-				<th>Name</th>
-				<th>Password</th>
-				<th>State</th>
 				<th>Cuit</th>
+				<th>Social razon</th>
+				<th>Email</th>
+				<th>State</th>
 				<th>Score</th>
 				<th>Stock</th>
+				<th>Address</th>
+				<th></th>
+				
 				
 
 			</tr>
 			<tr th:each="trader : ${results}">
-				<td th:text="${trader.id}"></td>
-				<td th:text="${trader.name}"></td>
-				<td th:text="${trader.password}"></td>
-				
-				<td th:if="${trader.state==false}"  th:text="Inacive"></td>
-				<td th:if="${trader.state==true}" th:text="Active"></td>
-				
-				
 				<td th:text="${trader.cuit}"></td>
-				<td th:text="${trader.score}"></td>
-				<td th:if="${trader.stock!=null}" th:text="${trader.stock.dateStock}"></td>
-				<td th:if="${trader.stock==null}" th:text="na_stock"></td>
+
+				<td align="center" th:text="${trader.nameEnterprise}"></td>
+				<td align="center" th:text="${trader.email}"></td>
+				
+				<td align="center" th:if="${trader.state==false}"  th:text="Inacive"></td>
+				<td align="center" th:if="${trader.state==true}" th:text="Active"></td>
+				
+				
+				<td align="center" th:text="${trader.score}"></td>
+				<td align="center" th:if="${trader.stock!=null}" th:text="${trader.stock.dateStock}"></td>
+				<td align="center" th:if="${trader.stock==null}" th:text="NO"></td>
+				
+				<td align="center" th:if="${trader.address.isEmpty()}" th:text="NO" width="10%"></td>
+				<td align="center" th:if="${trader.address!=null}"  >
+					<span th:each="address : ${trader.address}" width="30%">
+						<p th:text="${address.description} +' /city ' + ${address.city} +' /zone ' +  ${address.zona}"> </p>
+					</span>
+				</td>
 				
 				
 				<td>

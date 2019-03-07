@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /* 
  * Clase Abstracta User
@@ -27,23 +29,23 @@ public abstract class Usser {
 	@Column(name="USER_ID",nullable=false,updatable=false)
 	private long id;
 
-	@NotBlank(message = "Name is mandatory")
+
+	@NotNull(message = "Name is mandatory")
 	@Column(name="NAME",nullable=false,updatable=true )
 	private String name;
 	
-	@NotBlank(message = "Password is mandatory")
+	@NotNull(message = "Password is mandatory")
 	@Column(name="PASSWORD", nullable=false,updatable=true)
 	private String password;
 	
 	@Column(name="STATE", updatable=true)
-	private boolean state;
+	private boolean state=true;
 	
 	
 	
 	public Usser(){}
 	
 	public Usser(String _name, String _pass){
-		this.state=true;
 		this.name=_name;
 		this.password=_pass;
 	}

@@ -1,0 +1,7 @@
+DROP table if exists country;
+
+CREATE TABLE country (
+  COUNTRY_ID bigint(20) NOT NULL AUTO_INCREMENT,
+  NAME varchar(255) NOT NULL,
+  PRIMARY KEY (`COUNTRY_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

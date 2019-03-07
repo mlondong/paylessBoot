@@ -25,9 +25,8 @@ public class TraderServiceImp implements TraderService{
 	
 	
 	@Override
-	public List<Trader> searchByCuit(long cuit) {
-		List<Trader> listaTraders = traderRepository.findByCuit(cuit);
-		return listaTraders;
+	public Trader searchByCuit(long cuit) {
+		return traderRepository.findByCuit(cuit);
 	}
 
 	@Override
@@ -40,6 +39,7 @@ public class TraderServiceImp implements TraderService{
 	public Trader getTrader(Long id) {
 		
 		if(traderRepository.findById(id).isPresent()){
+			System.out.println(traderRepository.findById(id));
 			return traderRepository.findById(id).get();
 		}else{
 				return null;
