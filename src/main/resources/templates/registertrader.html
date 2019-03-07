@@ -7,23 +7,47 @@
 </head>
 
 <body>
-	<div id="div_reg">
-		<h2>Add Trader Form</h2>
+	<div id="div_reg" >
+		<h2>Create New Trader </h2>
 		<form th:action="@{/main/result}" th:object="${trader}" method="post">
 
 			<table>
 				<tbody>
 					<tr>
-						<td><label>Name</label></td>
-						<td><input type="text" th:field="*{name}" /></td>
+						<td><label>Social Name</label></td>
+						<td><input type="text" th:field="*{nameEnterprise}" /></td>
+						<td th:if="${#fields.hasErrors('nameEnterprise')}" th:errors="*{nameEnterprise}"></td>
 					</tr>
-					<tr>
-						<td><label>Password</label></td>
-						<td><input type="text" th:field="*{password}" /></td>
-					</tr>
+				
 					<tr>
 						<td><label>Cuit</label></td>
 						<td><input type="text" th:field="*{cuit}" /></td>
+						<td th:if="${#fields.hasErrors('cuit')}" th:errors="*{cuit}"></td>
+					</tr>
+					
+					<tr>
+						<td><label>Email</label></td>
+						<td><input type="text" th:field="*{email}" /></td>
+						<td th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></td>
+					</tr>
+					
+					
+					<tr>
+						<td></td>				
+						<td><label>Define information for login</label></td>
+					</tr>
+				
+					<tr>
+						<td><label>UserName</label></td>
+						<td><input type="text" th:field="*{name}" /></td>
+						<td th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></td>
+						
+					</tr>
+					<tr>
+						<td><label>Password</label></td>
+						<td><input type="password"  th:field="*{password}" /></td>
+						<td th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></td>
+			
 					</tr>
 					<tr>
 						<td>&nbsp;</td>
@@ -37,39 +61,12 @@
 		</form>
 	</div>
 
+	<div id="div_error" th:if="${error != null}" th:text="${error}">
+	</div>
 
-
-	<div id="div_list" th:if="${not #lists.isEmpty(traders)}">
-		<h2>Store it...</h2>
-		<table>
-			<tr>
-				<th>Id</th>
-				<th>Name</th>
-				<th>Password</th>
-				<th>State</th>
-				<th>Cuit</th>
-				<th>Score</th>
-				<th></th>
-				<th></th>
-
-
-			</tr>
-			<tr th:each="trader : ${traders}">
-				<td th:text="${trader.id}"></td>
-				<td th:text="${trader.name}"></td>
-				<td th:text="${trader.password}"></td>
-				<td th:text="${trader.state}"></td>
-				<td th:text="${trader.cuit}"></td>
-				<td th:text="${trader.score}"></td>
-			<td><img src="../images/refresh-256.png" height="30px" width="30px" alt="Update" /></td>
-				<td><img src="../images/delete-xxl.png" height="30px"	width="30px" alt="Delete" /></td>
-				<td><img src="../images/addressbook-icon.png" height="30px"	width="30px" alt="Add Address" /></td>
-				<td><img src="../images/stock-icon.png" height="30px" width="30px" alt="Add Stock" /></td>
-
-
-
-			</tr>
-		</table>
+	<div id="div_list" th:if="${not #lists.isEmpty(traderInfo)}">
+		<h2>Store it!...</h2>
+		<a th:href="@{/main/searchtrader?cuit={cuit} (cuit=${traderInfo.cuit}) }"> See Details </a>
 	</div>
 
 

@@ -27,7 +27,8 @@
 				</tr>
 			</tbody>
 		</table>
-		<table>
+
+		<table th:if="${infoTrader!=null}">
 			<tr>
 				<td>Address added</td>
 			</tr>
@@ -37,35 +38,58 @@
 				<td th:text="${address.description}" />
 				<td th:text="${address.city}" />
 				<td th:text="${address.zona}" />
+				
 			</tr>
 		</table>
 	</div>
 
-	<!-- OTRA FORMA DE ENVIAR DATOS POR PARAMETORSOS @{'/add-address/'+${infoTrader.id}}
-		@{/add-address/{id}(id=${infoTrader.id})}
-		th:action="@{'/hotels/'+${search.location}+'/'+${search.adults}+'/'+${search.dateCheckOut}+'/'+${search.dateCheckIn}}"  id="search-hotel-form">
-		-->
 
-	<div id="div_address">
+<div>
 		<h2>Add Address</h2>
 
-		<form action="#"
-			th:action="@{/add-address/{id}(id=${__infoTrader.id__})}"
-			th:object="${address}" method=post>
+		<form action="#" th:action="@{/add-address/{id}(id=${__infoTrader.id__})}" 	th:object="${address}" method=post >
+			<div class="form-group">
 			<table>
 				<tbody>
+				
+					<tr>
+						<td><label>Select City</label></td>
+						<td>
+						<select id="city">
+                            <option selected="selected"  value="">Select an City</option>
+                            <option th:each="city : ${selectCities}"
+                                    th:value="${city.id}"
+                                    th:text="${city.name}">
+                            </option>
+                        </select></td>
+					</tr>
+				
+				
+				<tr>
+						<td><label>Select Zone</label></td>
+						<td>
+						<select id="zone">
+                            <option selected="selected"  value="">Select an Zone</option>
+                            <option th:each="zone : ${selectZones}"
+                                    th:value="${zone.id}"
+                                    th:text="${zone.name}">
+                            </option>
+                        </select></td>
+					</tr>
+				
+				
+				
 					<tr>
 						<td><label>Description Address </label></td>
-						<td><input type="text" id="description"
-							th:field="*{description}" /></td>
+						<td><input type="text" id="description" th:field="*{description}" /></td>
 					</tr>
 					<tr>
 						<td><label>City Code</label></td>
-						<td><input type="text" id="city" th:field="*{city}" /></td>
+						<td><input type="text" id="city" th:field="*{city}" value="" /></td>
 					</tr>
 					<tr>
 						<td><label>Zone Code</label></td>
-						<td><input type="text" id="zona" th:field="*{zona}" /></td>
+						<td><input type="text" id="zona" th:field="*{zona}" value=""/></td>
 					</tr>
 
 
@@ -78,7 +102,7 @@
 					</tr>
 				</tbody>
 			</table>
-
+	</div>
 
 
 		</form>

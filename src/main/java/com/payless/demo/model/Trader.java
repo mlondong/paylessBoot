@@ -10,22 +10,34 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
 @Entity
 public class Trader extends Usser {
-
-	@Column(name="CUIT",nullable=false,updatable=true,unique=true)
+	
+	@Column(name="CUIT",nullable=false, updatable=true, unique=true)
 	private long cuit;
 
+    @Size(min=5, max=30)
+	@Column(name="NAME_ENTERPRISE",nullable=false, updatable=true)
+	private String nameEnterprise;
 
+	
+    @NotNull
+    @Email
+    @Column(name="EMAIL",nullable=false, updatable=true)
+	private String email;
+
+	@Max(5)
 	@Column(name="SCORE",nullable=false,updatable=true)
 	private int score=0;
 
@@ -152,6 +164,23 @@ public class Trader extends Usser {
 	}
 	public void setScore(int score) {
 		this.score = score;
+	}
+
+	
+	public String getNameEnterprise() {
+		return nameEnterprise;
+	}
+
+	public void setNameEnterprise(String nameEnterprise) {
+		this.nameEnterprise = nameEnterprise;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	@Override

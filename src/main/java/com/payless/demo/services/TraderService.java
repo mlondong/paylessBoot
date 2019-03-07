@@ -9,7 +9,7 @@ public interface TraderService {
 	
 	Trader save(Trader trader);
 	
-	List<Trader> searchByCuit(long cuit);
+	Trader searchByCuit(long cuit);
 
 	Trader getTrader(Long id);
 	Trader editTrader(Trader trader);

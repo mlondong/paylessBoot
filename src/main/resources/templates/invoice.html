@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+<title>ADMIN TRADER</title>
+<th:block th:include="layout/header"></th:block>
+</head>
+
+<body>
+
+	<div id="div_search">
+		<h2>Invoices</h2>
+
+		<form action="/invoice/searchinvoice" method="post">
+			<table>
+				<tbody>
+					<tr>
+						<td><label>Cuit to Search:</label></td>
+						<td><input type="text" id="cuit" name="cuit" /></td>
+						<td>
+							<button type="submit">Search</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+
+
+<span th:text="${infoinvoice}">
+</span>
+
+	<div id="div_list" th:if="${not #lists.isEmpty(infoinvoice)}">
+		<table>
+			<tr>
+				<th>Trader Cuit</th>
+				<th>Score</th>
+				<th>Total Invoices </th>
+				<th>Total Products in Invoices</th>
+			
+			</tr>
+			<tr th:each="trader : ${infoinvoice}">
+				<td  align="center" th:text="${trader.cuit}"></td>
+				<td align="center" th:text="${trader.score}"></td>
+				<td align="center" th:text="${#lists.size(trader.invoice)}"></td>
+			</tr>	
+		</table>
+	</div>
+
+<div th:if="${Error != null}">
+	<h3  th:text="${Error}"> </h3>
+</div>
+
+<div th:if="${TraderInfo != null}">
+	<h3  th:text="${TraderInfo}"> </h3>
+	<table>
+		<tr>
+			<td>Trader name:</td><td th:text="${TraderInfo.name}"></td>
+		</tr>
+		<tr>
+			<td>Cuit:</td><td th:text="${TraderInfo.cuit}"></td>
+		</tr>
+		<tr>
+			<td>Status:</td><td th:text="${TraderInfo.state} ? 'Active' : 'Inactive'"></td>
+		</tr>
+	</table>
+</div>
+
+
+<div th:if="${Show != null}">
+	<h3  th:text="${Show}"> </h3>
+	<table>
+			<tr>
+				<th>Invoice Date</th>
+				<th>Number Invoice</th>
+				<th>Number of products in invoice</th>
+			</tr>			
+			<tr th:each="invoice : ${Show}">
+				<td  align="center" th:text="${invoice.dateInvoice}"></td>
+				<td align="center" th:text="${invoice.id}"></td>
+				<td align="center" th:text="${#lists.size(invoice.products)}"></td>
+			
+			<td>
+				<a th:href="@{/invoice/show_producs_invoice/{idinvoice}/trader/{idtrader} (idinvoice=${invoice.id} , idtrader=${TraderInfo.id}) }">
+					<img src="/images/refresh-256.png" height="20px" width="20px" alt="Update" title="Update Invoice"/>
+				</a>
+			</td>
+				
+			<td>
+				<a th:href="@{/invoice/delete_Invoice/{idinvoice}/cuit/{cuit} (idinvoice=${invoice.id} , cuit=${TraderInfo.cuit} ) }">
+					<img src="/images/eliminar-ico.png" height="30px" width="30px" alt="Delete" title="Delete Invoice with produtcs"/>
+				</a>
+			</td>
+			
+			</tr>	
+	</table>
+	
+	
+</div>
+
+
+</body>
+</html>

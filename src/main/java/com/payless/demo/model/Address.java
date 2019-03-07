@@ -2,17 +2,23 @@ package com.payless.demo.model;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Embeddable
 public class Address {
 	
-	
+	@NotNull
+	@Size(min=2, max=30)
 	@Column(name="DESCRIPTION")
 	private String description;
 	
+	@NotNull
 	@Column(name="CITY_ID")
 	private int city;
 
+	@NotNull
 	@Column(name="ZONE")
 	private int zona;
 
