@@ -45,9 +45,16 @@ public class Invoice {
 
 	/*MAPEO BIDIRECCIONAL DE MUCHOS INVOICES A 1 TRADER*/
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "USER_ID")
+	@JoinColumn(name = "USER_ID_TRADER")
 	@JsonBackReference//esto evita problemas en el json ver el ref en trader
 	private Trader trader;
+
+	
+	/*MAPEO BIDIRECCIONAL DE MUCHOS INVOICES A 1 CONSUMER*/
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "USER_ID_CONSUMER")
+	@JsonBackReference//esto evita problemas en el json ver el ref en trader
+	private Consumer consumer;
 
 	
 	
@@ -58,8 +65,8 @@ public class Invoice {
 	private Collection<InvoiceProduct> products;
 	
 	
-	
-	
+	@Column(name="NUM_INVOICE")
+	private long numInvoice;
 	
 	
 	
@@ -82,7 +89,12 @@ public class Invoice {
 	}
 	
 	
-	
+	public void generateNumInvoice(){
+		int max=10000;
+		int min=1;
+		this.numInvoice= (long) (Math.random() * ( max - min ));
+	}
+
 	
 	
 	
@@ -125,6 +137,22 @@ public class Invoice {
 
 	public void setProducts(Collection<InvoiceProduct> products) {
 		this.products = products;
+	}
+
+	public Consumer getConsumer() {
+		return consumer;
+	}
+
+	public void setConsumer(Consumer consumer) {
+		this.consumer = consumer;
+	}
+
+	public long getNumInvoice() {
+		return numInvoice;
+	}
+
+	public void setNumInvoice(long numInvoice) {
+		this.numInvoice = numInvoice;
 	}
 
 	

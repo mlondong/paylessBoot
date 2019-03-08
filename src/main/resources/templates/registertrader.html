@@ -7,11 +7,11 @@
 </head>
 
 <body>
-	<div id="div_reg" >
+
 		<h2>Create New Trader </h2>
 		<form th:action="@{/main/result}" th:object="${trader}" method="post">
-
-			<table>
+		<div id="div_reg" class="form-group">
+		   <table>
 				<tbody>
 					<tr>
 						<td><label>Social Name</label></td>
@@ -34,7 +34,7 @@
 					
 					<tr>
 						<td></td>				
-						<td><label>Define information for login</label></td>
+						<td><h6>Define information for login</h6></td>
 					</tr>
 				
 					<tr>
@@ -52,14 +52,14 @@
 					<tr>
 						<td>&nbsp;</td>
 						<td>
-							<button type="submit">Submit</button>
-							<button type="reset">Clear</button>
+							<button type="submit" class="btn btn-primary">Submit</button>
+							<button type="reset" class="btn btn-secundary">Clear</button>
 						</td>
 					</tr>
 				</tbody>
 			</table>
+		</div>
 		</form>
-	</div>
 
 	<div id="div_error" th:if="${error != null}" th:text="${error}">
 	</div>

@@ -7,27 +7,32 @@
 
 <body>
 
-
-	<p th:text="${traderInfo}"></p>
 	<div id="div_stock" th:if="${traderInfo}">
 		<table>
+			<tr>
+				<td colspan="2"><h3>General Information in Stock:</h3></td>
+			</tr>
 			<tr>
 				<td>Date Stock:</td>
 				<td th:text="${traderInfo.getStock().dateStock}"></td>
 			</tr>
 		</table>
-		<p></p>
+	</div>
 	
-		<table>
-			<tr>
-				<td>Products Assoccied:</td>
-			</tr>
-			<tr>
-				<td>Code</td>
-				<td>Description</td>
-				<td>Units</td>
-				<td>Date register</td>
-			</tr>
+	<p></p>
+	
+	<div>
+		<table class="table">
+			<thead class="thead-dark">
+				<tr>
+				<th>Code</th>
+				<th>Description</th>
+				<th>Units</th>
+				<th>Date register</th>
+				<th colspan="2"></th>
+				</tr>	
+			</thead>
+			
 		
 			<tr th:each="datos : ${traderInfo.getStock().stockproducts}">
 				<td th:text="${datos.product.code} +' - ' + ${datos.product.id}"></td>
@@ -54,10 +59,11 @@
 
 
 	<p></p>
+	<p><h3>Form to Add Products</h3></p>
 
 	<div id="div_stock" th:if="${products}">
-		<table>
-
+		<table class="table table-bordered table-dark">
+			<thead>
 			<tr>
 				<th>Id</th>
 				<th>Code</th>
@@ -66,7 +72,7 @@
 				<th>Price</th>
 				<th>Units Required</th>				
 			</tr>
-
+			</thead>
 
 			<tr th:each="product : ${products}">
 				<td th:text="${product.id}"></td>

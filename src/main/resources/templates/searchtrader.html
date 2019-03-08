@@ -10,17 +10,19 @@
 	<div id="div_search">
 		<h2>Search Trader</h2>
 		<form th:action="@{/main/searchtrader}"  method="post">
+			<div class="form-group">
 			<table>
 				<tbody>
 					<tr>
 						<td><label>Cuit to Search:</label></td>
 						<td><input type="text" id="cuit" name="cuit" /></td>
 						<td>
-							<button type="submit">Search</button>
+							<button type="submit" class="btn btn-primary">Search</button>
 						</td>
 					</tr>
 				</tbody>
 			</table>
+			</div>
 			</form>
 	</div>
 
@@ -30,8 +32,7 @@
 </div>
 
 
-	<div id="div_list" th:if="${not #lists.isEmpty(results)}">
-		<h2>Find it</h2>
+	<div id="div_list" th:if="${not #lists.isEmpty(results)}" class="table table-striped">
 		<table>
 			<tr>
 				<th>Cuit</th>
@@ -40,11 +41,7 @@
 				<th>State</th>
 				<th>Score</th>
 				<th>Stock</th>
-				<th>Address</th>
-				<th></th>
-				
-				
-
+				<th colspan="5"></th>
 			</tr>
 			<tr th:each="trader : ${results}">
 				<td th:text="${trader.cuit}"></td>
@@ -61,12 +58,6 @@
 				<td align="center" th:if="${trader.stock==null}" th:text="NO"></td>
 				
 				<td align="center" th:if="${trader.address.isEmpty()}" th:text="NO" width="10%"></td>
-				<td align="center" th:if="${trader.address!=null}"  >
-					<span th:each="address : ${trader.address}" width="30%">
-						<p th:text="${address.description} +' /city ' + ${address.city} +' /zone ' +  ${address.zona}"> </p>
-					</span>
-				</td>
-				
 				
 				<td>
 				<a th:href="@{'/main/formupdate/'+${trader.id}}">
@@ -79,19 +70,33 @@
 				</a>
 				</td>
 				
-				<td><a th:href="@{'/main/addaddress/'+${trader.id}}"> 
+				<td><a th:href="@{/main/addaddress?idtrader={idtrader} (idtrader=${trader.id})}"> 
 				   <img src="../images/addressbook-icon.png" height="25px" width="25px"	alt="Add Address" title="Add Address" /></a></td>
-			
 				<td>
 				<a th:if="${trader.stock==null}" th:href="@{'/main/stock/'+${trader.id}}">
 				<img src="../images/stock-icon.png" height="25px" 	width="25px" alt="Add Stock" title="Add Stock"/>
 					</a></td>
 				<td></td>
-				
-				
-
 			</tr>
 		</table>
+		
+		<p></p>
+		
+		<table th:if="${results.address!=null}">
+		<thead class="thead-dark">
+			<th>Address Descrition</th>
+			<th>City</th>
+			<th>Zone</th>
+		</thead>
+		<tr  th:each="address : ${results.address}">
+			<td th:text="${address.description}"></td>
+			<td th:text="${address.city}"></td>
+			<td th:text="${address.zona}"></td>
+		</tr>
+		</table>
+		
+		
+		
 	</div>
 
 

@@ -7,34 +7,32 @@
 
 <body>
 
-	<div th:if="${stproductdb}">
+	<div class="form-group" th:if="${stproductdb}">
 		<h2>Update Product in Stock</h2>
-		<table>
-			<tbody>
+		<table  width="18%">
 				<tr>
-					<td>Product</td>
-					<td th:text="${stproductdb.product.code}"></td>
+					<td>Product:</td>
+					<td align="left" th:text="${stproductdb.product.code}"></td>
 				</tr>
 				<tr>
-					<td>Description</td>
-					<td th:text="${stproductdb.product.description}"></td>
+					<td>Description:</td>
+					<td align="left" th:text="${stproductdb.product.description}"></td>
 				</tr>
 		</table>
 
 		<form action="#" th:action="@{/main/save}" method="post">
-			<table>
+			<table  width="18%">
 				<tr>
-					<td>Quantity</td>
-					<td>
+					<td>Quantity:</td>
+					<td align="right">
 					   <input type="text"  name="quantity"  id="quantity"  th:value="${stproductdb.quantity}"  /> 
 					   <input type="hidden" name="idproduct"  id="idproduct"  th:value="${stproductdb.product.id}"  /> 
 					   <input type="hidden" name="idtrader"  id="idtrader"  th:value="${traderdb.id}" />
 					</td>
 				</tr>
 				<tr>
-					<td>&nbsp;</td>
-					<td>
-						<button type="submit">Update</button>
+					<td align="right" colspan="2">
+						<button type="submit" class="btn btn-primary">Update</button>
 					</td>
 				</tbody>
 			</table>

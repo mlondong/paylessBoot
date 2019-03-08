@@ -17,9 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.payless.demo.model.Consumer;
-import com.payless.demo.model.Purchase;
 import com.payless.demo.repositories.ConsumerRepository;
-import com.payless.demo.repositories.PurchaseRepository;
+//import com.payless.demo.repositories.PurchaseRepository;
 
 
 /**
@@ -47,9 +46,9 @@ public class ConsumerService {
 	private ConsumerRepository consumerRepository;
 
 
-	@Autowired
+/*	@Autowired
 	private PurchaseRepository purchaseRepository;
-
+*/
 
 
 	/**GET ALL CONSUMERS CON PAGE AND LIMIT**/

@@ -31,7 +31,7 @@ public class Consumer extends Usser {
 			cascade = CascadeType.ALL, 
 			orphanRemoval = true)
 	@JsonManagedReference
-	private Collection<Purchase> purchase= new ArrayList<Purchase>();
+	private Collection<Invoice> invoices = new ArrayList<>();
 
 
 
@@ -67,23 +67,7 @@ public class Consumer extends Usser {
 	public long getDni() {
 		return dni;
 	}
-
-	public void addPurchase(Purchase p){
-		this.purchase.add(p);	
-	}
-	
-	public void removePurchase(Purchase p){
-		this.purchase.remove(p);	
-	}
-	
-	public Collection<Purchase> getPurchase() {
-		return purchase;
-	}
-
-	public void setPurchase(Collection<Purchase> purchase) {
-		this.purchase = purchase;
-	}
-
+		
 	public void setDni(long dni) {
 		this.dni = dni;
 	}
@@ -100,12 +84,30 @@ public class Consumer extends Usser {
 		this.lastName = lastName;
 	}
 
-	@Override
-	public String toString() {
-		return "Consumer [dni=" + dni + ", firstName=" + firstName + ", lastName=" + lastName + ", purchase=" + purchase
-				+ "]";
+
+	
+	public Collection<Invoice> getInvoices() {
+		return invoices;
 	}
 
+	public void setInvoices(Collection<Invoice> invoices) {
+		this.invoices = invoices;
+	}
+
+	public void addInvoice(Invoice p){
+		this.invoices.add(p);	
+	}
+	
+	public void removeInvoice(Invoice p){
+		this.invoices.remove(p);	
+	}
+	
+
+	@Override
+	public String toString() {
+		return "Consumer [dni=" + dni + ", firstName=" + firstName + ", lastName=" + lastName + ", invoices=" + invoices
+				+ "]";
+	}
 
 
 

@@ -10,17 +10,19 @@
 	<div id="div_search">
 		<h2>Add Products in Stock</h2>
 		<form th:action="@{/main/viewformsearchstoch}" th:object="${trader}" method="post">
+			<div class="form-group">
 			<table>
 				<tbody>
 					<tr>
 						<td><label>Cuit to Search:</label></td>
 						<td><input type="text" th:field="*{cuit}" /></td>
 						<td>
-							<button type="submit">Search</button>
+							<button type="submit" class="btn btn-primary">Search</button>
 						</td>
 					</tr>
 				</tbody>
 			</table>
+		</div>	
 		</form>
 	</div>
 
@@ -29,49 +31,60 @@
 	<h3 th:text="${notfind}"></h3>
 </div>
 
-<div id="div_list" th:if="${not #lists.isEmpty(traderInfo)}">
-		<table>
-			<tr>
+<div class="table table-striped" id="div_list" th:if="${not #lists.isEmpty(traderInfo)}">
+<table  class="table" >
+		<thead class="thead-dark">
 				<th>Name</th>
 				<th>State</th>
 				<th>Cuit</th>
 				<th>Score</th>
 				<th>Stock Date</th>
-				<th>Products in Stock</th>
 				<th>Add more Products</th>
 			</tr>
 		
 				<tr th:each="trader : ${traderInfo}">
 				<td th:text="${trader.name}"></td>
-				
 				<td th:if="${trader.state==false}"  th:text="Inacive"></td>
 				<td th:if="${trader.state==true}" th:text="Active"></td>
 				
 				<td th:text="${trader.cuit}"></td>
 				<td th:text="${trader.score}"></td>
 			 	<td th:if="${trader.getStock() != null }" th:text="${trader.getStock().dateStock}"></td> 
-				
-				<td th:if="${trader.getStock() != null }">
-					<table>
-					<tr th:each="products : ${trader.getStock().stockproducts}">
-					<td th:text="${products.product.code} +' - '+ ${products.product.description}  "></td>
-					</tr>
-					</table>
-				</td>
-				
-				
 				<td align="center" th:if="${trader.stock!=null}" >
 				<a th:href="@{'/main/sendproducttostock/'+${trader.id}}">
 					<img src="../images/add-product-ico.png" height="25px"	width="25px" alt="Add Stock" title="Add Product"/>
 				</a>			
 				</td>
-				
 				<td th:if="${trader.stock==null}" th:text="WithOut_Stock"></td>
-		</tr>
+				</tr>
 		</table>		
-
-
 </div>
+
+
+<div th:if="${not #lists.isEmpty(traderInfo)}">
+<table  class="table" >
+		<thead class="thead-dark">
+				<th><h6>#</h6></th>
+				<th><h6>Date</h6></th>
+				<th><h6>Product Code</h6></th>
+				<th><h6>Description</h6></th>
+				<th>Units</th>
+				<th></th>
+				<th></th>
+				
+		</thead>
+		<tr th:each="products, index : ${traderInfo.getStock().stockproducts}">
+					<td th:text="${index.index}"> </td>
+					<td th:text="${products.date}"> </td>
+					<td th:text="${products.product.code}"> </td>
+					<td th:text="${products.product.description}"> </td>
+					<td th:text="${products.quantity}"> </td>					
+	
+		</tr>
+</table>
+</div>				
+
+
 
 
 </body>

@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.payless.demo.model.Consumer;
 import com.payless.demo.model.Invoice;
 import com.payless.demo.model.Product;
 import com.payless.demo.model.Stock;
 import com.payless.demo.model.StockProducts;
 import com.payless.demo.model.Trader;
 import com.payless.demo.model.InvoiceProduct;
+import com.payless.demo.repositories.ConsumerRepository;
 import com.payless.demo.repositories.InvoiceRepository;
 import com.payless.demo.repositories.ProductRepository;
 import com.payless.demo.repositories.TraderRepository;
@@ -47,13 +49,20 @@ public class InvoiceService {
 	@Autowired
 	private ProductRepository productRepository;
 
+	@Autowired
+	private ConsumerRepository consumerRepository;
 
 
 	@PostMapping(path="/invoice/addinvoice/trader{id}")
 	public Invoice addInvoice(@PathVariable("id") long id){
 		Trader traderdb = traderRepository.findById(id).get();
+		long con= 2L;
+		Consumer consumerdb = consumerRepository.findById(con).get();
+		
 		Invoice invoice= new  Invoice();
 		invoice.setTrader(traderdb);
+		invoice.setConsumer(consumerdb);
+		
 		return invoiceRepository.save(invoice);
 	}
 

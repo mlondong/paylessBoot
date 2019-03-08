@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.payless.demo.model.Consumer;
-import com.payless.demo.model.Purchase;
+//import com.payless.demo.model.Purchase;
 
 
 
@@ -28,7 +28,7 @@ public interface ConsumerRepository  extends BaseUserRepository<Consumer>{
 
 
 	/*OTRAS CONSULTAS DE OBJETOS*/
-	List<Consumer> findByPurchase(Purchase p);
+	//List<Consumer> findByPurchase(Purchase p);
 
 	
 }

@@ -6,56 +6,18 @@
 </head>
 
 <body>
-	<div id="div_info" th:if="${infoTrader!=null}">
-		<h2>General Information</h2>
-		<table>
-			<tbody>
-				<tr>
-					<td>User:</label></td>
-					<td th:text="${infoTrader.name}"></td>
-					<td>|State:</label></td>
-					<div th:if="${infoTrader.state==false}">
-						<td>Inactivo |</td>
-					</div>
-					<div th:if="${infoTrader.state==true}">
-						<td>Activo |</td>
-					</div>
-					<td>Cuit:</label></td>
-					<td th:text="${infoTrader.cuit}"></td>
-					<td>|Score:</label></td>
-					<td th:text="${infoTrader.score}"></td>
-				</tr>
-			</tbody>
-		</table>
-
-		<table th:if="${infoTrader!=null}">
-			<tr>
-				<td>Address added</td>
-			</tr>
-
-			<tr th:each="address: ${infoTrader.address}">
-				<td></td>
-				<td th:text="${address.description}" />
-				<td th:text="${address.city}" />
-				<td th:text="${address.zona}" />
-				
-			</tr>
-		</table>
-	</div>
-
-
 <div>
 		<h2>Add Address</h2>
 
-		<form action="#" th:action="@{/add-address/{id}(id=${__infoTrader.id__})}" 	th:object="${address}" method=post >
+		<form action="/add-address/" method=post >
 			<div class="form-group">
 			<table>
 				<tbody>
-				
 					<tr>
 						<td><label>Select City</label></td>
 						<td>
-						<select id="city">
+						<input type="hidden" id="idtrader"  name="idtrader" th:if="${infoTrader!=null}" th:value="${infoTrader.id}">
+						<select id="city" name="city" class="custom-select">
                             <option selected="selected"  value="">Select an City</option>
                             <option th:each="city : ${selectCities}"
                                     th:value="${city.id}"
@@ -63,12 +25,10 @@
                             </option>
                         </select></td>
 					</tr>
-				
-				
-				<tr>
+					<tr>
 						<td><label>Select Zone</label></td>
 						<td>
-						<select id="zone">
+						<select id="zone" name="zone" class="custom-select">
                             <option selected="selected"  value="">Select an Zone</option>
                             <option th:each="zone : ${selectZones}"
                                     th:value="${zone.id}"
@@ -76,37 +36,64 @@
                             </option>
                         </select></td>
 					</tr>
-				
-				
-				
 					<tr>
-						<td><label>Description Address </label></td>
-						<td><input type="text" id="description" th:field="*{description}" /></td>
+						<td><label>Description Address</label></td>
+						<td><input type="text" id="description" name="description"  /></td>
 					</tr>
-					<tr>
-						<td><label>City Code</label></td>
-						<td><input type="text" id="city" th:field="*{city}" value="" /></td>
-					</tr>
-					<tr>
-						<td><label>Zone Code</label></td>
-						<td><input type="text" id="zona" th:field="*{zona}" value=""/></td>
-					</tr>
-
-
 					<tr>
 						<td>&nbsp;</td>
 						<td>
-							<button type="submit">Add Address</button>
-							<button type="reset">Clear</button>
+							<button type="submit" class="btn btn-primary">Add Address</button>
+							<button type="reset" class="btn btn-secondary">Clear</button>
 						</td>
 					</tr>
+
 				</tbody>
 			</table>
 	</div>
-
-
-		</form>
+	</form>
 	</div>
+
+
+
+
+
+
+
+	<div id="div_info" class="form-group" th:if="${infoTrader!=null}">
+		<h3>General Information</h3>
+		<table class="table table-borderless">
+				<tr><td>Name:</td><td th:text="${infoTrader.nameEnterprise}"></td></tr>
+				<tr><td>Cuit:</td><td th:text="${infoTrader.cuit}"></td></tr>
+				<tr><td>Score:</td><td th:text="${infoTrader.score}"></td></tr>
+				<tr><td>State:</td><td th:text="${infoTrader.state} ? 'Active': 'Inactive'"></td></tr>
+		</table>
+
+
+		<p></p>
+				
+		<table class="table table-striped" th:if="${infoTrader!=null}">
+			<thead class="thead-dark">
+				<th><h6>Address Description</h6></th>
+				<th><h6>City</h6></th>
+				<th><h6>Zone</h6></th>
+				<th></th>
+			</thead>
+			
+			<tr th:each="address,index : ${infoTrader.address}">
+				<td th:text="${address.description}" />
+				<td th:text="${address.city}" />
+				<td th:text="${address.zona}" />
+				<td>
+				<a th:href="@{/delete-address?idtrader={idtrader}&indice={indice}  (idtrader=${infoTrader.id} , indice=${index.index}) }">
+				<img src="../images/eliminar-ico.png" height="25px" width="25px" alt="Delete" title="Delete Address"/>
+				</a>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+
 
 
 

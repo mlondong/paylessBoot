@@ -14,15 +14,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.payless.demo.model.Address;
-import com.payless.demo.model.City;
-import com.payless.demo.model.Invoice;
 import com.payless.demo.model.Product;
 import com.payless.demo.model.Stock;
 import com.payless.demo.model.StockProducts;
 import com.payless.demo.model.Trader;
-import com.payless.demo.model.Usser;
 import com.payless.demo.repositories.CityRepository;
-import com.payless.demo.repositories.ProductRepository;
 import com.payless.demo.repositories.ZoneRepository;
 import com.payless.demo.services.TraderServiceImp;
 import com.payless.demo.services.InvoiceServiceImp;
@@ -30,14 +26,9 @@ import com.payless.demo.services.ProductServiceImp;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
-import java.util.Objects;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.assertj.core.util.Lists;
-import org.hamcrest.core.IsNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -54,20 +45,13 @@ public class MainController {
 	private  ProductServiceImp productServiceImp;
 	@Autowired
 	private  InvoiceServiceImp invoicetServiceImp;
-
-
-
-	@Autowired
-	private ProductRepository  productRepository;
-
+	
 	@Autowired
 	private CityRepository cityrepository;
 
 	@Autowired
 	private ZoneRepository zonerepository;
 
-	
-	
 	
 	
 	/**HOME WITH LIST*/
@@ -207,38 +191,63 @@ public class MainController {
 
 	/***************************************/
 	/**CONTROLS TRADER OPERATIONS ADDRESS  */
-	/***************************************/
+	/**
+	 * @param list *************************************/
 
+	
+	
+	
 	/**VIEW ADDRES AFTER SEND PARAMETERS ID OF TRADER*/
-	@RequestMapping(value="/main/addaddress/{id}", method = {RequestMethod.POST, RequestMethod.GET})
-	public String showAddressTrader(@Valid Address address, BindingResult result, Model model , @PathVariable("id") long id  ) {
-		model.addAttribute("infoTrader", traderServiceImp.getTrader(id));
+	@RequestMapping(path="/main/addaddress", method = {RequestMethod.POST, RequestMethod.GET})
+	public String showFormAddressTrader(@RequestParam(value="idtrader" , required = true) long idtrader, 
+										@RequestParam(value="city",required = false) Long idCity, 
+										@RequestParam(value="zone",required = false) Long idZone ,	
+										@RequestParam(value="description",required = false) String descrp, Model model){
+		
+		
+		Trader traderdb = traderServiceImp.getTrader(idtrader);
+		model.addAttribute("infoTrader", traderdb);
 		model.addAttribute("selectCities", cityrepository.findAll());
 		model.addAttribute("selectZones", zonerepository.findAll());
-		System.out.println(zonerepository.findAll());
-		
 		return "addaddress";
 	}
 
 	/**SAVE ADDRESS**/
-	// tambien sirve @RequestMapping(value="/add-address/{id}", method = {RequestMethod.POST, RequestMethod.GET})
-	@PostMapping(path="/add-address/{id}")
-	public String addAddressTrader(@PathVariable("id") long id , @Valid Address address, BindingResult result, Model model ) {
-		Trader traderdb = traderServiceImp.getTrader(id);
-		traderdb.addAddress(address);
-		traderServiceImp.save(traderdb);
-		return "redirect:/main/addaddress/"+id;
+	@RequestMapping(path="/add-address" , method = {RequestMethod.POST, RequestMethod.GET})
+	public String addAddressTrader(@RequestParam(value="idtrader" , required = true) long idtrader, 
+			@RequestParam(value="city",required = true) Long idCity, 
+			@RequestParam(value="zone",required = true) Long idZone ,	
+			@RequestParam(value="description",required = true) String descrp, Model model) {
+		
+		if(idCity!=null || idZone!= null ){
+				Address addressnew = new Address(descrp, idCity.intValue() ,idZone.intValue() );
+				Trader traderdb = traderServiceImp.getTrader(idtrader);
+				traderdb.addAddress(addressnew);
+				traderServiceImp.save(traderdb);
+		}
+		return "redirect:/main/addaddress?idtrader="+idtrader;
 	}	
 
+
+	/**DELETE ADDRESS IN TRADER**/
+	@RequestMapping(path="/delete-address" , method = {RequestMethod.POST, RequestMethod.GET})
+	public String deleteAddressTrader(@RequestParam(value="idtrader" , required = true) long idtrader, 
+									  @RequestParam(value="indice" , required = true) int indice){
+		
+		System.out.println("/delete-address" + "trader " + idtrader + "index "+ indice );
+		Trader traderdb = traderServiceImp.getTrader(idtrader);
+		traderdb.getAddress().remove(indice);
+		traderServiceImp.save(traderdb);		
+		
+		return "redirect:/main/addaddress?idtrader="+idtrader;
+	} 
+
 	
 	
 	
-
-
-
-
-
-
+	
+	
+	
 	/***********************************/
 	/**CONTROLS TRADER OPERATIONS STOCK*/
 	/***********************************/
@@ -296,8 +305,9 @@ public class MainController {
 			@RequestParam("quantity") int cant) {
 
 		Trader traderdb = traderServiceImp.getTrader(idtrader);
-		if(productRepository.existsById(idprod)){
-			Product mt =  productRepository.findById(idprod).get();
+		
+		if(productServiceImp.existsById(idprod)){
+			Product mt =  productServiceImp.findById(idprod).get();
 			traderdb.getStock().addProduct(mt, cant);
 			traderServiceImp.save(traderdb);
 		}
