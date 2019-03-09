@@ -91,6 +91,13 @@ public class InvoiceProduct {
 	}
 
 
+	@Override
+	public String toString() {
+		return "InvoiceProduct [invProdId=" + invProdId + ", invoice=" + invoice + ", poduct=" + poduct + ", quantity="
+				+ quantity + "]";
+	}
+
+
 
 	
 	

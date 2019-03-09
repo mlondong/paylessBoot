@@ -3,6 +3,7 @@ package com.payless.demo.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -65,19 +66,27 @@ public class Invoice {
 	private Collection<InvoiceProduct> products;
 	
 	
-	@Column(name="NUM_INVOICE")
+	@Column(name="NUM_INVOICE", updatable=false, nullable=false, unique=true)
 	private long numInvoice;
 	
 	
 	
-
 	
-	public Invoice(){
+	public Invoice(){ }	
+	
+	public Invoice(Trader _trader, Consumer _consumer){
+		this.trader=_trader;
+		this.consumer=_consumer;
 		this.dateInvoice=new Date();
 		this.products= new ArrayList<InvoiceProduct>();
+		this.numInvoice=this.generateNumInvoice();
 	}
 	
+
+		
+	
 	/************************************************************************************************************************************/
+	
 	/* DESDE ACA SE van ADICIONANDO OBJETOS InvoiceProduct A LOS CUALES SE LES AGREGA PRODUCTOS
 	 * ES DECIR CADA invoideProducts COMO ENTIDAD CONTIENE UN INVOICE+PRODUCTO+CANTIDAD 
 	 * SACADO DEL EJEMPLO DE HIBERNATE*
@@ -89,19 +98,15 @@ public class Invoice {
 	}
 	
 	
-	public void generateNumInvoice(){
+	
+	public long generateNumInvoice(){
 		int max=10000;
 		int min=1;
-		this.numInvoice= (long) (Math.random() * ( max - min ));
+		return (long) (Math.random() * ( max - min ));
 	}
 
 	
-	
-	
-	
-	
-	
-	
+			
 	public long getId() {
 		return id;
 	}
@@ -155,7 +160,7 @@ public class Invoice {
 		this.numInvoice = numInvoice;
 	}
 
-	
+		
 
 
 

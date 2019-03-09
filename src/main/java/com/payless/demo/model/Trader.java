@@ -84,6 +84,8 @@ public class Trader extends Usser {
 
 	/*************************************************************************************************************************************/	
 
+	
+	
 	/*METODOS ADD REMOVE Y CREAATE STOCK EN TRADER*/
 	public void createStock(){
 		this.stock = new  Stock();

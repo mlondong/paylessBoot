@@ -8,92 +8,92 @@
 <body>
 
 	<div id="div_search" class="form-group">
-		<h2>Invoices</h2>
+		<h2>Search Invoices</h2>
 		<form action="/invoice/searchinvoice" method="post">
-			<table>
-				<tbody>
-					<tr>
-						<td><label>Cuit to Search:</label></td>
-						<td><input type="text" id="cuit" name="cuit" /></td>
-						<td>
-							<button type="submit" class="btn btn-primary">Search</button>
-						</td>
-					</tr>
-				</tbody>
-			</table>
+	
+		<div>
+				<label for="inputCuit">By Cuit</label> 
+				<input type="text"	id="cuit" name="cuit" >
+				<button type="submit" class="btn btn-primary">Search</button>
+		</div>
 		</form>
 	</div>
 
 
-<span th:text="${infoinvoice}">
-</span>
+	<span th:text="${infoinvoice}"> </span>
 
 	<div id="div_list" th:if="${not #lists.isEmpty(infoinvoice)}">
 		<table class="table">
-  				<thead class="thead-dark">
-  					<tr>
-  					<th>Trader Cuit</th>
+			<thead class="thead-dark">
+				<tr>
+					<th>Trader Cuit</th>
 					<th>Score</th>
-					<th>Total Invoices </th>
+					<th>Total Invoices</th>
 					<th>Total Products in Invoices</th>
-			</tr>
+				</tr>
 			</thead>
-				
+
 			<tr th:each="trader : ${infoinvoice}">
-				<td  align="center" th:text="${trader.cuit}"></td>
+				<td align="center" th:text="${trader.cuit}"></td>
 				<td align="center" th:text="${trader.score}"></td>
 				<td align="center" th:text="${#lists.size(trader.invoice)}"></td>
-			</tr>	
+			</tr>
 		</table>
 	</div>
 
-<div th:if="${Error != null}">
-	<h3  th:text="${Error}"> </h3>
-</div>
+	<div th:if="${Error != null}">
+		<h3 th:text="${Error}"></h3>
+	</div>
 
 
-<p></p>
+	<p></p>
 
-<span  th:if="${TraderInfo}">
-<p><h3>Invoices in Trader <label  th:text="${TraderInfo.nameEnterprise}"></label>  with Cuit <label  th:text="${TraderInfo.cuit}"></label> </h3></p>
-</span>
+	<span th:if="${TraderInfo}">
+		<p>
+		<h3>
+			Invoices in Trader <label th:text="${TraderInfo.nameEnterprise}"></label>
+			with Cuit <label th:text="${TraderInfo.cuit}"></label>
+		</h3>
+		</p>
+	</span>
 
-<div th:if="${Show != null}">
-	<table class="table">
-	  	<thead class="thead-dark">
-  				<th>#</th>
-  				<th>Invoice Date</th>
+	<div th:if="${Show != null}">
+		<table class="table">
+			<thead class="thead-dark">
+				<th>#</th>
+				<th>Invoice Date</th>
 				<th>Number Invoice</th>
-				<th>Number of products in invoice</th>
+				<th>Amount products in invoice</th>
 				<th>Cosumer</th>
 				<th></th>
 				<th></th>
-				</tr>			
-		</thead>
+				</tr>
+			</thead>
 			<tr th:each="invoice,index : ${Show}">
-				<td  th:text="${index.index}"></td>
-				<td  th:text="${invoice.dateInvoice}"></td>
-				<td  th:text="${invoice.id}"></td>
-				<td  th:text="${#lists.size(invoice.products)}"></td>
-				<td  th:text="${invoice.consumer.firstName} +' '+${invoice.consumer.lastName}+' '+${invoice.consumer.dni}"></td>
-		
-			<td>
-				<a th:href="@{/invoice/show_producs_invoice/{idinvoice}/trader/{idtrader} (idinvoice=${invoice.id} , idtrader=${TraderInfo.id}) }">
-					<img src="/images/refresh-256.png" height="20px" width="20px" alt="Update" title="Update Invoice"/>
-				</a>
-			</td>
-				
-			<td>
-				<a th:href="@{/invoice/delete_Invoice/{idinvoice}/cuit/{cuit} (idinvoice=${invoice.id} , cuit=${TraderInfo.cuit} ) }">
-					<img src="/images/eliminar-ico.png" height="30px" width="30px" alt="Delete" title="Delete Invoice with produtcs"/>
-				</a>
-			</td>
-			
-			</tr>	
-	</table>
-	
-	
-</div>
+				<td th:text="${index.index}"></td>
+				<td th:text="${invoice.dateInvoice}"></td>
+				<td th:text="${invoice.numInvoice}"></td>
+				<td th:text="${#lists.size(invoice.products)}"></td>
+				<td
+					th:text="${invoice.consumer.firstName} +' '+${invoice.consumer.lastName}+' '+${invoice.consumer.dni}"></td>
+
+				<td><a
+					th:href="@{/invoice/showdetail?idinvoice={idinvoice}&idtrader={idtrader} (idinvoice=${invoice.id} , idtrader=${TraderInfo.id}) }">
+						<img src="/images/see-ico.png" height="20px" width="20px"
+						alt="See products in Invoice" title="See products in Invoice" />
+				</a></td>
+
+				<td><a
+					th:href="@{/invoice/delete_Invoice/{idinvoice}/cuit/{cuit} (idinvoice=${invoice.id} , cuit=${TraderInfo.cuit} ) }">
+						<img src="/images/eliminar-ico.png" height="30px" width="30px"
+						alt="Delete" title="Delete Invoice with produtcs" />
+				</a></td>
+
+			</tr>
+		</table>
+
+
+	</div>
 
 
 </body>

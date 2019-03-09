@@ -19,20 +19,18 @@ public class InvoiceServiceImp implements InvoiceService{
 	
 	@Override
 	public Invoice save(Invoice entity) {
-		// TODO Auto-generated method stub
-		return null;
+		return invoiceRepositoty.save(entity);
 	}
 
 	@Override
 	public Optional<Invoice> findById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		return invoiceRepositoty.findById(id);
 	}
 
 	@Override
 	public boolean existsById(Long id) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		return invoiceRepositoty.existsById(id);
 	}
 
 	@Override

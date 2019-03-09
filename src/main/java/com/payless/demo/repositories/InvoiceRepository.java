@@ -35,6 +35,6 @@ public interface InvoiceRepository extends CrudRepository<Invoice, Long>{
 	void delete(Invoice entity);
 
 	void deleteAll();
-
+	
 
 }

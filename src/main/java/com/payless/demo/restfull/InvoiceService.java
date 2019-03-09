@@ -53,16 +53,12 @@ public class InvoiceService {
 	private ConsumerRepository consumerRepository;
 
 
-	@PostMapping(path="/invoice/addinvoice/trader{id}")
-	public Invoice addInvoice(@PathVariable("id") long id){
-		Trader traderdb = traderRepository.findById(id).get();
-		long con= 2L;
-		Consumer consumerdb = consumerRepository.findById(con).get();
+	@PostMapping(path="/invoice/addinvoice/trader/{idtrader}/consumer/{idconsumer}")
+	public Invoice addInvoice(@PathVariable("idtrader") long idTrader , @PathVariable("idconsumer") long idConsumer ){
 		
-		Invoice invoice= new  Invoice();
-		invoice.setTrader(traderdb);
-		invoice.setConsumer(consumerdb);
-		
+		Trader traderdb = traderRepository.findById(idTrader).get();
+		Consumer consumerdb = consumerRepository.findById(idConsumer).get();
+		Invoice invoice= new  Invoice(traderdb,consumerdb);
 		return invoiceRepository.save(invoice);
 	}
 

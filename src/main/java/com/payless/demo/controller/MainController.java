@@ -2,6 +2,7 @@ package com.payless.demo.controller;
 
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.payless.demo.model.Address;
+import com.payless.demo.model.Invoice;
+import com.payless.demo.model.InvoiceProduct;
 import com.payless.demo.model.Product;
 import com.payless.demo.model.Stock;
 import com.payless.demo.model.StockProducts;
@@ -45,6 +48,7 @@ public class MainController {
 	private  ProductServiceImp productServiceImp;
 	@Autowired
 	private  InvoiceServiceImp invoicetServiceImp;
+	
 	
 	@Autowired
 	private CityRepository cityrepository;
@@ -375,25 +379,72 @@ public class MainController {
 	}
 
 	@RequestMapping(path="/invoice/searchinvoice",  method = {RequestMethod.POST, RequestMethod.GET})
-	public String  searchInvoice(@RequestParam("cuit") long cuit , Model model){
-		Trader traderlist = traderServiceImp.searchByCuit(cuit);
-		if(traderlist == null){
-			model.addAttribute("Error", " Trader not find it, with Cuit. " + cuit);
-		}else if(traderlist.getInvoice().isEmpty()){
-			model.addAttribute("Error", " There isn't Invoices in Trader with Cuit. " + cuit);	
-		}else{
-			model.addAttribute("TraderInfo", traderlist );	
-			model.addAttribute("Show", traderlist.getInvoice() );	
+	public String  searchInvoice(@RequestParam(required=false, name="cuit" ) Long cuit , 
+								@RequestParam(required=false, name="numInvoice") Integer numInvoice, 
+								Model model){
+		
+		Trader traderlist = traderServiceImp. searchByCuit(cuit);
+			if(traderlist == null){
+					model.addAttribute("Error", " Trader not find it, with Cuit. " + cuit);
+			}else if(traderlist.getInvoice().isEmpty()){
+					model.addAttribute("Error", " There isn't Invoices in Trader with Cuit. " + cuit);	
+			}else{
+					model.addAttribute("TraderInfo", traderlist );	
+					model.addAttribute("Show", traderlist.getInvoice() );	
+				}
+		
+			return "invoice";
+	}
+
+
+	@RequestMapping(path="/invoice/showdetail", method = {RequestMethod.POST, RequestMethod.GET})
+	public String show_product_invoice(@RequestParam(value="idinvoice", required=true) long idInvoice, 
+									   @RequestParam(value="idtrader", required=true) long idTrader, Model model){
+		
+		if(invoicetServiceImp.existsById(idInvoice)){
+			Invoice invoicedb = invoicetServiceImp.findById(idInvoice).get();
+			model.addAttribute("invoice_detail", invoicedb);
 		}
-		return "invoice";
+		
+		return "invoicedetails";
 	}
 
 
-	@RequestMapping(path="/invoice/show_producs_invoice/{idinvoice}/trader/{idtrader}")
-	public String show_producs_invoice(@PathVariable("idinvoice") long idInvoice , @PathVariable("idtrader") long idTrader){
-		return "index";
+	@PostMapping(path="/invoice/updateprod")
+	public String update_product_invoice(@Valid InvoiceProduct invoiceproduct, BindingResult result, Model model ){
+		
+		Invoice invoicedb = invoicetServiceImp.findById(invoiceproduct.getInvoice().getId()).get();
+		Collection<InvoiceProduct> list_invoiceProducts   = invoicedb.getProducts();
+		
+		for(InvoiceProduct ip : list_invoiceProducts){
+			if(ip.getPoduct().equals(invoiceproduct.getPoduct())){
+				ip.setQuantity(invoiceproduct.getQuantity());
+				invoicetServiceImp.save(invoicedb);
+				break;
+			}
+		}
+		
+		return "redirect:/invoice/showdetail?idinvoice="+invoicedb.getId()+"&idtrader="+invoicedb.getTrader().getId();
 	}
 
+	
+	
+	
+	@RequestMapping(path="/invoice/deleteinvoice", method = {RequestMethod.POST, RequestMethod.GET})
+	public String removeProductInvoice(@RequestParam("idinvoice") long idinvoice, @RequestParam("idprod") long idprod){
+	
+		Invoice invoicedb = invoicetServiceImp.findById(idinvoice).get();
+		Product pr =  productServiceImp.findById(idprod).get();
+		Collection<InvoiceProduct> _listinvoiceProducts  = invoicedb.getProducts();
+		_listinvoiceProducts.removeIf((InvoiceProduct ip) -> ip.getPoduct().equals(pr));
+		invoicetServiceImp.save(invoicedb);
+		
+		return "redirect:/invoice/showdetail?idinvoice="+idinvoice+"&idtrader="+idprod;
+	}
+	
+	
+	
+	
 	@RequestMapping(path="/invoice/delete_Invoice/{idinvoice}/cuit/{cuit}" ,method = {RequestMethod.POST, RequestMethod.GET})
 	public RedirectView delete_Invoice(@PathVariable("idinvoice") long idinvoice , @PathVariable("cuit") long cuit , RedirectAttributes redirectAttributes   ){
 		invoicetServiceImp.deleteById(idinvoice);

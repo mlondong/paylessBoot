@@ -6,6 +6,17 @@
 </head>
 
 <body>
+<div class="card" th:if="${infoTrader!=null}">
+  <div class="card-header">
+    General Information
+  </div>
+  <div class="card-body">
+    <p class="card-text">Name: <label th:text="${infoTrader.nameEnterprise}"></label>
+    					 | Cuit: <label th:text="${infoTrader.cuit}"></label>
+    					 | Score: <label th:text="${infoTrader.score}"></label>
+    					 | State: <label th:text="${infoTrader.state} ? 'Active': 'Inactive'"></label></p>
+  </div>
+</div>
 <div>
 		<h2>Add Address</h2>
 
@@ -53,22 +64,6 @@
 	</div>
 	</form>
 	</div>
-
-
-
-
-
-
-
-	<div id="div_info" class="form-group" th:if="${infoTrader!=null}">
-		<h3>General Information</h3>
-		<table class="table table-borderless">
-				<tr><td>Name:</td><td th:text="${infoTrader.nameEnterprise}"></td></tr>
-				<tr><td>Cuit:</td><td th:text="${infoTrader.cuit}"></td></tr>
-				<tr><td>Score:</td><td th:text="${infoTrader.score}"></td></tr>
-				<tr><td>State:</td><td th:text="${infoTrader.state} ? 'Active': 'Inactive'"></td></tr>
-		</table>
-
 
 		<p></p>
 				

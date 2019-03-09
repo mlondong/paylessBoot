@@ -23,7 +23,6 @@ public class TraderServiceImp implements TraderService{
 	
 
 	
-	
 	@Override
 	public Trader searchByCuit(long cuit) {
 		return traderRepository.findByCuit(cuit);
@@ -52,10 +51,7 @@ public class TraderServiceImp implements TraderService{
 		return traderRepository.save(trader);
 	}
 
-	@Override
-	public void deleteTrader(Trader trader) {
-	}
-
+	
 	@Override
 	public void deleteTrader(Long id) {
 		traderRepository.deleteById(id);

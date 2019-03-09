@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+<title>ADMIN TRADER</title>
+<th:block th:include="layout/header"></th:block>
+</head>
+
+<body>
+<div th:if="${invoice_detail.id}">	
+	<h2>Invoice  <label	th:text="${invoice_detail.numInvoice}"></label>  Information </h2>
+	<div th:if="${invoice_detail != null}">
+
+		<table border=1>
+			<tr>
+				<td>
+					<table >
+						<tr>
+							<td>Num Invoice: <label	th:text="${invoice_detail.numInvoice}"></label></td>
+						</tr>
+						 <tr>
+								<td>Date Invoice: <label th:text="${invoice_detail.dateInvoice}"></label></td>
+						 </tr>
+					</table>
+				</td>
+			</tr>
+			
+			<tr>
+			<td>
+				<table border=1>
+					<tr>
+						<td>Consumer: <label th:text="${invoice_detail.consumer.firstName + ' ' +invoice_detail.consumer.lastName}"></label></td>
+					<tr>
+					<tr>
+						<td>DNI: <label th:text="${invoice_detail.consumer.dni}"></label></td>
+					<tr>
+					</table>
+			</td>
+			<td>
+				<table border=1>
+					<tr>	
+						<td>Trader: <label th:text="${invoice_detail.trader.nameEnterprise +' '+ invoice_detail.trader.cuit}"></label>
+						</td>
+					<tr>
+					<tr>
+						<td>Email: <label th:text="${invoice_detail.trader.email}"></label></td>
+					</tr>
+				</table>
+			</td>
+			</tr>
+	</table>
+</div>
+
+	<p></p>
+	<div th:if="${invoice_detail != null}">
+		<table class="table">
+			<thead class="thead-dark">
+				<th>#</th>
+				<th>Code</th>
+				<th>Description</th>
+				<th>Branch</th>
+				<th>Price</th>
+				<th>Current Amount</th>
+				<th>To Update</th>
+				<th>Delete</th>
+				</tr>
+			</thead>
+			<tr th:each="invoiceProduct,index : ${invoice_detail.products}">
+				<td th:text="${index.index}"></td>
+				<td th:text="${invoiceProduct.poduct.code}"></td>
+				<td th:text="${invoiceProduct.poduct.description}"></td>
+				<td th:text="${invoiceProduct.poduct.producer}"></td>
+				<td th:text="${invoiceProduct.poduct.priceUnit}"></td>
+				<td th:text="${invoiceProduct.quantity}"></td>
+			
+			    <td>
+					<form th:action="@{/invoice/updateprod}" th:object="${invoiceproduct}" method="post">
+					<input type="hidden" size="5" name="invoice"  id="invoice"  th:value="${invoiceProduct.invProdId.INVOICE_ID}"  />
+					<input type="hidden" size="5" name="poduct"  id="poduct"  th:value="${invoiceProduct.invProdId.PRODUCT_ID}"  />
+					<input type="text" size="5" name="quantity"  id="quantity"  th:value="${invoiceProduct.quantity}"  />
+					<button type="submit" class="btn btn-primary">Change</button>
+					</form>
+				</td>
+				
+				<td>
+				<a th:href="@{/invoice/deleteinvoice?idinvoice={idinvoice}&idprod={idprod} (idprod=${invoiceProduct.invProdId.PRODUCT_ID} , idinvoice=${invoice_detail.id})}">
+				<img src="/images/eliminar-ico.png" height="30px" width="30px" alt="Delete" title="Delete Product"/>
+				</a>
+				</td>
+				
+			</tr>
+		</table>
+	</div>
+</div>
+
+</body>
+</html>
