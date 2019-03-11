@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head lang="en">
+<title>ADMIN CONSUMER</title>
+<th:block th:include="layout/header"></th:block>
+</head>
+
+<body>
+
+	<h2>Create New Consumer</h2>
+	<form th:action="@{/consumer/create}" th:object="${consumer}" method="post">
+		<div id="div_reg" class="form-group">
+			<table>
+				<tbody>
+					<tr>
+						<td><label>Firts Name:</label></td>
+						<td><input type="text"  th:field="*{firstName}" /></td>
+						<td th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></td>
+					<tr>
+					
+					<tr>
+						<td><label>Last Name:</label></td>
+						<td><input type="text" th:field="*{lastName}"/></td>
+						<td th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></td>
+					</tr>
+					
+						<tr>
+						<td><label>Dni</label></td>
+						<td><input type="text" th:field="*{dni}"  /></td>
+						<td th:if="${#fields.hasErrors('dni')}" th:errors="*{dni}"></td>
+					</tr>
+				
+					<tr>
+						<td></td>				
+						<td><h6>Define information for login</h6></td>
+					</tr>
+				
+					<tr>
+						<td><label>UserName</label></td>
+						<td><input type="text" th:field="*{name}" /></td>
+						<td th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></td>
+						
+					</tr>
+					<tr>
+						<td><label>Password</label></td>
+						<td><input type="password"  th:field="*{password}" /></td>
+						<td th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></td>
+			
+					<tr>
+						<td>&nbsp;</td>
+						<td>
+							<button type="submit" class="btn btn-primary">Create Consumer</button>
+							<button type="reset" class="btn btn-secundary">Clear</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<span th:if="${errors}" ></span>
+		</div>
+	</form>
+<p></p>
+
+<div id="div_error" th:if="${error != null}" th:text="${error}">
+</div>
+
+
+<div id="div_list" th:if="${not #lists.isEmpty(consumerInfo)}">
+		<h2>Store it!...</h2>
+		<a> See Details </a>
+</div>
+
+
+
+
+</body>
+</html>

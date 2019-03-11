@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.payless.demo.model.Address;
+import com.payless.demo.model.Consumer;
 import com.payless.demo.model.Invoice;
 import com.payless.demo.model.InvoiceProduct;
 import com.payless.demo.model.Product;
@@ -423,12 +424,9 @@ public class MainController {
 				break;
 			}
 		}
-		
 		return "redirect:/invoice/showdetail?idinvoice="+invoicedb.getId()+"&idtrader="+invoicedb.getTrader().getId();
 	}
 
-	
-	
 	
 	@RequestMapping(path="/invoice/deleteinvoice", method = {RequestMethod.POST, RequestMethod.GET})
 	public String removeProductInvoice(@RequestParam("idinvoice") long idinvoice, @RequestParam("idprod") long idprod){
@@ -443,8 +441,6 @@ public class MainController {
 	}
 	
 	
-	
-	
 	@RequestMapping(path="/invoice/delete_Invoice/{idinvoice}/cuit/{cuit}" ,method = {RequestMethod.POST, RequestMethod.GET})
 	public RedirectView delete_Invoice(@PathVariable("idinvoice") long idinvoice , @PathVariable("cuit") long cuit , RedirectAttributes redirectAttributes   ){
 		invoicetServiceImp.deleteById(idinvoice);
@@ -453,6 +449,9 @@ public class MainController {
 	}
 
 
+	
+
+	
 
 }
 

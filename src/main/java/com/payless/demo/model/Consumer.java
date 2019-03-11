@@ -8,6 +8,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -18,10 +20,12 @@ public class Consumer extends Usser {
 	@Column(name="DNI",nullable=false,unique=true)
 	private long dni;
 
+    @Size(min=5, max=30)
 	@Column(name="FIRSTNAME",nullable=false)
 	private String firstName;
 
-	@Column(name="LASTNAME",nullable=false)
+    @Size(min=5, max=30)
+    @Column(name="LASTNAME",nullable=false)
 	private String lastName;
 
 
