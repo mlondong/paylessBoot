@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<body>      
+		<select id="zone" name="zone" class="custom-select">
+			<option selected="selected" value="">-Select One City-</option>
+			<option th:each="zone : ${zonesdb}" th:value="${zone.id}" th:text="${zone.name}"></option>
+		</select>
+</body>
+</html>

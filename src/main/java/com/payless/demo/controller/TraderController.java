@@ -28,8 +28,10 @@ import com.payless.demo.services.TraderServiceImp;
 import com.payless.demo.services.InvoiceServiceImp;
 import com.payless.demo.services.ProductServiceImp;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -41,7 +43,7 @@ import org.springframework.stereotype.Controller;
  * @RestController = @Controller + @ResponseBody  
  * */
 @Controller
-public class MainController {
+public class TraderController {
 
 	@Autowired
 	private  TraderServiceImp traderServiceImp;
@@ -189,6 +191,28 @@ public class MainController {
 	}
 
 
+	@SuppressWarnings("null")
+	@RequestMapping(path="/traders",method={RequestMethod.POST, RequestMethod.GET})
+	public String getTraderInZone(@RequestParam("idzone") int idZone,  Model model){
+		List <Trader> lista = traderServiceImp.getAllTraders();
+		List <Trader> filterTraders= new ArrayList<>();
+		
+		for(Trader t: lista){
+			List <Address> address = t.getAddress();
+			for(Address a: address){
+				if(a.getZona()==idZone){
+					if(!filterTraders.contains(t)){
+						filterTraders.add(t);
+					}
+				}
+			}
+		}
+	
+		System.out.println(filterTraders);	
+		model.addAttribute("traders", filterTraders);
+	
+		return "registerinvoice :: #traders";
+	}
 
 
 
@@ -449,8 +473,23 @@ public class MainController {
 	}
 
 
+	@RequestMapping(path="/invoice/show_add" ,method = {RequestMethod.POST, RequestMethod.GET})
+	public String show_create_Invoice(Model model){
+		model.addAttribute("selectCities", cityrepository.findAll());
+		return "registerinvoice";
+	}
+	
+	@RequestMapping(path="/invoice/add" ,method = {RequestMethod.POST, RequestMethod.GET})
+	public RedirectView create_Invoice(){
+		return new RedirectView("/invoice/searchinvoice");
+	}
+
 	
 
+	
+	
+	
+	
 	
 
 }

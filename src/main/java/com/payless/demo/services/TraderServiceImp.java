@@ -23,6 +23,8 @@ public class TraderServiceImp implements TraderService{
 	
 
 	
+	
+	
 	@Override
 	public Trader searchByCuit(long cuit) {
 		return traderRepository.findByCuit(cuit);

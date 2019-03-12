@@ -67,7 +67,7 @@
 
 <div id="div_list" th:if="${not #lists.isEmpty(consumerInfo)}">
 		<h2>Store it!...</h2>
-		<a> See Details </a>
+		<a th:href="@{/consumer/search?dni={dni} (dni=${consumerInfo.dni}) }"> See Details </a>
 </div>
 
 
