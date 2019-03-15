@@ -7,18 +7,20 @@
 
 <body>
 <div th:if="${invoice_detail.id}">	
-	<h2>Invoice  <label	th:text="${invoice_detail.numInvoice}"></label>  Information </h2>
+	<h2>Invoice Information </h2>
 	<div th:if="${invoice_detail != null}">
 
-		<table border=1>
+		<table colspan="0" cellspacing="0">
 			<tr>
 				<td>
-					<table >
+					<table class="table-active">
 						<tr>
-							<td>Num Invoice: <label	th:text="${invoice_detail.numInvoice}"></label></td>
+							<td>Num Invoice:</td>
+							<td th:text="${invoice_detail.numInvoice}"></td>
 						</tr>
 						 <tr>
-								<td>Date Invoice: <label th:text="${invoice_detail.dateInvoice}"></label></td>
+								<td >Date Invoice:</td> 
+								<td th:text="${invoice_detail.dateInvoice}"></td>
 						 </tr>
 					</table>
 				</td>
@@ -26,9 +28,9 @@
 			
 			<tr>
 			<td>
-				<table border=1>
+				<table class="table-success">
 					<tr>
-						<td>Consumer: <label th:text="${invoice_detail.consumer.firstName + ' ' +invoice_detail.consumer.lastName}"></label></td>
+						<td >Consumer: <label th:text="${invoice_detail.consumer.firstName + ' ' +invoice_detail.consumer.lastName}"></label></td>
 					<tr>
 					<tr>
 						<td>DNI: <label th:text="${invoice_detail.consumer.dni}"></label></td>
@@ -36,9 +38,9 @@
 					</table>
 			</td>
 			<td>
-				<table border=1>
+				<table class="table-info">
 					<tr>	
-						<td>Trader: <label th:text="${invoice_detail.trader.nameEnterprise +' '+ invoice_detail.trader.cuit}"></label>
+						<td >Trader: <label th:text="${invoice_detail.trader.nameEnterprise +' '+ invoice_detail.trader.cuit}"></label>
 						</td>
 					<tr>
 					<tr>

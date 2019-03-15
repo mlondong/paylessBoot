@@ -49,19 +49,19 @@
 				<td align="center" th:text="${trader.nameEnterprise}"></td>
 				<td align="center" th:text="${trader.email}"></td>
 				
-				<td align="center" th:if="${trader.state==false}"  th:text="Inacive"></td>
+				<td class="table-danger" align="center" th:if="${trader.state==false}"  th:text="Inacive"></td>
 				<td align="center" th:if="${trader.state==true}" th:text="Active"></td>
 				
 				
 				<td align="center" th:text="${trader.score}"></td>
 				<td align="center" th:if="${trader.stock!=null}" th:text="${trader.stock.dateStock}"></td>
-				<td align="center" th:if="${trader.stock==null}" th:text="NO"></td>
+				<td class="table-danger" align="center" th:if="${trader.stock==null}" th:text="NO"></td>
 				
 				<td align="center" th:if="${trader.address.isEmpty()}" th:text="NO" width="10%"></td>
 				
 				<td>
 				<a th:href="@{'/main/formupdate/'+${trader.id}}">
-				<img src="../images/refresh-256.png" height="25px"	width="25px" alt="Update" title="Update Trader"/>
+				<img src="../images/edit-ico.png" height="35px"	width="35px" alt="Update" title="Update Trader"/>
 				</a></td>
 					
 				<td>

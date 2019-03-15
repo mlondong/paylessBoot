@@ -44,7 +44,7 @@
 		
 				<tr th:each="trader : ${traderInfo}">
 				<td th:text="${trader.name}"></td>
-				<td th:if="${trader.state==false}"  th:text="Inacive"></td>
+				<td class="table-danger" th:if="${trader.state==false}"  th:text="Inacive"></td>
 				<td th:if="${trader.state==true}" th:text="Active"></td>
 				
 				<td th:text="${trader.cuit}"></td>
@@ -55,13 +55,14 @@
 					<img src="../images/add-product-ico.png" height="25px"	width="25px" alt="Add Stock" title="Add Product"/>
 				</a>			
 				</td>
-				<td th:if="${trader.stock==null}" th:text="WithOut_Stock"></td>
+				<td class="table-danger" th:if="${trader.stock==null}" th:text="WithOut_Stock"></td>
 				</tr>
 		</table>		
 </div>
 
 
-<div th:if="${not #lists.isEmpty(traderInfo)}">
+<span th:if="${traderInfo}">
+<span th:if="${traderInfo.stock!=null}">
 <table  class="table" >
 		<thead class="thead-dark">
 				<th><h6>#</h6></th>
@@ -71,20 +72,17 @@
 				<th>Units</th>
 				<th></th>
 				<th></th>
-				
 		</thead>
-		<tr th:each="products, index : ${traderInfo.getStock().stockproducts}">
+		<tr  th:each="products, index : ${traderInfo.getStock().stockproducts}">
 					<td th:text="${index.index}"> </td>
 					<td th:text="${products.date}"> </td>
 					<td th:text="${products.product.code}"> </td>
 					<td th:text="${products.product.description}"> </td>
 					<td th:text="${products.quantity}"> </td>					
-	
 		</tr>
 </table>
-</div>				
-
-
+</span>
+</span>
 
 
 </body>

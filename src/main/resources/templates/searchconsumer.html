@@ -29,7 +29,6 @@
 	</div>
 
 <p></p>
-<span th:text="${consumers}"> </span>
 <div id="div_list" th:if="${not #lists.isEmpty(consumers)}" class="table table-striped">
 		<table>
 			<tr>
@@ -53,20 +52,17 @@
 				<td align="center"  th:text="${consumer.invoices.size()}" width="10%"></td>
 				
 				<td>
-				<a href="@">
+				<a th:href="@{/consumer/show_update?idconsumer={idconsumer}        (idconsumer=${consumer.id} )     }  ">
 				<img src="../images/edit-ico.png" height="30px"	width="30px" alt="Update" title="Update Consumer"/>
 				</a></td>
 					
 				<td>
-				<a href="#">
+				<a th:href="@{/consumer/delete?idconsumer={idconsumer}        (idconsumer=${consumer.id})}">
 				<img src="../images/delete-xxl.png" height="25px" width="25px" alt="Delete" title="Delete Consumer"/>
 				</a>
 				</td>
 				
-				<td>
-				<a href="#">
-				<img src="../images/invoice-icon.jpg" height="25px" 	width="25px" alt="Add Invoice" title="Add Invoice"/>
-					</a></td>
+				
 				<td></td>
 			</tr>
 		</table>

@@ -5,13 +5,17 @@
 <title>ADMIN CONSUMER</title>
 <th:block th:include="layout/header"></th:block>
 <script type="text/javascript">
-$(document).ready(function () {
 
+
+$(document).ready(function () {
     getZones(); 	//call function when page is loaded
     $('#city').change(getZones); //set on change listener
 
     getTraderInZone(); 	//call function when page is loaded
     $('#zone').change(getTraderInZone); //set on change listener
+
+
+    
 
     
     function getZones() {
@@ -20,7 +24,6 @@ $(document).ready(function () {
             url = url + $('#city').val();
       	    $('#zone').load(url);  //load fragment and replace content
         }
-        
     }
 
     function getTraderInZone(){
@@ -29,10 +32,7 @@ $(document).ready(function () {
            url = url + $('#zone').val();
      	    $('#traders').load(url);  //load fragment and replace content
   		  }
-   
     }
-
-    
 })
 </script>
 
@@ -42,68 +42,89 @@ $(document).ready(function () {
 <body>
 
 	<h2>Create New Invoice</h2>
-	<form method="post">
+	<form action="/invoice/add" method="post" id="formInvoice"
+		name="formInvoice">
+
 		<div id="div_reg" class="form-group">
 			<table>
-				<tbody>
-					<tr>
-						<td><label>Select City:</label></td>
-						<td>
-							<select id="city" name="city" class="custom-select" >
-                            	<option selected="selected"  value="0">-Select One City-</option>
-                            	<option th:each="city : ${selectCities}"  th:value="${city.id}"    th:text="${city.name}">
-                            </option>
-                        </select>
-						</td>
-					<tr>
-					<tr>
-						<td><label>Select Zone:</label></td>
-						<td>
-							<select id="zone" name="zone" class="custom-select" >
-								<option selected="selected" value="0">-Select One Zone-</option>
-						    	<option th:each="zone : ${zones}"  th:value="${zone.id}"    th:text="${zone.name}">
-                    		</select>
-						</td>
-					<tr>
-				
-					<tr>
-						<td><label>Select Trader:</label></td>
-						<td>
-						<span th:text="${traders}"></span>
-						<select id="traders" name="traders" class="custom-select" >
-								<option selected="selected" value="0">-Select Trader-</option>
-						    	<option th:each="trader : ${traders}"  th:value="${trader.id}"    th:text="${trader.nameEnterprise} +' - '+${trader.cuit}">
-                    	</select>
-                    	</td>
-                    </tr>
-					
-					<tr>
-						<td><label>Dni Consumer:</label></td>
-						<td>
-							<input type="text" id="dni" name="dni"/>
-		            	</td>
-					<tr>
-					
-					
-					<tr>
-						<td><label>Select Produts</label></td>
-					</tr>
-					<tr>
-						<td>&nbsp;</td>
-						<td>
-							<button type="submit" class="btn btn-primary">Create Invoice</button>
-							<button type="reset" class="btn btn-secundary">Clear</button>
-						</td>
-					</tr>
-				</tbody>
+					<td>
+						<table>
+							<tr>
+								<td><label>Select City:</label></td>
+								<td><select id="city" name="city" class="custom-select">
+										<option selected="selected" value="0">-Select One
+											City-</option>
+										<option th:each="city : ${selectCities}" th:value="${city.id}"
+											th:text="${city.name}"></option>
+								</select></td>
+							<tr>
+							<tr>
+								<td><label>Select Zone:</label></td>
+								<td><select id="zone" name="zone" class="custom-select">
+										<option selected="selected" value="0">-Select One
+											Zone-</option>
+										<option th:each="zone : ${zones}" th:value="${zone.id}"
+											th:text="${zone.name}">
+								</select></td>
+							<tr>
+							<tr>
+								<td><label>Select Trader:</label></td>
+								<td><span th:text="${traders}"></span> <select id="traders"
+									name="traders" class="custom-select">
+										<option selected="selected" value="0">-Select Trader-</option>
+										<option th:each="trader : ${traders}" th:value="${trader.id}"
+											th:text="${trader.nameEnterprise} +' - '+${trader.cuit}">
+								</select></td>
+							</tr>
+							<tr>
+								<td><label>Dni Consumer:</label></td>
+								<td><input type="text" id="dni" name="dni" /></td>
+							<tr>
+							<tr>
+								<td>&nbsp;</td>
+								<td>
+									<button type="submit" class="btn btn-primary">Create
+										Invoice</button>
+									<button type="reset" class="btn btn-secundary">Clear</button>
+								</td>
+							</tr>
+						</table>
+					</td>
+
+					<td>
+						<table class="table table-borderless table-dark">
+							<tr>
+								<th>Code</th>
+								<th>Description</th>
+								<th>Price Unit</th>
+								<th>Producer</th>
+								<th>State</th>
+							</tr>
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+						</table>
+					<td>
+
+
+
+
 			</table>
-			<span th:if="${errors}" ></span>
 		</div>
 	</form>
-<p></p>
+	<p></p>
 
-<div id="div_error" th:if="${error != null}" th:text="${error}">
-</div>
+
+
+
+	<span th:if="${errors}"></span>
+
+	<div id="div_error" th:if="${error != null}" th:text="${error}">
+	</div>
 
 
 

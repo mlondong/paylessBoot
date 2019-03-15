@@ -21,7 +21,9 @@ public interface InvoiceRepository extends CrudRepository<Invoice, Long>{
 	<S extends Invoice> Iterable<S> saveAll(Iterable<S> entities);
 
 	Optional<Invoice> findById(Long id);
-
+	
+	Optional<Invoice> findByNumInvoice(long numInvoice);
+	
 	boolean existsById(Long id);
 
 	Iterable<Invoice> findAll();

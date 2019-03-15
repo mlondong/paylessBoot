@@ -31,49 +31,8 @@ public class ConsumerController {
 	
 	
 	
-	/*** CONTROLLES FOR CONSUMER*/
-	
-	@GetMapping(path="/consumer/add")
-	public String home(Consumer consumer){
-		return "registerconsumer"; 
-	}
-	
-	
-	@PostMapping(path="/consumer/create")
-	public String  createConsumer(@Valid Consumer consumer, BindingResult result, Model model ){
-		if (result.hasErrors()) {
-			model.addAttribute("errors", result.getFieldError() );	
-		}else{
-				Consumer consumerdb =  consumerServiceImp.save(consumer);
-				model.addAttribute("consumerInfo", consumerdb);
-			}
-		return "registerconsumer";
-	}	
 		
-
-	@RequestMapping(path="/consumer/viewsearch" , method={RequestMethod.POST, RequestMethod.GET})
-	public String viewsearchConsumer(){
-			return "searchconsumer";
-    }
 	
-	@SuppressWarnings("unused")
-	@RequestMapping(path="/consumer/search" , method={RequestMethod.POST, RequestMethod.GET})
-	public String searchConsumer(@RequestParam(value="firstName", required=false) String firstName ,
-								 @RequestParam(value="dni", required=false) Long dni, Model model){
-		
-	System.out.println(firstName+ " - "+ dni);	
-				if((firstName=="" || firstName.length()==0 ) && dni==null){
-					Iterable<Consumer> consumerdb = consumerServiceImp.findAll();
-					model.addAttribute("consumers", consumerdb);
-				}else if(firstName.length() != 0){
-					List<Consumer> consumerdb =  consumerServiceImp.findByFirstNameLike(firstName);
-					model.addAttribute("consumers", consumerdb);
-				}else{
-						Consumer consumerdb  = consumerServiceImp.findByDni(dni);
-						model.addAttribute("consumers", consumerdb);
-				}
-		return "searchconsumer"; 
-	}
 
 	
 }

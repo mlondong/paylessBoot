@@ -12,5 +12,7 @@ public class MilkProduct extends Product {
 		super(_code, _desc, _name, _price);
 	}
 	
-
+	public boolean isMilkProduct(){
+		return true;
+	}
 }

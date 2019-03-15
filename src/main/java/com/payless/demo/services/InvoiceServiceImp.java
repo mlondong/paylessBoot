@@ -17,6 +17,12 @@ public class InvoiceServiceImp implements InvoiceService{
 	
 	
 	
+	
+	@Override
+	public Optional<Invoice> findByNumInvoice(long numInvoice) {
+		return invoiceRepositoty.findByNumInvoice(numInvoice);
+	}
+
 	@Override
 	public Invoice save(Invoice entity) {
 		return invoiceRepositoty.save(entity);

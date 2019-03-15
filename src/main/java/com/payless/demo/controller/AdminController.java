@@ -15,9 +15,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.payless.demo.model.Address;
+import com.payless.demo.model.CareProduct;
 import com.payless.demo.model.Consumer;
 import com.payless.demo.model.Invoice;
 import com.payless.demo.model.InvoiceProduct;
+import com.payless.demo.model.MeatProduct;
+import com.payless.demo.model.MilkProduct;
 import com.payless.demo.model.Product;
 import com.payless.demo.model.Stock;
 import com.payless.demo.model.StockProducts;
@@ -25,6 +28,7 @@ import com.payless.demo.model.Trader;
 import com.payless.demo.repositories.CityRepository;
 import com.payless.demo.repositories.ZoneRepository;
 import com.payless.demo.services.TraderServiceImp;
+import com.payless.demo.services.ConsumerServiceImp;
 import com.payless.demo.services.InvoiceServiceImp;
 import com.payless.demo.services.ProductServiceImp;
 
@@ -32,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -43,7 +48,7 @@ import org.springframework.stereotype.Controller;
  * @RestController = @Controller + @ResponseBody  
  * */
 @Controller
-public class TraderController {
+public class AdminController {
 
 	@Autowired
 	private  TraderServiceImp traderServiceImp;
@@ -51,11 +56,14 @@ public class TraderController {
 	private  ProductServiceImp productServiceImp;
 	@Autowired
 	private  InvoiceServiceImp invoicetServiceImp;
+	@Autowired
+	private  ConsumerServiceImp consumerServiceImp;
+	@Autowired
+	private  InvoiceServiceImp invoiceServiceImp;
 	
 	
 	@Autowired
 	private CityRepository cityrepository;
-
 	@Autowired
 	private ZoneRepository zonerepository;
 
@@ -147,26 +155,6 @@ public class TraderController {
 
 
 
-	/*********************************************************************************************************************
-	//OTRO EJEMPLO CO EL @Valid Trader trader
-	//@RequestMapping(value="/result", method={RequestMethod.POST, RequestMethod.GET})
-	/*@PostMapping(path="/main/result")
-	public String register(@Valid Trader trader, BindingResult result, Model model) {
-
-		if (result.hasErrors()) {
-			return "index";
-		}
-
-		traderRepository.save(new Trader(trader.getName(),trader.getPassword(),trader.getCuit()));
-		model.addAttribute("traders", traderRepository.findAll());
-		return "result";
-	}*/
-
-
-
-
-
-
 
 	/****************************/
 	/**CONTROLS TRADER SEARCH****/
@@ -215,16 +203,99 @@ public class TraderController {
 	}
 
 
+	
+	
+	/***************************************/
+	/**CONTROLS CONSUMER OPERATIONS        */
+	/***************************************/
+	
+	/*** CONTROLLES FOR CONSUMER*/
+	
+	@GetMapping(path="/consumer/add")
+	public String home(Consumer consumer){
+		return "registerconsumer"; 
+	}
+	
+	
+	@PostMapping(path="/consumer/create")
+	public String  createConsumer(@Valid Consumer consumer, BindingResult result, Model model ){
+		if (result.hasErrors()) {
+			model.addAttribute("errors", result.getFieldError() );	
+		}else{
+				Consumer consumerdb =  consumerServiceImp.save(consumer);
+				model.addAttribute("consumerInfo", consumerdb);
+			}
+		return "registerconsumer";
+	}	
+		
+
+	@RequestMapping(path="/consumer/viewsearch" , method={RequestMethod.POST, RequestMethod.GET})
+	public String viewsearchConsumer(){
+			return "searchconsumer";
+    }
+	
+	@SuppressWarnings("unused")
+	@RequestMapping(path="/consumer/search" , method={RequestMethod.POST, RequestMethod.GET})
+	public String searchConsumer(@RequestParam(value="firstName", required=false, defaultValue="" ) String firstName ,
+								 @RequestParam(value="dni", required=false, defaultValue="0") Long dni, Model model){
+		
+			if(dni!=0 && firstName.equals("")){
+			 	Consumer consumerdb  = consumerServiceImp.findByDni(dni);
+				model.addAttribute("consumers", consumerdb);
+			}else if(dni==0 && firstName.equals("")){
+				Iterable<Consumer> consumerdb = consumerServiceImp.findAll();
+				model.addAttribute("consumers", consumerdb);
+			}else if(dni==0 && !firstName.equals("")){
+				List<Consumer> consumerdb =  consumerServiceImp.findByFirstNameLike(firstName);
+				model.addAttribute("consumers", consumerdb);
+			}
+		return "searchconsumer"; 
+	}
 
 
+	@RequestMapping(path="/consumer/show_update", method={RequestMethod.POST, RequestMethod.GET})
+	public String showupdateConsumer(@RequestParam(value="idconsumer", required=false) Long idConsumer, Model model){
+		Consumer consumerdb = consumerServiceImp.findById(idConsumer).get();
+		System.out.println(consumerdb.toString());
+		model.addAttribute("consumer", consumerdb);	
+		return "updateconsumer";
+	}
+	
+	
+	@PostMapping(path="/consumer/update")
+	public String updateConsumer(@Valid Consumer consumer, BindingResult result, Model model){
+		Consumer consumerdb= null;
+		
+		if(result.hasErrors()){
+			model.addAttribute("Error", "Error en data Information...");
+			return "updateconsumer";
+		}else{
+			   consumerdb = consumerServiceImp.findById(consumer.getId()).get();
+			   consumerdb.setFirstName(consumer.getFirstName());
+			   consumerdb.setLastName(consumer.getLastName());
+			   consumerdb.setName(consumer.getName());
+			   consumerdb.setPassword(consumer.getPassword());
+			   consumerdb.setState(consumer.isState());
+			   consumerdb.setDni(consumer.getDni());
+			   consumerServiceImp.save(consumerdb);
+			   return "redirect:/consumer/search?dni="+consumer.getDni();
+		}
+	}
+			
+	
+	@RequestMapping(path="/consumer/delete" , method={RequestMethod.POST, RequestMethod.GET})
+	public String deleteConsumer(@RequestParam("idconsumer") Long idConsumer){
+		consumerServiceImp.deleteById(idConsumer);
+		return "redirect:/consumer/search";
+	}	
+	
+	
+	
 
+	
 	/***************************************/
 	/**CONTROLS TRADER OPERATIONS ADDRESS  */
-	/**
-	 * @param list *************************************/
-
-	
-	
+	/***************************************/
 	
 	/**VIEW ADDRES AFTER SEND PARAMETERS ID OF TRADER*/
 	@RequestMapping(path="/main/addaddress", method = {RequestMethod.POST, RequestMethod.GET})
@@ -232,15 +303,16 @@ public class TraderController {
 										@RequestParam(value="city",required = false) Long idCity, 
 										@RequestParam(value="zone",required = false) Long idZone ,	
 										@RequestParam(value="description",required = false) String descrp, Model model){
-		
-		
+
 		Trader traderdb = traderServiceImp.getTrader(idtrader);
 		model.addAttribute("infoTrader", traderdb);
 		model.addAttribute("selectCities", cityrepository.findAll());
 		model.addAttribute("selectZones", zonerepository.findAll());
 		return "addaddress";
+	
 	}
 
+	
 	/**SAVE ADDRESS**/
 	@RequestMapping(path="/add-address" , method = {RequestMethod.POST, RequestMethod.GET})
 	public String addAddressTrader(@RequestParam(value="idtrader" , required = true) long idtrader, 
@@ -263,17 +335,12 @@ public class TraderController {
 	public String deleteAddressTrader(@RequestParam(value="idtrader" , required = true) long idtrader, 
 									  @RequestParam(value="indice" , required = true) int indice){
 		
-		System.out.println("/delete-address" + "trader " + idtrader + "index "+ indice );
 		Trader traderdb = traderServiceImp.getTrader(idtrader);
 		traderdb.getAddress().remove(indice);
 		traderServiceImp.save(traderdb);		
-		
 		return "redirect:/main/addaddress?idtrader="+idtrader;
 	} 
 
-	
-	
-	
 	
 	
 	
@@ -282,31 +349,28 @@ public class TraderController {
 	/***********************************/
 
 	/**SEARCH STOCK FOR ADD RODUCTS /TRADERS*/
-	@GetMapping(path="/main/viewformsearchstoch")
+	@GetMapping(path="/main/viewformsearchstock")
 	public String viewFormSearchStockTrader(Trader trader) {
 		return "showproductinstock";
 	}
 
-
 	/**ADD STOCK OF TRADER*/
 	@RequestMapping(value="/main/stock/{id}", method = {RequestMethod.POST, RequestMethod.GET})
 	public String addStockTrader(@PathVariable("id") long id  ) {
-		
 		Trader traderdb = traderServiceImp.getTrader(id);
 		Stock st = new Stock();
 		st.setTrader(traderdb);
 		traderdb.setStock(st);
-		
 		traderServiceImp.save(traderdb);
-		
 		return "redirect:/main/searchtrader?cuit="+traderdb.getCuit();
-	
 	}
 
 
 	@PostMapping(value="/main/viewformsearchstoch")
 	public String searchFormSearchStockTrader( @Valid Trader trader, BindingResult result, Model model  ) {
 		Trader traderdb = traderServiceImp.searchByCuit(trader.getCuit());
+		System.out.println(traderdb);
+		
 		if(traderdb != null ){
 			model.addAttribute("traderInfo", traderdb);
 		}else{
@@ -334,7 +398,6 @@ public class TraderController {
 			@RequestParam("quantity") int cant) {
 
 		Trader traderdb = traderServiceImp.getTrader(idtrader);
-		
 		if(productServiceImp.existsById(idprod)){
 			Product mt =  productServiceImp.findById(idprod).get();
 			traderdb.getStock().addProduct(mt, cant);
@@ -356,6 +419,7 @@ public class TraderController {
 			return "redirect:/main/sendproducttostock/"+idtrader;
 		}
 	}
+
 
 	@RequestMapping(path="/main/save" ,  method = {RequestMethod.POST, RequestMethod.GET})
 	public String saveChangesProductsInStock(@RequestParam("quantity") int cant, @RequestParam("idproduct") long  idProduct , 
@@ -389,13 +453,9 @@ public class TraderController {
 
 
 
-
-
-
 	/**************************************/
 	/**CONTROLS TRADER OPERATIONS INVOICES*/
 	/**************************************/
-
 
 	/**VIEW INVOICES IN TRADER*/
 	@RequestMapping(path="/invoice/showforminvoice" ,  method = {RequestMethod.POST, RequestMethod.GET})
@@ -404,21 +464,21 @@ public class TraderController {
 	}
 
 	@RequestMapping(path="/invoice/searchinvoice",  method = {RequestMethod.POST, RequestMethod.GET})
-	public String  searchInvoice(@RequestParam(required=false, name="cuit" ) Long cuit , 
-								@RequestParam(required=false, name="numInvoice") Integer numInvoice, 
-								Model model){
-		
-		Trader traderlist = traderServiceImp. searchByCuit(cuit);
-			if(traderlist == null){
+	public String searchInvoiceByCuit(@RequestParam(required=false, name="cuit", defaultValue="0" ) Long cuit, Model model){
+		if(cuit==0){
+			model.addAttribute("Error", " Fill the form... to find information " );
+		}else{
+				Trader traderlist = traderServiceImp.searchByCuit(cuit);
+				if(traderlist == null){
 					model.addAttribute("Error", " Trader not find it, with Cuit. " + cuit);
-			}else if(traderlist.getInvoice().isEmpty()){
+				}else if(traderlist.getInvoice().isEmpty()){
 					model.addAttribute("Error", " There isn't Invoices in Trader with Cuit. " + cuit);	
-			}else{
+				}else{
 					model.addAttribute("TraderInfo", traderlist );	
 					model.addAttribute("Show", traderlist.getInvoice() );	
 				}
-		
-			return "invoice";
+		}
+		return "invoice";
 	}
 
 
@@ -430,7 +490,6 @@ public class TraderController {
 			Invoice invoicedb = invoicetServiceImp.findById(idInvoice).get();
 			model.addAttribute("invoice_detail", invoicedb);
 		}
-		
 		return "invoicedetails";
 	}
 
@@ -440,7 +499,6 @@ public class TraderController {
 		
 		Invoice invoicedb = invoicetServiceImp.findById(invoiceproduct.getInvoice().getId()).get();
 		Collection<InvoiceProduct> list_invoiceProducts   = invoicedb.getProducts();
-		
 		for(InvoiceProduct ip : list_invoiceProducts){
 			if(ip.getPoduct().equals(invoiceproduct.getPoduct())){
 				ip.setQuantity(invoiceproduct.getQuantity());
@@ -451,16 +509,14 @@ public class TraderController {
 		return "redirect:/invoice/showdetail?idinvoice="+invoicedb.getId()+"&idtrader="+invoicedb.getTrader().getId();
 	}
 
-	
+
 	@RequestMapping(path="/invoice/deleteinvoice", method = {RequestMethod.POST, RequestMethod.GET})
 	public String removeProductInvoice(@RequestParam("idinvoice") long idinvoice, @RequestParam("idprod") long idprod){
-	
 		Invoice invoicedb = invoicetServiceImp.findById(idinvoice).get();
 		Product pr =  productServiceImp.findById(idprod).get();
 		Collection<InvoiceProduct> _listinvoiceProducts  = invoicedb.getProducts();
 		_listinvoiceProducts.removeIf((InvoiceProduct ip) -> ip.getPoduct().equals(pr));
 		invoicetServiceImp.save(invoicedb);
-		
 		return "redirect:/invoice/showdetail?idinvoice="+idinvoice+"&idtrader="+idprod;
 	}
 	
@@ -479,16 +535,94 @@ public class TraderController {
 		return "registerinvoice";
 	}
 	
-	@RequestMapping(path="/invoice/add" ,method = {RequestMethod.POST, RequestMethod.GET})
-	public RedirectView create_Invoice(){
-		return new RedirectView("/invoice/searchinvoice");
+	
+	@RequestMapping(path="/invoice/dnisearch",  method = {RequestMethod.POST, RequestMethod.GET})
+	public String  searchInvoice(@RequestParam(required=false, name="dni", defaultValue="0" ) Long dni, Model model){
+		
+		if(dni==0){
+			model.addAttribute("Error", " Fill the form... to find information " );
+		}else{
+				Consumer consumerdb = consumerServiceImp.findByDni(dni);
+				if(consumerdb == null){
+					model.addAttribute("Error", " Consumer not find it, with Dni. " + dni);
+				}else if(consumerdb.getInvoices().isEmpty()){
+					model.addAttribute("Error", " There isn't Invoices in Consumer with Dni. " + dni);	
+				}else{
+					model.addAttribute("ConsumerInfo", consumerdb );	
+					model.addAttribute("consumerInvoices", consumerdb.getInvoices());	
+				}
+		}
+	return "invoice";
 	}
+	
+	
+	@RequestMapping(path="/invoice/numinvoice",  method = {RequestMethod.POST, RequestMethod.GET})
+	public String  searchInvoiceNumeber(@RequestParam(required=false, name="numInvoice", defaultValue="0" ) Long numInvoice, Model model){
+		
+		System.out.println("llego .. numinvoice " + numInvoice);
+		
+		if(numInvoice==0){
+			model.addAttribute("Error", " Fill the form... to find information " );
+		}else{
+				Optional<Invoice> invoicedb = invoiceServiceImp.findByNumInvoice(numInvoice);
+				System.out.println(" datos "  + invoicedb.isPresent());
+				
+				if(invoicedb.isPresent()==false){
+					model.addAttribute("Error", " Consumer not find it, with Dni. " + numInvoice);
+				}else{
+					  model.addAttribute("consumerInvoices", invoicedb.get() );	
+				}
+				
+		}
+		return "invoice";
+	}
+	
+	
+	
+	/*
+	@RequestMapping(path="/invoice/add" ,method = {RequestMethod.POST, RequestMethod.GET})
+	public RedirectView create_Invoice(@RequestParam("city") Long idCity , 
+									   @RequestParam("zone") Long idZone, 
+									   @RequestParam("traders") Long idTrader, 
+									   @RequestParam("dni") int dni ){
+		
+		System.out.println("idCity " + idCity + " zone " +idZone+ "trader" + idTrader + "dni " + dni);
+		return null;
+		//return new RedirectView("/invoice/searchinvoice");
+	}*/
 
 	
-
+	@RequestMapping(path="/products", method={RequestMethod.POST, RequestMethod.GET})
+	public String viewProducts(Model model){
+		
+		Iterable<Product> products = productServiceImp.findAll();
+		List<MeatProduct> listMeat = null; 
+		List<CareProduct> listCare = null;
+		List<MilkProduct> listMilkt =null;
+		
+		for(Object o: products)
+			System.out.println( o.getClass().getSimpleName().equals("CareProduct"));
+		
+		
+		model.addAttribute("products", productServiceImp.findAll());	
+		return "products";
+	}
 	
-	
-	
+	@RequestMapping(path="/products/update", method={RequestMethod.POST, RequestMethod.GET})
+	public String updateProducts( @RequestParam("id") Long id,	  @RequestParam("code") String code,
+								  @RequestParam("description") String description,	  @RequestParam("producer") String producer,
+								  @RequestParam("priceUnit") Integer price,	  @RequestParam(name="typeAnimal",required=false ) String typeAnimal,
+								  @RequestParam(name="dateExpiry",required=false ) Date dateExpiry, Model model 			
+			){
+		
+		
+		if(productServiceImp.existsById(id)){
+			model.addAttribute("products", productServiceImp.findAll());	
+		}
+		
+		
+		return "products";
+	}
 	
 	
 

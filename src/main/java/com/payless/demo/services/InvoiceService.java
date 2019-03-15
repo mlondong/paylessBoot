@@ -9,6 +9,9 @@ public interface InvoiceService {
 	Invoice	save(Invoice entity);
 
 	Optional<Invoice> findById(Long id);
+	
+	Optional<Invoice> findByNumInvoice(long numInvoice);
+
 
 	boolean existsById(Long id);
 

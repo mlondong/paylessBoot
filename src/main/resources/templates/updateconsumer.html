@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head lang="en">
+<title>ADMIN CONSUMER</title>
+<th:block th:include="layout/header"></th:block>
+</head>
+
+<body>
+		<div id="consumer_div" th:if="${consumer}">
+		<h2>
+			Update Consumer <label th:text="${consumer.dni}"> </label>
+		</h2>
+		<form th:action="@{/consumer/update}" th:object="${consumer}"	method="post">
+			<input type="hidden" th:field="*{id}"	 th:value="${consumer.getId()}" />
+			
+			<div id="div_reg" class="form-group">
+				<table>
+					<tr>
+						<td>
+							<table>
+								<tr>
+									<td><h5>General information</h5></td>
+								</tr>
+								
+								<tr>
+										<td>State</td>
+										<td><select id="state" th:field="*{state}" 	th:value="${consumer.state}">
+												<option th:value="'0'" th:text="Inactive"></option>
+												<option th:value="'1'" th:text="Active"></option>
+										</select></td>
+								</tr>
+								
+								<tr>
+									<td><label>Firts Name:</label></td>
+									<td><input type="text" th:field="*{firstName}"	th:value="${consumer.firstName}" /></td>
+									<td th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></td>
+								<tr>
+								<tr>
+									<td><label>Last Name:</label></td>
+									<td><input type="text" th:field="*{lastName}" th:value="${consumer.lastName}" /></td>
+									<td th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></td>
+								</tr>
+								<tr>
+									<td><label>Dni</label></td>
+									<td>
+										<input type="text" th:field="*{dni}"  th:value="${consumer.dni}" />
+									</td>
+									<td th:if="${#fields.hasErrors('dni')}" th:errors="*{dni}"></td>
+								</tr>
+								
+							</table>
+						</td>
+					
+						<td>
+							<table>
+								<tr>
+									<td><h5>Login Information</h5></td>
+								</tr>
+								<tr>
+									<td><label>UserName:</label></td>
+									<td><input type="text" th:field="*{name}"
+										th:value="${consumer.getName()}" /></td>
+									<td th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></td>
+								</tr>
+								<tr>
+									<td><label>Actual Password:</label></td>
+									<td><input type="text" disabled="disabled"
+										th:value="${consumer.getPassword()}" /></td>
+								<tr>
+								<tr>
+									<td><label>New Password:</label></td>
+									<td><input type="text"  th:field="*{password}"  th:value="${consumer.getPassword()}" /></td>
+									<td th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></td>
+							 	</tr>
+							</table>
+
+						</td>
+					</tr>
+					<tr>
+					<td><button type="submit" class="btn btn-primary">Update Consumer</button></td>
+					</tr>
+					</table>
+				<span th:if="${Error}" th:text="${Error}"></span>
+			</div>
+		</form>
+		<p></p>
+	</div>
+
+</body>
+</html>
