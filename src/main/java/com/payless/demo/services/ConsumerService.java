@@ -17,6 +17,9 @@ public interface ConsumerService {
 	
 	List<Consumer> findByLastNameIsLike(String lastName);
 	List<Consumer> findByFirstNameLike(String lastName);
+	List<Consumer> findByDniIsLike(long dni);
+	
+	List<Consumer> queryByDni(long dni);
 	List<Consumer> queryByFirstName(String firstName);
 	
 	Iterable<Consumer> findAll();

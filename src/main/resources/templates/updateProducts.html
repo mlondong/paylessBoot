@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+<title>ADMIN TRADER</title>
+<th:block th:include="layout/header"></th:block>
+</head>
+
+<body>
+
+	<div class="form-group" th:if="${productInfo}">
+		<h2>Product information </label> </h2>
+	
+	<form action="/products/update"  method="post">
+		<table width="18%">
+			<tr>
+				<td>Category:</td>
+				<td th:text="${productInfo.getClass().getSimpleName()}" ></td>
+			</tr>
+			
+			<tr>
+				<td>Code:</td>
+				<td>
+				<input type="hidden" id="id" name="id" th:value="${productInfo.id}">
+				<input type="text" id="code"  name="code" th:value="${productInfo.code}"></td>
+			</tr>
+			<tr>
+				<td>Description:</td>
+				<td><input type="text" id="description"  name="description" th:value="${productInfo.description}"></td>
+			</tr>
+
+			<tr>
+				<td>Producer:</td>
+				<td><input type="text" id="producer" name="producer" th:value="${productInfo.producer}"></td>
+			</tr>
+
+			<tr>
+				<td>Price:</td>
+				<td><input type="text" id="priceUnit" name="priceUnit" th:value="${productInfo.priceUnit}"></td>
+			</tr>
+
+			<tr>
+				<td>State:</td>
+				<td>
+					<select id="state" >
+						<option th:if="${productInfo.state==false}" th:text="Inactive"></option>
+						<option th:if="${productInfo.state==true}"   th:text="Active"></option>
+			 	</select>
+				</td>
+			</tr>
+	
+			<tr th:if="${productInfo.getClass().getSimpleName()}=='MeatProduct'">
+				<td>Animal type:</td>
+				<td><input type="text" id="typeAnimal" name="typeAnimal" th:value="${productInfo.typeAnimal}"></td>
+			</tr>
+	
+			<tr th:if="${productInfo.getClass().getSimpleName()}=='MeatProduct'">
+				<td>Expired Date:</td>
+				<td><input type="text" id="dateExpiry" name="dateExpiry" th:value="${productInfo.dateExpiry}"></td>
+			</tr>
+	
+			<tr>
+				<td></td>
+				<td>
+						
+						<button type="submit" class="btn btn-primary">Update</button>
+				</td>
+			</tr>
+		</table>
+	</form>
+	</div>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head lang="en">
+<title>ADMIN CONSUMER</title>
+
+  
+<th:block th:include="layout/header"></th:block>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.js"> </script>
+<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"> </script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+
+<script type="text/javascript">
+$(document).ready(function(){
+    $(function() {
+        $("#dni-autocomplete").autocomplete({
+            source: function(request, response) {
+				$.ajax({
+                         url: "/consumer",
+                         type: "GET",
+                         data: { dni: $('#dni-autocomplete').val() },
+                         dataType: "json",
+                         success: function(data){
+													response($.map (data, function(v,i){
+														return {
+															label: v.dni+' - '+v.firstName+' - '+v.lastName,
+														    value: v.dni
+														   };			
+													 }));
+                                                }
+                       });              
+             }   
+        });
+    });
+});
+
+
+</script>
+</head>
+
+<body>
+
+	<h2>Create New Invoice action="/invoice/add"</h2>
+	<form action="#" method="post" id="formInvoice" name="formInvoice">
+			<table>
+				<tr>
+					<td><label>Dni Consumer:</label></td>
+					<td>
+					<div class="ui-widget">
+							<label for="dni-autocomplete"></label>
+							<input type="text" id="dni-autocomplete" /> 
+					</div>		
+					</td>
+				<tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>
+						<button type="submit" class="btn btn-primary">Create
+							Invoice</button>
+						<button type="reset" class="btn btn-secundary">Clear</button>
+					</td>
+				</tr>
+			</table>
+	</form>
+	<p></p>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

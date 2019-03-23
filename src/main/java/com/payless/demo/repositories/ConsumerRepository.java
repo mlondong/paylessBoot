@@ -23,11 +23,17 @@ public interface ConsumerRepository  extends BaseUserRepository<Consumer>{
 	/*CONSULTAS LIKE*/
 	List<Consumer> findByLastNameIsLike(String lastName);
 	List<Consumer> findByFirstNameLike(String lastName);
+	List<Consumer> findByDniIsLike(long dni);
+	
 
 	
 	/*Queries*/
 	@Query("Select c from Consumer c where c.firstName like %:firstName%")
 	List<Consumer> queryByFirstName(@Param("firstName") String firstName);
 	
+	
+	/*Queries*/
+	@Query("Select c from Consumer c where str(c.dni) like :dni% ")
+	List<Consumer> queryByDni(@Param("dni") long dni);
 	
 }

@@ -37,8 +37,7 @@ public class ProductServiceImp implements ProductService {
 	
 	@Override
 	public Product save(Product product) {
-		// TODO Auto-generated method stub
-		return null;
+		return productRepository.save(product);
 	}
 
 	@Override

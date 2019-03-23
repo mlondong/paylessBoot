@@ -25,6 +25,7 @@ import com.payless.demo.model.Product;
 import com.payless.demo.model.Stock;
 import com.payless.demo.model.StockProducts;
 import com.payless.demo.model.Trader;
+
 import com.payless.demo.repositories.CityRepository;
 import com.payless.demo.repositories.ZoneRepository;
 import com.payless.demo.services.TraderServiceImp;
@@ -68,6 +69,7 @@ public class AdminController {
 	private ZoneRepository zonerepository;
 
 	
+
 	
 	/**HOME WITH LIST*/
 	@RequestMapping(path="/")
@@ -536,6 +538,8 @@ public class AdminController {
 	}
 	
 	
+	
+	
 	@RequestMapping(path="/invoice/dnisearch",  method = {RequestMethod.POST, RequestMethod.GET})
 	public String  searchInvoice(@RequestParam(required=false, name="dni", defaultValue="0" ) Long dni, Model model){
 		
@@ -572,59 +576,112 @@ public class AdminController {
 				}else{
 					  model.addAttribute("consumerInvoices", invoicedb.get() );	
 				}
-				
 		}
 		return "invoice";
 	}
 	
 	
 	
-	/*
+	
 	@RequestMapping(path="/invoice/add" ,method = {RequestMethod.POST, RequestMethod.GET})
-	public RedirectView create_Invoice(@RequestParam("city") Long idCity , 
-									   @RequestParam("zone") Long idZone, 
-									   @RequestParam("traders") Long idTrader, 
-									   @RequestParam("dni") int dni ){
+	public ModelAndView create_Invoice(@RequestParam("traders") Long idTrader, 
+			@RequestParam("dni-autocomplete") Long dni, RedirectAttributes attributes){
 		
-		System.out.println("idCity " + idCity + " zone " +idZone+ "trader" + idTrader + "dni " + dni);
-		return null;
-		//return new RedirectView("/invoice/searchinvoice");
-	}*/
+		ModelAndView modelAndView = null; 
+		Consumer consumerdb = consumerServiceImp.findByDni(dni);
+		Trader traderdb     = traderServiceImp.getTrader(idTrader);
+	
+		if(consumerdb == null){
+			modelAndView = new ModelAndView("registerinvoice");
+			modelAndView.addObject("Error", "Consumer with dni "+dni+ " is not find it!");
+		}else{
+				@SuppressWarnings("unused")
+				Invoice inv = new  Invoice(traderdb, consumerdb);
+				invoicetServiceImp.save(inv);	
+				modelAndView = new ModelAndView("redirect:/invoice/addproducts?numInvoice="+inv.getNumInvoice());
+		}
+		return modelAndView;
+	}
 
+	
+	@RequestMapping(path="/invoice/addproducts" ,method = {RequestMethod.POST, RequestMethod.GET})
+	public ModelAndView add_products_in_Invoice(@RequestParam("numInvoice") Long numInvoice){
+		ModelAndView modelAndView = null;
+		Optional<Invoice> inv = invoicetServiceImp.findByNumInvoice(numInvoice);
+		
+		if(inv.isPresent()==false){
+			modelAndView = new ModelAndView("registerinvoice");
+			modelAndView.addObject("Error", "Invoice not generated ,try in a moment!!!");
+		}else{
+				modelAndView = new ModelAndView("addproductininvoice");
+				modelAndView.addObject("invoice", inv.get()); 
+				modelAndView.addObject("products", productServiceImp.findAll());
+		}
+		return modelAndView;
+	} 
+	
+	
+	
+	
+	
+	@RequestMapping(path="/invoice/addprodinv" ,  method = {RequestMethod.POST, RequestMethod.GET})
+	public String putProductInInvoice(@RequestParam("numInvoice") Long numInvoice, @RequestParam("idProduct") Long idProduct, @RequestParam("cant") int cant) {
+
+		System.out.println("Invoice num " +  numInvoice);
+		System.out.println("idprod " +  idProduct);
+		System.out.println("cant" +  cant);
+		
+		
+		Invoice invoicedb = invoicetServiceImp.findByNumInvoice(numInvoice).get();
+		Product productdb = productServiceImp.findById(idProduct).get();	
+		invoicedb.addInvoiceProduct(productdb, cant);
+		invoicetServiceImp.save(invoicedb);
+		return "redirect:/invoice/addproducts?numInvoice="+numInvoice;
+	}	
+	
+	
+	
+	
+	
+	
+	/**************************************/
+	/**CONTROLS PRODUCTS                  */
+	/**************************************/
+
+	
 	
 	@RequestMapping(path="/products", method={RequestMethod.POST, RequestMethod.GET})
 	public String viewProducts(Model model){
-		
-		Iterable<Product> products = productServiceImp.findAll();
-		List<MeatProduct> listMeat = null; 
-		List<CareProduct> listCare = null;
-		List<MilkProduct> listMilkt =null;
-		
-		for(Object o: products)
-			System.out.println( o.getClass().getSimpleName().equals("CareProduct"));
-		
-		
 		model.addAttribute("products", productServiceImp.findAll());	
 		return "products";
 	}
 	
-	@RequestMapping(path="/products/update", method={RequestMethod.POST, RequestMethod.GET})
-	public String updateProducts( @RequestParam("id") Long id,	  @RequestParam("code") String code,
-								  @RequestParam("description") String description,	  @RequestParam("producer") String producer,
-								  @RequestParam("priceUnit") Integer price,	  @RequestParam(name="typeAnimal",required=false ) String typeAnimal,
-								  @RequestParam(name="dateExpiry",required=false ) Date dateExpiry, Model model 			
-			){
+	@RequestMapping(path="/products/detail" , method={RequestMethod.POST, RequestMethod.GET})
+	public String detailproduct(@RequestParam("id") long id , Model model){
+		Product productdb = productServiceImp.findById(id).get();	
+		model.addAttribute("productInfo", productdb);
+		return "updateProducts";
+	}	
 		
+	
+
+	
+	
+	
+	@SuppressWarnings("deprecation")
+	@RequestMapping(path="/products/update" , method={RequestMethod.POST, RequestMethod.GET})
+	public String updateProductDB(@RequestParam("id") long id, @RequestParam("code") String code, @RequestParam("description") String description,
+			@RequestParam("producer") String producer, @RequestParam("priceUnit") Float priceUnit , @RequestParam(name="typeAnimal", required=false) String typeAnimal,
+			@RequestParam(name="dateExpiry", required=false) String dateExpiry){
 		
-		if(productServiceImp.existsById(id)){
-			model.addAttribute("products", productServiceImp.findAll());	
-		}
-		
-		
-		return "products";
+		Product productdb = productServiceImp.findById(id).get();
+		productdb.setCode(code);
+		productdb.setDescription(description);
+		productdb.setProducer(producer);
+		productdb.setPriceUnit(priceUnit);
+		productServiceImp.save(productdb);
+		return "redirect:/products";
 	}
-	
-	
 
 }
 

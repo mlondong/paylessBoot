@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+<title>ADMIN TRADER</title>
+<th:block th:include="layout/header"></th:block>
+</head>
+
+<body>
+<span th:text="${invoice.getProducts()}"></span>
+		
+	<div id="div_stock" th:if="${invoice}">
+		<table>
+			<tr>
+				<td colspan="4"><h3>General Information in Invoice:</h3></td>
+			</tr>
+			<tr>
+				<td>Num Invoice:</td>
+				<td th:text="${invoice.getNumInvoice()}"></td>
+				<td>Date Invoice:</td>
+				<td th:text="${invoice.getDateInvoice()}"></td>
+			</tr>
+		</table>
+	</div>
+	
+	
+	<div th:if="${invoice.getProducts()}">
+		<table class="table">
+			<thead class="thead-dark">
+				<tr>
+				<th>Code</th>
+				<th>Description</th>
+				<th>Units</th>
+				<th>Date register</th>
+				<th colspan="2"></th>
+				</tr>	
+			</thead>
+			<tr th:each="invoiceProduct,index : ${invoice.getProducts()}">
+				<td th:text="${index.index}"></td>
+				<td th:text="${invoiceProduct.poduct.code}"></td>
+				<td th:text="${invoiceProduct.poduct.description}"></td>
+				<td th:text="${invoiceProduct.poduct.producer}"></td>
+				<td th:text="${invoiceProduct.poduct.priceUnit}"></td>
+				<td th:text="${invoiceProduct.quantity}"></td>
+			</tr>
+		</table>
+	</div>
+	
+	
+	
+	
+	<p></p>
+	<p><h3>Form to Add Products</h3></p>
+	
+
+	<div id="div_stock" th:if="${products}">
+		<table class="table table-bordered table-dark">
+			<thead>
+			<tr>
+				<th>Id</th>
+				<th>Code</th>
+				<th>Description</th>
+				<th>Branch</th>
+				<th>Price</th>
+				<th>Units Required</th>				
+			</tr>
+			</thead>
+
+			<tr th:each="product : ${products}">
+				<td th:text="${product.id}"></td>
+				<td th:text="${product.code}"></td>
+				<td th:text="${product.description}"></td>
+				<td th:text="${product.producer}"></td>
+				<td th:text="${product.priceUnit}"></td>
+				<td>
+						    
+						<span th:text="${invoice.getId()}"> </span>
+						    
+						<form action="/invoice/addprodinv"   method="post">
+								<input type="hidden"  name="numInvoice"  id="numInvoice"  th:value="${invoice.getNumInvoice()}"  />
+								<input type="hidden" th:value="${product.id}" name="idProduct"  id="idProduct"     />
+								<input type="text" size=5  name="cant"  id="cant"     /> 
+						<button type="submit">Add</button>
+						</form> 
+						
+				</td>
+			</tr>
+		</table>
+	</div>
+
+</body>
+</html>

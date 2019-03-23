@@ -31,29 +31,29 @@
 			</tr>
 			</thead>
 		
-		<form action="/products/update" method="post">
 			<tr th:each="product : ${products}">
-				<td th:text="${product.id}">
-				<input type="hidden" id="id"  th:value="${product.id}" >
-				</td>
+				<td th:text="${product.id}"></td>
 				<td th:text="${product.getClass().getSimpleName()}" ></td>
-				<td><input type="text" id="code"  th:value="${product.code}" ></td>
-				<td><input type="text" id="description"  th:value="${product.description}" ></td>
-				<td><input type="text" id="producer"  th:value="${product.producer}" ></td>
-				<td><input type="text" id="priceUnit"  th:value="${product.priceUnit}" ></td>
+				<td th:text="${product.id}"></td>
+				<td th:text="${product.description}" ></td>
+				<td th:text="${product.producer}" ></td>
+				<td th:text="${product.priceUnit}" ></td>
 				
 				<span th:if="${product.getClass().getSimpleName().equals('MeatProduct')}">
-				<td><input type="text" id="typeAnimal"  th:value="${product.typeAnimal}" ></td>
-				<td><input type="text" id="dateExpiry"  th:value="${product.dateExpiry}" ></td>
+				<td th:text="${product.typeAnimal}" ></td>
+				<td th:text="${product.dateExpiry}" ></td>
 				</span>
 			
 				<span th:if="!${product.getClass().getSimpleName().equals('MeatProduct')}">
 				<td></td>
 				<td></td>
 				</span>
-				<td><button type="submit" class="btn btn-primary">Update</button></td>
+				<td>
+				<a th:href="@{/products/detail?id={id}  (id=${product.id})}">
+				<img src="../images/edit-product.png" height="35px"	width="35px" alt="Update Product" title="Update Product"/>
+				</a>
+				</td>
 			</tr>
-		</form>
 	
 		</table>
 	</div>

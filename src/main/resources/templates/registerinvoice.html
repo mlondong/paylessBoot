@@ -4,20 +4,19 @@
 <head lang="en">
 <title>ADMIN CONSUMER</title>
 <th:block th:include="layout/header"></th:block>
+
+<script type="text/javascript" 	src="http://code.jquery.com/jquery-1.10.2.js"> </script>
+<script type="text/javascript" 	src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"> </script>
+<link rel="stylesheet" 	href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+
 <script type="text/javascript">
-
-
 $(document).ready(function () {
     getZones(); 	//call function when page is loaded
+    var xTriggered = 0;
     $('#city').change(getZones); //set on change listener
-
-    getTraderInZone(); 	//call function when page is loaded
     $('#zone').change(getTraderInZone); //set on change listener
 
 
-    
-
-    
     function getZones() {
         var url = "/zones?idcity=";
 		 if ($('#city').val() != 0) {
@@ -33,6 +32,55 @@ $(document).ready(function () {
      	    $('#traders').load(url);  //load fragment and replace content
   		  }
     }
+
+        
+    
+    $("#dni-autocomplete").autocomplete({
+        source: function(request, response) {
+			$.ajax({
+                     url: "/consumer",
+                     type: "GET",
+                     data: { dni: $('#dni-autocomplete').val() },
+                     dataType: "json",
+                     success: function(data){
+												response($.map (data, function(v,i){
+													return {
+														label: v.dni+' - '+v.firstName+' - '+v.lastName,
+													    value: v.dni
+													   };			
+												 }));
+                                            }
+                   });              
+         }   
+    });
+
+
+    
+    $('#btnvalidate').click(function() { 
+    	var traders = $('#traders').val();
+    	var dni = $('#dni-autocomplete').val();
+		var flag= true;
+		var msj="";
+		
+    	if(traders == 0){
+	    	  msj+='Please select a valid Trader';
+	    	  $('#traders').focus(); 
+	    	  flag= false;
+    	}else if(dni == ''){
+		  		 msj+=' Please select a valid Trader';
+		   	 	 $('#dni-autocomplete').focus();
+		   	 	 flag= false;
+             }
+
+		if(flag==true){
+			$( "#formInvoice" ).submit();
+		}else{
+					alert(msj);
+			}
+      })
+       
+	
+
 })
 </script>
 
@@ -41,91 +89,59 @@ $(document).ready(function () {
 
 <body>
 
-	<h2>Create New Invoice</h2>
-	<form action="/invoice/add" method="post" id="formInvoice"
-		name="formInvoice">
+	<h2>Create New Invoice action="/invoice/add"</h2>
+	<form  method="post" action="/invoice/add" id="formInvoice" name="formInvoice" >
+		<table>
+			<tr>
+				<td><label>Select City:</label></td>
+				<td><select id="city" name="city" class="custom-select">
+						<option selected="selected" value="0">-Select One City-</option>
+						<option th:each="city : ${selectCities}" th:value="${city.id}"
+							th:text="${city.name}"></option>
+				</select></td>
+			<tr>
+			<tr>
+				<td><label>Select Zone:</label></td>
+				<td><select id="zone" name="zone" class="custom-select">
+						<option selected="selected" value="0">-Select One Zone-</option>
+						<option th:each="zone : ${zones}" th:value="${zone.id}"
+							th:text="${zone.name}">
+				</select></td>
+			<tr>
+			<tr>
+				<td><label>Select Trader:</label></td>
+				<td>
+				<span th:text="${traders}"></span> 
+				<select id="traders" name="traders" class="custom-select">
+						<option selected="selected" value="0">-Select Trader-</option>
+						<option th:each="trader : ${traders}" th:value="${trader.id}" th:text="${trader.nameEnterprise} +' - '+${trader.cuit}">
+				</select>
+				
+				</td>
+			</tr>
+			<tr>
+				<td><label>Dni Consumer:</label></td>
+				<td>
+				<label for="dni-autocomplete"></label> 
+				<input type="text"	id="dni-autocomplete" name="dni-autocomplete"  style/></td>
+			<tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td>
+					<button type="button" class="btn btn-primary" id="btnvalidate">Create
+						Invoice</button>
+					<button type="reset" class="btn btn-secundary">Clear</button>
+				</td>
+			</tr>
+		</table>
 
-		<div id="div_reg" class="form-group">
-			<table>
-					<td>
-						<table>
-							<tr>
-								<td><label>Select City:</label></td>
-								<td><select id="city" name="city" class="custom-select">
-										<option selected="selected" value="0">-Select One
-											City-</option>
-										<option th:each="city : ${selectCities}" th:value="${city.id}"
-											th:text="${city.name}"></option>
-								</select></td>
-							<tr>
-							<tr>
-								<td><label>Select Zone:</label></td>
-								<td><select id="zone" name="zone" class="custom-select">
-										<option selected="selected" value="0">-Select One
-											Zone-</option>
-										<option th:each="zone : ${zones}" th:value="${zone.id}"
-											th:text="${zone.name}">
-								</select></td>
-							<tr>
-							<tr>
-								<td><label>Select Trader:</label></td>
-								<td><span th:text="${traders}"></span> <select id="traders"
-									name="traders" class="custom-select">
-										<option selected="selected" value="0">-Select Trader-</option>
-										<option th:each="trader : ${traders}" th:value="${trader.id}"
-											th:text="${trader.nameEnterprise} +' - '+${trader.cuit}">
-								</select></td>
-							</tr>
-							<tr>
-								<td><label>Dni Consumer:</label></td>
-								<td><input type="text" id="dni" name="dni" /></td>
-							<tr>
-							<tr>
-								<td>&nbsp;</td>
-								<td>
-									<button type="submit" class="btn btn-primary">Create
-										Invoice</button>
-									<button type="reset" class="btn btn-secundary">Clear</button>
-								</td>
-							</tr>
-						</table>
-					</td>
-
-					<td>
-						<table class="table table-borderless table-dark">
-							<tr>
-								<th>Code</th>
-								<th>Description</th>
-								<th>Price Unit</th>
-								<th>Producer</th>
-								<th>State</th>
-							</tr>
-							<tr>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
-						</table>
-					<td>
-
-
-
-
-			</table>
-		</div>
 	</form>
 	<p></p>
 
 
-
-
-	<span th:if="${errors}"></span>
-
-	<div id="div_error" th:if="${error != null}" th:text="${error}">
+	<div th:if="${Error != null}">
+		<h3 th:text="${Error}"></h3>
 	</div>
-
 
 
 

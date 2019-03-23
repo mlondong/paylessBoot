@@ -15,14 +15,23 @@ public class ConsumerServiceImp implements ConsumerService{
 
 	@Autowired
 	private ConsumerRepository consumerRepository;
+
 	
 	
-	
+	@Override
+	public List<Consumer> queryByDni(long dni) {
+		return consumerRepository.queryByDni(dni);
+	}
+
+	@Override
+	public List<Consumer> findByDniIsLike(long dni) {
+		return consumerRepository.findByDniIsLike(dni);
+	}
+
 	@Override
 	public Consumer findByDni(long dni) {
 		return consumerRepository.findByDni(dni);
 	}
-
 
 	@Override
 	public Consumer save(Consumer entity) {
