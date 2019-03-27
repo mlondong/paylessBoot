@@ -3,16 +3,69 @@
 <head lang="en">
 <title>ADMIN TRADER</title>
 <th:block th:include="layout/header"></th:block>
+
+
+<script type="text/javascript" 	src="http://code.jquery.com/jquery-1.10.2.js"> </script>
+<script type="text/javascript" 	src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"> </script>
+<link rel="stylesheet" 	href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+
+<script type="text/javascript">
+
+
+		function validForm(form){
+
+			var flag=true;
+			var msj="";
+			var cantToSend = document.getElementById(form.id).elements[3].value; 
+			var cantInDB= document.getElementById(form.id).elements[2].value;
+
+
+			
+			if(cantToSend == 0){
+		  	   msj+='Please insert a correct value';
+		  	  flag= false;
+			}else if(cantToSend > cantInDB){
+			   msj+=' Please insert a quantity less at the product in stock';
+			   flag= false;
+		    }
+
+
+
+			
+			
+			if(flag==true){
+				$.ajax({
+                    url: "/invoice/addprodinv",
+                    type: "GET",
+                    data: { numInvoice: document.getElementById(form.id).elements[0].value,
+                    		idProduct: document.getElementById(form.id).elements[1].value,
+                    		cant: document.getElementById(form.id).elements[3].value  },
+                    dataType: "json"
+                  });    
+
+	        		setTimeout(reload, 1500);		
+
+	    	}else{
+						alert(msj);
+						//alert("form "+form.id+ " cant to send "+ cantToSend + " cant in db " + cantInDB); 
+						
+					}
+		}
+		
+		function reload() {
+			window.location.reload();
+	    }
+
+
+</script>
+
 </head>
 
 <body>
-<span th:text="${invoice.getProducts()}"></span>
-		
 	<div id="div_stock" th:if="${invoice}">
+	<fieldset  class="col-md-6">
+		<legend>General Information in Invoice:</legend>		
 		<table>
-			<tr>
-				<td colspan="4"><h3>General Information in Invoice:</h3></td>
-			</tr>
 			<tr>
 				<td>Num Invoice:</td>
 				<td th:text="${invoice.getNumInvoice()}"></td>
@@ -20,27 +73,40 @@
 				<td th:text="${invoice.getDateInvoice()}"></td>
 			</tr>
 		</table>
+	</fieldset>	
 	</div>
-	
-	
-	<div th:if="${invoice.getProducts()}">
-		<table class="table">
+
+
+<p></p>
+
+
+	<div th:if="${not #lists.isEmpty(invoice.getProducts())}">
+		<table class="table" >
 			<thead class="thead-dark">
 				<tr>
 				<th>Code</th>
 				<th>Description</th>
+				<th>Branch</th>
+				<th>Price</th>
 				<th>Units</th>
-				<th>Date register</th>
-				<th colspan="2"></th>
+				<th>Subtotal</th>
 				</tr>	
 			</thead>
-			<tr th:each="invoiceProduct,index : ${invoice.getProducts()}">
-				<td th:text="${index.index}"></td>
+			<tr th:each="invoiceProduct,index : ${invoice.getProducts()}" th:with="total=${total}">
 				<td th:text="${invoiceProduct.poduct.code}"></td>
 				<td th:text="${invoiceProduct.poduct.description}"></td>
 				<td th:text="${invoiceProduct.poduct.producer}"></td>
 				<td th:text="${invoiceProduct.poduct.priceUnit}"></td>
 				<td th:text="${invoiceProduct.quantity}"></td>
+				<td th:text="${invoiceProduct.quantity} * ${invoiceProduct.poduct.priceUnit}"></td>
+			</tr>
+			<tr class="table-primary">
+				<th></th>
+				<th></th>
+				<th scope="col"><h6>Totales</h6></th>
+				<th scope="col" th:text="${#aggregates.sum(invoice.getProducts().![poduct.priceUnit])}"></th>
+				<th scope="col" th:text="${#aggregates.sum(invoice.getProducts().![quantity])}"></th>
+				<th scope="col" th:text="${#aggregates.sum(invoice.getProducts().![quantity * poduct.priceUnit])}"></th>
 			</tr>
 		</table>
 	</div>
@@ -49,39 +115,47 @@
 	
 	
 	<p></p>
-	<p><h3>Form to Add Products</h3></p>
 	
-
-	<div id="div_stock" th:if="${products}">
-		<table class="table table-bordered table-dark">
+	<div class="table-warning">
+		<p><h3>Choose your Products in Stock</h3></p>
+	</div>
+	
+	<div id="div_stock" th:if="${stockproducts}">
+		<table border=1 class="table">
 			<thead>
-			<tr>
-				<th>Id</th>
+			<tr class="table-warning">
+				<th>Type Product</th>
 				<th>Code</th>
 				<th>Description</th>
 				<th>Branch</th>
 				<th>Price</th>
-				<th>Units Required</th>				
+				<th>Register date</th>				
+				<th>Quantity in Stock</th>
+				<th>Add Quantity</th>
+								
 			</tr>
 			</thead>
 
-			<tr th:each="product : ${products}">
-				<td th:text="${product.id}"></td>
-				<td th:text="${product.code}"></td>
-				<td th:text="${product.description}"></td>
-				<td th:text="${product.producer}"></td>
-				<td th:text="${product.priceUnit}"></td>
+		  
+			<tr th:each="stockproduct,index : ${stockproducts}">
+				<td th:text="${stockproduct.getClass().getSimpleName()}"></td>
+				<td th:text="${stockproduct.product.code}"></td>
+				<td th:text="${stockproduct.product.description}"></td>
+				<td th:text="${stockproduct.product.producer}"></td>
+				<td th:text="${stockproduct.product.priceUnit}"></td>
+				<td th:text="${stockproduct.date}"></td>
+				<td  th:text="${stockproduct.quantity}"></td>
 				<td>
-						    
-						<span th:text="${invoice.getId()}"> </span>
-						    
-						<form action="/invoice/addprodinv"   method="post">
-								<input type="hidden"  name="numInvoice"  id="numInvoice"  th:value="${invoice.getNumInvoice()}"  />
-								<input type="hidden" th:value="${product.id}" name="idProduct"  id="idProduct"     />
-								<input type="text" size=5  name="cant"  id="cant"     /> 
-						<button type="submit">Add</button>
+				
+						<form method="get"  action="/invoice/addprodinv"  th:id="'myForm' + ${index.index}"  >
+							<input type="hidden"  th:id="'numInvoice' + ${index.index}"  th:value="${invoice.getNumInvoice()}"  />
+							<input type="hidden" th:id="'idProduct' + ${index.index}" th:value="${stockproduct.product.id}"  />
+							<input type="hidden"  th:id="'cant_db' + ${index.index}"  th:value="${stockproduct.quantity}"  />
+							<span th:if=${stockproduct.quantity!=0}>	
+							<input type="text" size=5  th:id="'cant' + ${index.index}" /> 
+							<button type="button" id="btn-add" name="btn-add" th:onclick="validForm(this.form);">Add</button>
+							</span>
 						</form> 
-						
 				</td>
 			</tr>
 		</table>

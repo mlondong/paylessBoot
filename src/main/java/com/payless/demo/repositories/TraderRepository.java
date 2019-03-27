@@ -23,4 +23,5 @@ public interface TraderRepository extends BaseUserRepository<Trader>{
 	Trader findByCuit(long cuit);
 	List<Trader> findByStock(Stock stock);
 	
+	
 }

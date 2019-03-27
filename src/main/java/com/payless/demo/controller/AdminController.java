@@ -27,11 +27,13 @@ import com.payless.demo.model.StockProducts;
 import com.payless.demo.model.Trader;
 
 import com.payless.demo.repositories.CityRepository;
+import com.payless.demo.repositories.StockRepository;
 import com.payless.demo.repositories.ZoneRepository;
 import com.payless.demo.services.TraderServiceImp;
 import com.payless.demo.services.ConsumerServiceImp;
 import com.payless.demo.services.InvoiceServiceImp;
 import com.payless.demo.services.ProductServiceImp;
+import com.payless.demo.services.StockServiceImp;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -61,6 +63,10 @@ public class AdminController {
 	private  ConsumerServiceImp consumerServiceImp;
 	@Autowired
 	private  InvoiceServiceImp invoiceServiceImp;
+	@Autowired
+	private  StockServiceImp stockServiceImp;
+	
+	
 	
 	
 	@Autowired
@@ -190,7 +196,7 @@ public class AdminController {
 		for(Trader t: lista){
 			List <Address> address = t.getAddress();
 			for(Address a: address){
-				if(a.getZona()==idZone){
+				if(a.getZona()==idZone && t.getStock()!=null){
 					if(!filterTraders.contains(t)){
 						filterTraders.add(t);
 					}
@@ -606,6 +612,7 @@ public class AdminController {
 	
 	@RequestMapping(path="/invoice/addproducts" ,method = {RequestMethod.POST, RequestMethod.GET})
 	public ModelAndView add_products_in_Invoice(@RequestParam("numInvoice") Long numInvoice){
+
 		ModelAndView modelAndView = null;
 		Optional<Invoice> inv = invoicetServiceImp.findByNumInvoice(numInvoice);
 		
@@ -614,8 +621,11 @@ public class AdminController {
 			modelAndView.addObject("Error", "Invoice not generated ,try in a moment!!!");
 		}else{
 				modelAndView = new ModelAndView("addproductininvoice");
+				Stock stockdb = inv.get().getTrader().getStock();
 				modelAndView.addObject("invoice", inv.get()); 
-				modelAndView.addObject("products", productServiceImp.findAll());
+				modelAndView.addObject("stockproducts", stockdb.getStockproducts());
+			
+				
 		}
 		return modelAndView;
 	} 
@@ -625,18 +635,39 @@ public class AdminController {
 	
 	
 	@RequestMapping(path="/invoice/addprodinv" ,  method = {RequestMethod.POST, RequestMethod.GET})
-	public String putProductInInvoice(@RequestParam("numInvoice") Long numInvoice, @RequestParam("idProduct") Long idProduct, @RequestParam("cant") int cant) {
+	public ModelAndView putProductInInvoice(@RequestParam("numInvoice") Long numInvoice, 
+									  @RequestParam("idProduct") Long idProduct, 
+									  @RequestParam("cant") int cant) {
 
-		System.out.println("Invoice num " +  numInvoice);
-		System.out.println("idprod " +  idProduct);
-		System.out.println("cant" +  cant);
+		System.out.println("datos....... " +  cant +" "+idProduct+" " +numInvoice);
+		ModelAndView modelAndView = null;
+		
+		Optional<Invoice> invoicedb = invoicetServiceImp.findByNumInvoice(numInvoice);
+		if(invoicedb.isPresent()==false){
+			modelAndView = new ModelAndView("registerinvoice");
+			modelAndView.addObject("Error", "Invoice not generated ,try in a moment!!!");
+		}else{
+				Stock stockdb = invoicedb.get().getTrader().getStock();
+				StockProducts stockProductDB = stockdb.findProductInOwnStock(idProduct); 
+				
+				int newQuantity = stockProductDB.getQuantity()-cant;
+				stockProductDB.setQuantity(newQuantity);
+			
+				Product productdb = productServiceImp.findById(idProduct).get();	
+				invoicedb.get().addInvoiceProduct(productdb, cant);
+				invoicetServiceImp.save(invoicedb.get());
+				
+			    modelAndView = new ModelAndView("addproductininvoice");
+				modelAndView.addObject("invoice", invoicedb.get()); 
+				modelAndView.addObject("stockproducts", stockdb.getStockproducts());
+		}
+		return modelAndView;
+		
+			
 		
 		
-		Invoice invoicedb = invoicetServiceImp.findByNumInvoice(numInvoice).get();
-		Product productdb = productServiceImp.findById(idProduct).get();	
-		invoicedb.addInvoiceProduct(productdb, cant);
-		invoicetServiceImp.save(invoicedb);
-		return "redirect:/invoice/addproducts?numInvoice="+numInvoice;
+		//return "redirect:/invoice/addproducts?numInvoice="+numInvoice;
+		//return "index";
 	}	
 	
 	
