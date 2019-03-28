@@ -68,7 +68,6 @@ public class Trader extends Usser {
 	
 	
 	
-	/*******************************************************************************************************************************************/	
 	public Trader(){}
 
 	public Trader(String _name, String _pass, long _cuit, List<Address> _address){
@@ -82,9 +81,6 @@ public class Trader extends Usser {
 		this.cuit=_cuit;
 	}
 
-	/*************************************************************************************************************************************/	
-
-	
 	
 	/*METODOS ADD REMOVE Y CREAATE STOCK EN TRADER*/
 	public void createStock(){
@@ -102,8 +98,6 @@ public class Trader extends Usser {
 	}
 
 	
-	
-	
 	/*METODOS PARA ADICIONAR ASDRESS A TRADER*/
 
 	public void addAddress(Address ad){
@@ -113,8 +107,6 @@ public class Trader extends Usser {
 	public void removeAddress(Address ad){
 		this.address.remove(ad);
 	}
-
-
 
 	/*METODOS PARA ADICIONAR INVOICES*/
 	public void addInvoice(Invoice i){
@@ -126,9 +118,8 @@ public class Trader extends Usser {
 	}
 	
 
-
-
-	/*************************************************************************************************************************************/
+	
+	
 	/*METODOS GETTER AND SETER*/
 
 	public Collection<Invoice> getInvoice() {

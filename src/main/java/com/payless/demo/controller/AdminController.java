@@ -595,13 +595,14 @@ public class AdminController {
 		
 		ModelAndView modelAndView = null; 
 		Consumer consumerdb = consumerServiceImp.findByDni(dni);
-		Trader traderdb     = traderServiceImp.getTrader(idTrader);
-	
+		
 		if(consumerdb == null){
 			modelAndView = new ModelAndView("registerinvoice");
 			modelAndView.addObject("Error", "Consumer with dni "+dni+ " is not find it!");
 		}else{
+		
 				@SuppressWarnings("unused")
+				Trader traderdb     = traderServiceImp.getTrader(idTrader);
 				Invoice inv = new  Invoice(traderdb, consumerdb);
 				invoicetServiceImp.save(inv);	
 				modelAndView = new ModelAndView("redirect:/invoice/addproducts?numInvoice="+inv.getNumInvoice());
@@ -623,8 +624,10 @@ public class AdminController {
 				modelAndView = new ModelAndView("addproductininvoice");
 				Stock stockdb = inv.get().getTrader().getStock();
 				modelAndView.addObject("invoice", inv.get()); 
-				modelAndView.addObject("stockproducts", stockdb.getStockproducts());
-			
+				modelAndView.addObject("stockproducts", stockdb.matchInvoiceStockInTrader(inv.get()));
+				modelAndView.addObject("currentstock", stockdb.getStockproducts());
+				
+				
 				
 		}
 		return modelAndView;

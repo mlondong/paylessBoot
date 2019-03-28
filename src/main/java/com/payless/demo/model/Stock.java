@@ -2,6 +2,7 @@ package com.payless.demo.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +19,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.assertj.core.internal.Lists;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -111,7 +114,31 @@ public class Stock {
 	
 	
 	
-	
+	public List<StockProducts> matchInvoiceStockInTrader(Invoice invoice){
+		
+		List<StockProducts> newStockView = new  ArrayList<>();	
+		List<StockProducts> productsInStock = (List<StockProducts>) this.stockproducts;
+		List<InvoiceProduct>  prodInInvoice = (List<InvoiceProduct>) invoice.getProducts();
+		boolean flag=true;
+		
+		
+		for(StockProducts sp : productsInStock){
+			for(InvoiceProduct ip : prodInInvoice){
+					if( ip.getPoduct().getCode() == sp.getProduct().getCode() ){
+						flag=false;
+					}
+			}
+			
+			if(flag==true){
+				newStockView.add(sp);
+			}
+
+			flag=true;
+		}	
+
+		
+		return newStockView;
+	}
 	
 	
 	

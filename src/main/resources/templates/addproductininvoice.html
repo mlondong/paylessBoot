@@ -11,50 +11,63 @@
 
 <script type="text/javascript">
 
+$(document).ready(function () { 
 
-		function validForm(form){
 
+	$('#myModal').on('shown.bs.modal', function () {
+		  $('#myInput').trigger('focus')
+	})	
+	
+
+	$('form').each(function(index){
+
+		$("form").keypress(function(e) {
+			  //Enter key
+			  if (e.which == 13) {
+			    return false;
+			  }
+		});
+
+		$('#btn-add'+index).on('click', function(){
 			var flag=true;
-			var msj="";
-			var cantToSend = document.getElementById(form.id).elements[3].value; 
-			var cantInDB= document.getElementById(form.id).elements[2].value;
+			var cant = parseInt($('#cant'+index).val());
+	    	var cantdb = parseInt($('#cant_db'+index).val());
 
+	    	if(cant==0){
+	    		flag=false;
+		  		$('#span-add'+index).after('<p>Please insert a correct value.</p>')
+			}else if(cant > cantdb){
+				flag=false;
+		  		$('#span-add'+index).after('<p>Please insert a quantity less at the product in stock.</p>')
+			}else if(isNaN(cant)){
+				flag=false;
+		  		$('#span-add'+index).after('<p>Please input numbers only.</p>')
+			}else if(cant<0){
+				flag=false;
+		  		$('#span-add'+index).after('<p>Please input only positifs numbers.</p>')
+			}
 
-			
-			if(cantToSend == 0){
-		  	   msj+='Please insert a correct value';
-		  	  flag= false;
-			}else if(cantToSend > cantInDB){
-			   msj+=' Please insert a quantity less at the product in stock';
-			   flag= false;
-		    }
-
-
-
-			
-			
+	    	
 			if(flag==true){
 				$.ajax({
                     url: "/invoice/addprodinv",
                     type: "GET",
-                    data: { numInvoice: document.getElementById(form.id).elements[0].value,
-                    		idProduct: document.getElementById(form.id).elements[1].value,
-                    		cant: document.getElementById(form.id).elements[3].value  },
+                    data: { numInvoice: $('#numInvoice'+index).val(),
+                    		idProduct:  $('#idProduct'+index).val(), 
+                    		cant:       $('#cant'+index).val() },
                     dataType: "json"
                   });    
 
-	        		setTimeout(reload, 1500);		
+	        		setTimeout(reload, 300);		
+	    	}
+	    });
+	});
+});
 
-	    	}else{
-						alert(msj);
-						//alert("form "+form.id+ " cant to send "+ cantToSend + " cant in db " + cantInDB); 
-						
-					}
-		}
-		
-		function reload() {
-			window.location.reload();
-	    }
+function reload() {
+	window.location.reload();
+}
+
 
 
 </script>
@@ -81,32 +94,51 @@
 
 
 	<div th:if="${not #lists.isEmpty(invoice.getProducts())}">
-		<table class="table" >
+		<table class="table" style="border-collapse: collapse" >
 			<thead class="thead-dark">
 				<tr>
+				<th></th>
 				<th>Code</th>
 				<th>Description</th>
 				<th>Branch</th>
 				<th>Price</th>
 				<th>Units</th>
 				<th>Subtotal</th>
+				<th></th>
+				
 				</tr>	
 			</thead>
 			<tr th:each="invoiceProduct,index : ${invoice.getProducts()}" th:with="total=${total}">
+				<td>
+				<a href="#">
+				<img src="/images/delete-xxl.png" height="20px" width="20px" alt="Delete" title="Delete Product"/>
+				</a>
+				</td>
 				<td th:text="${invoiceProduct.poduct.code}"></td>
 				<td th:text="${invoiceProduct.poduct.description}"></td>
 				<td th:text="${invoiceProduct.poduct.producer}"></td>
 				<td th:text="${invoiceProduct.poduct.priceUnit}"></td>
 				<td th:text="${invoiceProduct.quantity}"></td>
 				<td th:text="${invoiceProduct.quantity} * ${invoiceProduct.poduct.priceUnit}"></td>
+				
+				<td>
+				<a href="#" data-toggle="modal" data-target="#exampleModal">
+				<img src="/images/see-ico.png" height="30px" width="30px" alt="Edit" title="Edit Product"/>
+				</a>
+				</td>
+				
+				
+			
 			</tr>
-			<tr class="table-primary">
+			<tr >
 				<th></th>
 				<th></th>
-				<th scope="col"><h6>Totales</h6></th>
-				<th scope="col" th:text="${#aggregates.sum(invoice.getProducts().![poduct.priceUnit])}"></th>
-				<th scope="col" th:text="${#aggregates.sum(invoice.getProducts().![quantity])}"></th>
-				<th scope="col" th:text="${#aggregates.sum(invoice.getProducts().![quantity * poduct.priceUnit])}"></th>
+				<th></th>
+				<th class="table-primary" scope="col"><h6>Totales</h6></th>
+				<th class="table-primary" scope="col" th:text="${#aggregates.sum(invoice.getProducts().![poduct.priceUnit])}"></th>
+				<th class="table-primary"  th:text="${#aggregates.sum(invoice.getProducts().![quantity])}"></th>
+				<th class="table-primary"  th:text="${#aggregates.sum(invoice.getProducts().![quantity * poduct.priceUnit])}"></th>
+				<th class="table-primary"></th>
 			</tr>
 		</table>
 	</div>
@@ -116,15 +148,16 @@
 	
 	<p></p>
 	
+	<div th:if="${not #lists.isEmpty(stockproducts)}">
+	
 	<div class="table-warning">
 		<p><h3>Choose your Products in Stock</h3></p>
 	</div>
-	
+
 	<div id="div_stock" th:if="${stockproducts}">
-		<table border=1 class="table">
+		<table border=1 class="table"  style="border-collapse: collapse">
 			<thead>
 			<tr class="table-warning">
-				<th>Type Product</th>
 				<th>Code</th>
 				<th>Description</th>
 				<th>Branch</th>
@@ -138,7 +171,6 @@
 
 		  
 			<tr th:each="stockproduct,index : ${stockproducts}">
-				<td th:text="${stockproduct.getClass().getSimpleName()}"></td>
 				<td th:text="${stockproduct.product.code}"></td>
 				<td th:text="${stockproduct.product.description}"></td>
 				<td th:text="${stockproduct.product.producer}"></td>
@@ -151,15 +183,72 @@
 							<input type="hidden"  th:id="'numInvoice' + ${index.index}"  th:value="${invoice.getNumInvoice()}"  />
 							<input type="hidden" th:id="'idProduct' + ${index.index}" th:value="${stockproduct.product.id}"  />
 							<input type="hidden"  th:id="'cant_db' + ${index.index}"  th:value="${stockproduct.quantity}"  />
-							<span th:if=${stockproduct.quantity!=0}>	
-							<input type="text" size=5  th:id="'cant' + ${index.index}" /> 
-							<button type="button" id="btn-add" name="btn-add" th:onclick="validForm(this.form);">Add</button>
+							<span th:if=${stockproduct.quantity!=0}  >	
+										<input type="text" size=5  th:id="'cant' + ${index.index}" /> 
+										<button type="button" th:id="'btn-add'+ ${index.index}" >Add</button>
+							</span>
+							<span th:id="'span-add'+ ${index.index}"> </span>
+							
 							</span>
 						</form> 
 				</td>
 			</tr>
 		</table>
 	</div>
+</div>
+
+	
+	
+	<p></p>
+		
+		<div class="table-success">
+			<p><h3>Current Stock</h3></p>
+		</div>
+		
+		<table  border=1 class="table"  style="border-collapse: collapse; overflow:scroll;">
+			<thead>
+			<tr class="table-success">
+				<th>Code</th>
+				<th>Description</th>
+				<th>Branch</th>
+				<th>Price</th>
+				<th>Register date</th>				
+				<th>Quantity in Stock</th>
+			</tr>
+			</thead>
+		
+		<tr th:each="currentstock : ${currentstock}">
+				<td th:text="${currentstock.product.code}"></td>
+				<td th:text="${currentstock.product.description}"></td>
+				<td th:text="${currentstock.product.producer}"></td>
+				<td th:text="${currentstock.product.priceUnit}"></td>
+				<td th:text="${currentstock.date}"></td>
+				<td  th:text="${currentstock.quantity}"></td>
+		</tr>	
+		</table>	
+
+
+
+		<div class="modal" tabindex="-1" role="dialog">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title">Modal title</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        <p>Modal body text goes here.</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-primary">Save changes</button>
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
 
 </body>
 </html>
