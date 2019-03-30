@@ -3,13 +3,98 @@
 <head lang="en">
 <title>ADMIN TRADER</title>
 <th:block th:include="layout/header"></th:block>
+<script type="text/javascript">
+
+
+
+function showEditModal(idInvoice, idProd, cant) {
+	var url = "/invoice/getInvoiceProduct?idInvoice="+idInvoice+"&idProd="+idProd;
+	$('#update-idprod').val(idProd);
+	$('#update-idinvoice').val(idInvoice);
+	$('#update-quantity').val(cant);
+    loadEntity(url);
+}
+
+//Ajax request for Something to populate the modal form.
+function loadEntity(url) {
+
+	$.getJSON(url, {}, function (data) {
+		populateModal(data);
+       });
+}
+
+//Assign the data values to the modal form.
+function populateModal(data) {
+    $('#update-code').val(data.code);
+    $('#update-branch').val(data.producer);
+    $('#update-description').val(data.description);
+}
+
+
+
+$(document).ready(function () { 
+
+	$('#save-product').on('click', function(){
+		
+	});		
+
+});
+</script>
 </head>
 
 <body>
-<div th:if="${invoice_detail.id}">	
-	<h2>Invoice Information </h2>
-	<div th:if="${invoice_detail != null}">
 
+<!--MODAL FOR UPDATE  -->
+<div th:id="umodal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Update Product</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-form" role="form" action="/invoice/updateprod" method="GET">
+                    <input id="update-idprod" type="hidden" />
+                    <input id="update-idinvoice" type="hidden" />
+                    <fieldset class="form-group">
+                        <table width="100%">
+                        <tr>
+                        	<td>Code: </td>
+                        	<td><input type="text" id="update-code" disabled="disabled"></td>
+                       </tr>
+                       <tr>
+                        	<td>Description: </td>
+                        	<td><input type="text" id="update-description" disabled="disabled"></td>
+                       </tr>
+                       <tr>
+                        	<td>Branch: </td>
+                        	<td><input type="text" id="update-branch" disabled="disabled"></td>
+                        </tr>
+                       <tr>
+                        	<td>Quantity: </td>
+                        	<td><input type="text" id="update-quantity" ></td>
+                        </tr>
+                        </table>
+                    </fieldset>
+                    <div class="form-group">
+                        <button class="btn btn-success" id="save-product" type="button">Save</button>
+                		<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            	    </div>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+
+<div th:if="${invoice_detail.id}">	
+	<h2>General Information in Invoice: </h2>
+	<div th:if="${invoice_detail != null}">
 		<table colspan="0" cellspacing="0">
 			<tr>
 				<td>
@@ -52,9 +137,11 @@
 	</table>
 </div>
 
-	<p></p>
+<p></p>
+
+
 	<div th:if="${invoice_detail != null}">
-		<table class="table">
+		<table class="table" border=1>
 			<thead class="thead-dark">
 				<th>#</th>
 				<th>Code</th>
@@ -62,8 +149,9 @@
 				<th>Branch</th>
 				<th>Price</th>
 				<th>Current Amount</th>
-				<th>To Update</th>
-				<th>Delete</th>
+				<th></th>
+				<th></th>
+				
 				</tr>
 			</thead>
 			<tr th:each="invoiceProduct,index : ${invoice_detail.products}">
@@ -73,16 +161,15 @@
 				<td th:text="${invoiceProduct.poduct.producer}"></td>
 				<td th:text="${invoiceProduct.poduct.priceUnit}"></td>
 				<td th:text="${invoiceProduct.quantity}"></td>
-			
-			    <td>
-					<form th:action="@{/invoice/updateprod}" th:object="${invoiceproduct}" method="post">
-					<input type="hidden" size="5" name="invoice"  id="invoice"  th:value="${invoiceProduct.invProdId.INVOICE_ID}"  />
-					<input type="hidden" size="5" name="poduct"  id="poduct"  th:value="${invoiceProduct.invProdId.PRODUCT_ID}"  />
-					<input type="text" size="5" name="quantity"  id="quantity"  th:value="${invoiceProduct.quantity}"  />
-					<button type="submit" class="btn btn-primary">Change</button>
-					</form>
-				</td>
 				
+				<td>
+                    <a data-toggle="modal" data-target="#umodal" 
+                    th:onclick="'showEditModal(\''+${invoiceProduct.invProdId.INVOICE_ID}+ '\' , 
+                    							\''+${invoiceProduct.poduct.id}+ '\' , 
+                    							\''+${invoiceProduct.quantity}+ '\' );'">
+                    <img src="/images/SEE-ico.png" height="30px" width="30px" alt="Update" title="Update"/>
+                    </a>
+                </td>
 				<td>
 				<a th:href="@{/invoice/deleteinvoice?idinvoice={idinvoice}&idprod={idprod} (idprod=${invoiceProduct.invProdId.PRODUCT_ID} , idinvoice=${invoice_detail.id})}">
 				<img src="/images/eliminar-ico.png" height="30px" width="30px" alt="Delete" title="Delete Product"/>

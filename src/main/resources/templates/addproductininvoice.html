@@ -4,21 +4,94 @@
 <title>ADMIN TRADER</title>
 <th:block th:include="layout/header"></th:block>
 
-
-<script type="text/javascript" 	src="http://code.jquery.com/jquery-1.10.2.js"> </script>
-<script type="text/javascript" 	src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"> </script>
-<link rel="stylesheet" 	href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
-
 <script type="text/javascript">
+
+
+function showDeleteModal(idInvoice, idProduct) {
+    $('#delete-idInvoice').val(idInvoice);
+    $('#delete-idProduct').val(idProduct);
+}
+
+function deleteEntity(url) {
+
+	var idInvoice =  $('#delete-idInvoice').val();
+	var idProduct =  $('#delete-idProduct').val();
+	var url ="/invoice/deleteinvoice?idinvoice="+idInvoice+"&idprod="+idProduct;
+
+	$.post(url, function (data) {	
+
+	});
+    closeModal('#dmodal');
+
+}
+
+
+function closeModal(name) {
+    $(name).modal('toggle');
+	setTimeout(reload, 300);	
+}
+
+
+
+function showEditModal(idInvoice, idProd, cant) {
+	var url = "/invoice/getInvoiceProduct?idInvoice="+idInvoice+"&idProd="+idProd;
+	$('#update-idprod').val(idProd);
+	$('#update-idinvoice').val(idInvoice);
+	$('#update-quantity').val(cant);
+    loadEntity(url);
+}
+
+//Ajax request for Something to populate the modal form.
+function loadEntity(url) {
+
+	   $.getJSON(url, {}, function (data) {
+		  populateModal(data);
+       });
+}
+
+//Assign the data values to the modal form.
+function populateModal(data) {
+    $('#update-code').val(data.code);
+    $('#update-branch').val(data.producer);
+    $('#update-description').val(data.description);
+}
+
 
 $(document).ready(function () { 
 
 
-	$('#myModal').on('shown.bs.modal', function () {
-		  $('#myInput').trigger('focus')
-	})	
+	$('#save-product').on('click', function(){
+		var newCant = parseInt($('#update-quantity').val());
+		var flag2=true;
+		
+		if(newCant==0){
+			flag2=false;
+	  		$('#span-update').after('Please insert a correct value.')
+		}else if(isNaN(newCant)){
+			flag2=false;
+	  		$('#span-update').after('Please input numbers only.')
+		}else if(newCant<0){
+			flag2=false;
+	  		$('#span-update').after('Please input only positifs numbers.')
+		}
 	
+		if(flag2==true){
+			 $.ajax({
+                url: "/invoice/updateprod",
+                type: "GET",
+                data: { idprod: 	$('#update-idprod').val(),
+                		idinvoice:  $('#update-idinvoice').val(), 
+                		quantity:   $('#update-quantity').val() },
+                dataType: "json"
+              });    
+			 closeModal('#umodal');
+     	}
 
+	});		
+
+
+
+	
 	$('form').each(function(index){
 
 		$("form").keypress(function(e) {
@@ -29,6 +102,7 @@ $(document).ready(function () {
 		});
 
 		$('#btn-add'+index).on('click', function(){
+			
 			var flag=true;
 			var cant = parseInt($('#cant'+index).val());
 	    	var cantdb = parseInt($('#cant_db'+index).val());
@@ -67,187 +141,276 @@ $(document).ready(function () {
 function reload() {
 	window.location.reload();
 }
-
-
-
 </script>
-
 </head>
 
 <body>
+
+<!-- MODAL FOR DELETE -->
+<div th:id="dmodal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Delete Something</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <input id="delete-idInvoice" type="hidden"/>
+                <input id="delete-idProduct" type="hidden"/>
+                
+                <div align="center">
+                    <p>Are you sure you want to delete this record?</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <a type="button" class="btn btn-danger" onclick="deleteEntity('something')">Delete</a>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+
+
+<!--MODAL FOR UPDATE  -->
+<div th:id="umodal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Update Product</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-form" role="form" action="/invoice/updateprod" method="GET">
+                    <input id="update-idprod" type="hidden" />
+                    <input id="update-idinvoice" type="hidden" />
+                    <fieldset class="form-group">
+                        <table width="100%">
+                        <tr>
+                        	<td>Code: </td>
+                        	<td><input type="text" id="update-code" disabled="disabled"></td>
+                       </tr>
+                       <tr>
+                        	<td>Description: </td>
+                        	<td><input type="text" id="update-description" disabled="disabled"></td>
+                       </tr>
+                       <tr>
+                        	<td>Branch: </td>
+                        	<td><input type="text" id="update-branch" disabled="disabled"></td>
+                        </tr>
+                       <tr>
+                        	<td>Quantity: </td>
+                        	<td>
+                        		<input type="text" id="update-quantity" >
+                        	</td>
+                        </tr>
+                        </table>
+                   		<div  id="span-update"></div>
+                    </fieldset>
+                    
+                    <div class="form-group">
+                        <button class="btn btn-success" id="save-product" type="button">Save</button>
+                		<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            	    </div>
+            	    
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+
+
+
+
+
+
 	<div id="div_stock" th:if="${invoice}">
-	<fieldset  class="col-md-6">
-		<legend>General Information in Invoice:</legend>		
-		<table>
-			<tr>
-				<td>Num Invoice:</td>
-				<td th:text="${invoice.getNumInvoice()}"></td>
-				<td>Date Invoice:</td>
-				<td th:text="${invoice.getDateInvoice()}"></td>
-			</tr>
-		</table>
-	</fieldset>	
+			<h2>General Information in Invoice: </h2>
+			<table class="table-active" >
+				<tr>
+					<td style="color: red">Num Invoice:</td>
+					<td th:text="${invoice.getNumInvoice()}" align="right"></td>
+					<td></td> 
+					<td style="color: red"> Date Invoice:</td>
+					<td th:text="${invoice.getDateInvoice()}" align="right"></td>
+				</tr>
+				<tr>
+					<td style="color: red">Consumer:</td> 
+					<td th:text="${invoice.consumer.firstName + ' ' +invoice.consumer.lastName}" align="right"></td>
+					<td></td>
+					<td style="color: red">DNI:</td> 
+					<td th:text="${invoice.consumer.dni}" align="right"></td>
+				</tr>
+				<tr>	
+					<td style="color: red">Trader:</td>
+					<td th:text="${invoice.trader.nameEnterprise +' '+ invoice.trader.cuit}" align="right"></td>
+					<td></td>
+					<td style="color: red">Email:</td>					
+					<td th:text="${invoice.trader.email}" align="right"></td>
+				</tr>
+			</table>
 	</div>
 
 
-<p></p>
+	<p></p>
 
 
 	<div th:if="${not #lists.isEmpty(invoice.getProducts())}">
-		<table class="table" style="border-collapse: collapse" >
+		<table class="table" style="border-collapse: collapse" border=1>
 			<thead class="thead-dark">
 				<tr>
-				<th></th>
-				<th>Code</th>
-				<th>Description</th>
-				<th>Branch</th>
-				<th>Price</th>
-				<th>Units</th>
-				<th>Subtotal</th>
-				<th></th>
-				
-				</tr>	
+					<th>Code</th>
+					<th>Description</th>
+					<th>Branch</th>
+					<th>Price</th>
+					<th>Units</th>
+					<th>Subtotal</th>
+					<th></th>
+					<th></th>
+				</tr>
 			</thead>
 			<tr th:each="invoiceProduct,index : ${invoice.getProducts()}" th:with="total=${total}">
-				<td>
-				<a href="#">
-				<img src="/images/delete-xxl.png" height="20px" width="20px" alt="Delete" title="Delete Product"/>
-				</a>
-				</td>
 				<td th:text="${invoiceProduct.poduct.code}"></td>
 				<td th:text="${invoiceProduct.poduct.description}"></td>
 				<td th:text="${invoiceProduct.poduct.producer}"></td>
 				<td th:text="${invoiceProduct.poduct.priceUnit}"></td>
 				<td th:text="${invoiceProduct.quantity}"></td>
-				<td th:text="${invoiceProduct.quantity} * ${invoiceProduct.poduct.priceUnit}"></td>
-				
+				<td	th:text="${invoiceProduct.quantity} * ${invoiceProduct.poduct.priceUnit}"></td>
 				<td>
-				<a href="#" data-toggle="modal" data-target="#exampleModal">
-				<img src="/images/see-ico.png" height="30px" width="30px" alt="Edit" title="Edit Product"/>
+                    <a data-toggle="modal" 
+                       data-target="#umodal" 
+                       th:onclick="'showEditModal(\''+${invoiceProduct.invProdId.INVOICE_ID}+ '\' , 
+                    							\''+${invoiceProduct.poduct.id}+ '\' , 
+                    							\''+${invoiceProduct.quantity}+ '\' );'">
+                    <img src="/images/SEE-ico.png" height="30px" width="30px" alt="Update" title="Update"/>
+                    </a>
+                </td>
+                <td>
+                <a  data-toggle='modal' 
+					data-target='#dmodal'
+                    th:onclick="'showDeleteModal(\''+${invoiceProduct.invProdId.INVOICE_ID}+ '\', 
+                    							\''+${invoiceProduct.poduct.id}+ '\' )'">
+				<img src="/images/eliminar-ico.png" height="30px" width="30px" alt="Delete" title="Delete Product"/>
 				</a>
 				</td>
-				
-				
-			
+                
 			</tr>
-			<tr >
-				<th></th>
+			<tr>
 				<th></th>
 				<th></th>
 				<th class="table-primary" scope="col"><h6>Totales</h6></th>
-				<th class="table-primary" scope="col" th:text="${#aggregates.sum(invoice.getProducts().![poduct.priceUnit])}"></th>
-				<th class="table-primary"  th:text="${#aggregates.sum(invoice.getProducts().![quantity])}"></th>
-				<th class="table-primary"  th:text="${#aggregates.sum(invoice.getProducts().![quantity * poduct.priceUnit])}"></th>
+				<th class="table-primary" scope="col"
+					th:text="${#aggregates.sum(invoice.getProducts().![poduct.priceUnit])}"></th>
+				<th class="table-primary"
+					th:text="${#aggregates.sum(invoice.getProducts().![quantity])}"></th>
+				<th class="table-primary"
+					th:text="${#aggregates.sum(invoice.getProducts().![quantity * poduct.priceUnit])}"></th>
 				<th class="table-primary"></th>
+				<th class="table-primary"></th>
+
 			</tr>
 		</table>
 	</div>
-	
-	
-	
-	
+
+
+
+
 	<p></p>
-	
+
 	<div th:if="${not #lists.isEmpty(stockproducts)}">
-	
-	<div class="table-warning">
-		<p><h3>Choose your Products in Stock</h3></p>
-	</div>
 
-	<div id="div_stock" th:if="${stockproducts}">
-		<table border=1 class="table"  style="border-collapse: collapse">
-			<thead>
-			<tr class="table-warning">
-				<th>Code</th>
-				<th>Description</th>
-				<th>Branch</th>
-				<th>Price</th>
-				<th>Register date</th>				
-				<th>Quantity in Stock</th>
-				<th>Add Quantity</th>
-								
-			</tr>
-			</thead>
-
-		  
-			<tr th:each="stockproduct,index : ${stockproducts}">
-				<td th:text="${stockproduct.product.code}"></td>
-				<td th:text="${stockproduct.product.description}"></td>
-				<td th:text="${stockproduct.product.producer}"></td>
-				<td th:text="${stockproduct.product.priceUnit}"></td>
-				<td th:text="${stockproduct.date}"></td>
-				<td  th:text="${stockproduct.quantity}"></td>
-				<td>
-				
-						<form method="get"  action="/invoice/addprodinv"  th:id="'myForm' + ${index.index}"  >
-							<input type="hidden"  th:id="'numInvoice' + ${index.index}"  th:value="${invoice.getNumInvoice()}"  />
-							<input type="hidden" th:id="'idProduct' + ${index.index}" th:value="${stockproduct.product.id}"  />
-							<input type="hidden"  th:id="'cant_db' + ${index.index}"  th:value="${stockproduct.quantity}"  />
-							<span th:if=${stockproduct.quantity!=0}  >	
-										<input type="text" size=5  th:id="'cant' + ${index.index}" /> 
-										<button type="button" th:id="'btn-add'+ ${index.index}" >Add</button>
-							</span>
-							<span th:id="'span-add'+ ${index.index}"> </span>
-							
-							</span>
-						</form> 
-				</td>
-			</tr>
-		</table>
-	</div>
-</div>
-
-	
-	
-	<p></p>
-		
-		<div class="table-success">
-			<p><h3>Current Stock</h3></p>
+		<div class="table-warning">
+			<p>
+			<h3>Choose your Products in Stock</h3>
+			</p>
 		</div>
-		
-		<table  border=1 class="table"  style="border-collapse: collapse; overflow:scroll;">
-			<thead>
+
+		<div id="div_stock" th:if="${stockproducts}">
+			<table border=1 class="table" style="border-collapse: collapse">
+				<thead>
+					<tr class="table-warning">
+						<th>Code</th>
+						<th>Description</th>
+						<th>Branch</th>
+						<th>Price</th>
+						<th>Register date</th>
+						<th>Quantity in Stock</th>
+						<th>Add Quantity</th>
+
+					</tr>
+				</thead>
+
+
+				<tr th:each="stockproduct,index : ${stockproducts}">
+					<td th:text="${stockproduct.product.code}"></td>
+					<td th:text="${stockproduct.product.description}"></td>
+					<td th:text="${stockproduct.product.producer}"></td>
+					<td th:text="${stockproduct.product.priceUnit}"></td>
+					<td th:text="${stockproduct.date}"></td>
+					<td th:text="${stockproduct.quantity}"></td>
+					<td>
+
+						<form method="get" action="/invoice/addprodinv"	th:id="'myForm' + ${index.index}">
+							<input type="hidden" th:id="'numInvoice' + ${index.index}"	th:value="${invoice.getNumInvoice()}" />
+							<input type="hidden" th:id="'idProduct' + ${index.index}"	th:value="${stockproduct.product.id}" />
+							<input type="hidden" th:id="'cant_db' + ${index.index}"	th:value="${stockproduct.quantity}" /> 
+							<span th:if=${stockproduct.quantity!=0}> 
+								<input type="text" size=5 th:id="'cant' + ${index.index}" />
+								<button type="button" th:id="'btn-add'+ ${index.index}">Add</button>
+							</span> 
+							<span th:id="'span-add'+ ${index.index}"> </span> </span>
+						</form>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	
+
+
+	<p></p>
+
+	<div class="table-success">
+		<p>
+		<h3>Current Stock</h3>
+		</p>
+	</div>
+
+	<table border=1 class="table"
+		style="border-collapse: collapse; overflow: scroll;">
+		<thead>
 			<tr class="table-success">
 				<th>Code</th>
 				<th>Description</th>
 				<th>Branch</th>
 				<th>Price</th>
-				<th>Register date</th>				
+				<th>Register date</th>
 				<th>Quantity in Stock</th>
 			</tr>
-			</thead>
-		
+		</thead>
+
 		<tr th:each="currentstock : ${currentstock}">
-				<td th:text="${currentstock.product.code}"></td>
-				<td th:text="${currentstock.product.description}"></td>
-				<td th:text="${currentstock.product.producer}"></td>
-				<td th:text="${currentstock.product.priceUnit}"></td>
-				<td th:text="${currentstock.date}"></td>
-				<td  th:text="${currentstock.quantity}"></td>
-		</tr>	
-		</table>	
+			<td th:text="${currentstock.product.code}"></td>
+			<td th:text="${currentstock.product.description}"></td>
+			<td th:text="${currentstock.product.producer}"></td>
+			<td th:text="${currentstock.product.priceUnit}"></td>
+			<td th:text="${currentstock.date}"></td>
+			<td th:text="${currentstock.quantity}">
+			</td>
+		</tr>
+	</table>
 
 
-
-		<div class="modal" tabindex="-1" role="dialog">
-		  <div class="modal-dialog" role="document">
-		    <div class="modal-content">
-		      <div class="modal-header">
-		        <h5 class="modal-title">Modal title</h5>
-		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		          <span aria-hidden="true">&times;</span>
-		        </button>
-		      </div>
-		      <div class="modal-body">
-		        <p>Modal body text goes here.</p>
-		      </div>
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-primary">Save changes</button>
-		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-		      </div>
-		    </div>
-		  </div>
-		</div>
 
 
 </body>

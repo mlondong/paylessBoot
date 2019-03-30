@@ -3,6 +3,7 @@ package com.payless.demo.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -83,7 +84,20 @@ public class Invoice {
 	}
 	
 
+	public InvoiceProduct getInvoiceProductWithProduct(long idProduct){
+		Collection <InvoiceProduct> invoiceProducts = this.getProducts();
+		InvoiceProduct invp = null;
 		
+		for(InvoiceProduct ip : invoiceProducts){
+				if(ip.getPoduct().getId()==idProduct){
+					invp=ip;
+				}
+		}
+		return invp;
+	}	
+	
+	
+	
 	
 	/************************************************************************************************************************************/
 	
@@ -96,6 +110,12 @@ public class Invoice {
 		InvoiceProduct invoideProducts = new InvoiceProduct(this, p, quantity);
 		products.add(invoideProducts);
 	}
+	
+
+	public void removeInvoiceProduct(InvoiceProduct ivp){
+		 this.getProducts().remove(ivp);
+	}
+
 	
 	
 	

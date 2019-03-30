@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
@@ -63,6 +64,7 @@ public class AdminController {
 	private  ConsumerServiceImp consumerServiceImp;
 	@Autowired
 	private  InvoiceServiceImp invoiceServiceImp;
+	
 	@Autowired
 	private  StockServiceImp stockServiceImp;
 	
@@ -489,43 +491,91 @@ public class AdminController {
 		return "invoice";
 	}
 
+	
+	
+	@RequestMapping(path = "/invoice/getInvoiceProduct",  method={RequestMethod.POST, RequestMethod.GET})
+	@ResponseBody
+   public Product loadInvoiceProduct(@RequestParam("idInvoice") Long idInvoice , @RequestParam("idProd") Long idProd) {
+		InvoiceProduct invoiceProduct=null;
+		Invoice invoicedb = invoicetServiceImp.findById(idInvoice).get();
+		invoiceProduct = invoicedb.getInvoiceProductWithProduct(idProd);
+		return invoiceProduct.getPoduct();
+    }
+	
+	
+	
+	@RequestMapping(path="/invoice/updateprod" , method={RequestMethod.POST, RequestMethod.GET})
+	public ModelAndView update_product_invoice(@RequestParam("idprod") Long idProd ,  
+										 @RequestParam("idinvoice") Long idInvoice ,
+										 @RequestParam("quantity") int cant){
 
-	@RequestMapping(path="/invoice/showdetail", method = {RequestMethod.POST, RequestMethod.GET})
-	public String show_product_invoice(@RequestParam(value="idinvoice", required=true) long idInvoice, 
-									   @RequestParam(value="idtrader", required=true) long idTrader, Model model){
 		
-		if(invoicetServiceImp.existsById(idInvoice)){
-			Invoice invoicedb = invoicetServiceImp.findById(idInvoice).get();
-			model.addAttribute("invoice_detail", invoicedb);
+		Invoice invoicedb = invoicetServiceImp.findById(idInvoice).get();
+
+		ModelAndView modelAndView = new ModelAndView("redirect:/invoice/showdetail?idinvoice="+idInvoice+"&idtrader="+invoicedb.getTrader().getId());
+
+		InvoiceProduct invoiceProduct = invoicedb.getInvoiceProductWithProduct(idProd);
+		Stock stockTrader = invoicedb.getTrader().getStock();
+		StockProducts stockProduct= stockTrader.findProductInOwnStock(idProd);
+
+		
+		int quantityInStock = stockProduct.getQuantity(); 
+		int quantityInvoice = invoiceProduct.getQuantity(); 
+		int quantityToUpdate=0;
+		
+		if(quantityInStock==0){
+			if(quantityInvoice < cant){
+				quantityToUpdate= cant;
+				quantityInStock = quantityInStock + (quantityInvoice - cant);
+			}else{
+					modelAndView.addObject("Error", "Quantity in stock is 0, you can't update your quantity ");
+				 }	
+		}else if(quantityInStock < cant){
+			modelAndView.addObject("Error", "Quantity in stock: "+quantityInStock+ "is less, that "+cant+", try again!");
+		}else{
+				System.out.println("quantityInvoice  " + quantityInvoice + "cant "+ cant );
+			
+				if(quantityInvoice < cant){
+					quantityToUpdate = cant ;
+					quantityInStock=  quantityInStock - ( cant - quantityInvoice );
+				}if(quantityInvoice > cant){
+					quantityToUpdate = cant ;
+					quantityInStock=  quantityInStock + (quantityInvoice - cant);
+				}if(quantityInvoice==cant){
+					quantityToUpdate=cant;
+				}
+		
+				
+			stockProduct.setQuantity(quantityInStock);
+			invoiceProduct.setQuantity(quantityToUpdate); 
+			stockServiceImp.save(stockTrader);
+			invoicetServiceImp.save(invoicedb);
 		}
-		return "invoicedetails";
+		
+		return modelAndView;
 	}
 
 
-	@PostMapping(path="/invoice/updateprod")
-	public String update_product_invoice(@Valid InvoiceProduct invoiceproduct, BindingResult result, Model model ){
-		
-		Invoice invoicedb = invoicetServiceImp.findById(invoiceproduct.getInvoice().getId()).get();
-		Collection<InvoiceProduct> list_invoiceProducts   = invoicedb.getProducts();
-		for(InvoiceProduct ip : list_invoiceProducts){
-			if(ip.getPoduct().equals(invoiceproduct.getPoduct())){
-				ip.setQuantity(invoiceproduct.getQuantity());
-				invoicetServiceImp.save(invoicedb);
-				break;
-			}
-		}
-		return "redirect:/invoice/showdetail?idinvoice="+invoicedb.getId()+"&idtrader="+invoicedb.getTrader().getId();
-	}
-
-
+	
+	
+	
 	@RequestMapping(path="/invoice/deleteinvoice", method = {RequestMethod.POST, RequestMethod.GET})
-	public String removeProductInvoice(@RequestParam("idinvoice") long idinvoice, @RequestParam("idprod") long idprod){
+	public String removeProductInvoice(@RequestParam("idinvoice") long idinvoice, @RequestParam("idprod") long idProduct){
+		
 		Invoice invoicedb = invoicetServiceImp.findById(idinvoice).get();
-		Product pr =  productServiceImp.findById(idprod).get();
-		Collection<InvoiceProduct> _listinvoiceProducts  = invoicedb.getProducts();
-		_listinvoiceProducts.removeIf((InvoiceProduct ip) -> ip.getPoduct().equals(pr));
+		InvoiceProduct invoiceProduct = invoicedb.getInvoiceProductWithProduct(idProduct);
+		
+		Stock stockTrader = invoicedb.getTrader().getStock();
+		StockProducts stockProduct= stockTrader.findProductInOwnStock(idProduct);
+	
+		int newQuantity = stockProduct.getQuantity() + invoiceProduct.getQuantity();
+		stockProduct.setQuantity(newQuantity);
+		stockServiceImp.save(stockTrader);
+
+		invoicedb.removeInvoiceProduct(invoiceProduct);
 		invoicetServiceImp.save(invoicedb);
-		return "redirect:/invoice/showdetail?idinvoice="+idinvoice+"&idtrader="+idprod;
+		
+		return "redirect:/invoice/showdetail?idinvoice="+idinvoice+"&idtrader="+idProduct;
 	}
 	
 	
@@ -569,7 +619,6 @@ public class AdminController {
 	@RequestMapping(path="/invoice/numinvoice",  method = {RequestMethod.POST, RequestMethod.GET})
 	public String  searchInvoiceNumeber(@RequestParam(required=false, name="numInvoice", defaultValue="0" ) Long numInvoice, Model model){
 		
-		System.out.println("llego .. numinvoice " + numInvoice);
 		
 		if(numInvoice==0){
 			model.addAttribute("Error", " Fill the form... to find information " );
@@ -666,12 +715,11 @@ public class AdminController {
 		}
 		return modelAndView;
 		
-			
-		
-		
-		//return "redirect:/invoice/addproducts?numInvoice="+numInvoice;
-		//return "index";
 	}	
+	
+	
+
+	
 	
 	
 	
