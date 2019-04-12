@@ -2,9 +2,7 @@ package com.payless.demo.controller;
 
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,26 +14,24 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.payless.demo.model.Address;
-import com.payless.demo.model.CareProduct;
 import com.payless.demo.model.Consumer;
 import com.payless.demo.model.Invoice;
 import com.payless.demo.model.InvoiceProduct;
-import com.payless.demo.model.MeatProduct;
-import com.payless.demo.model.MilkProduct;
 import com.payless.demo.model.Product;
 import com.payless.demo.model.Stock;
 import com.payless.demo.model.StockProducts;
 import com.payless.demo.model.Trader;
 
 import com.payless.demo.repositories.CityRepository;
-import com.payless.demo.repositories.StockRepository;
 import com.payless.demo.repositories.ZoneRepository;
+
 import com.payless.demo.services.TraderServiceImp;
 import com.payless.demo.services.ConsumerServiceImp;
 import com.payless.demo.services.InvoiceServiceImp;
 import com.payless.demo.services.ProductServiceImp;
 import com.payless.demo.services.StockServiceImp;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -46,7 +42,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-
 
 /**
  * @RestController = @Controller + @ResponseBody  
@@ -64,13 +59,8 @@ public class AdminController {
 	private  ConsumerServiceImp consumerServiceImp;
 	@Autowired
 	private  InvoiceServiceImp invoiceServiceImp;
-	
 	@Autowired
 	private  StockServiceImp stockServiceImp;
-	
-	
-	
-	
 	@Autowired
 	private CityRepository cityrepository;
 	@Autowired
@@ -79,17 +69,22 @@ public class AdminController {
 	
 
 	
+	
+	
+	
+	
+	/**HOME WITH LIST*/
 	/**HOME WITH LIST*/
 	@RequestMapping(path="/")
 	public String home(Model model){
 		model.addAttribute("message", "SpringBoot Thymeleaf rocks");
-		return "index"; 
-
+		return "invoice"; 
 	}
 
-
-
-	/***********************************/
+    /*************************************************/    
+    
+    
+    /***********************************/
 	/**CONTROLS TRADER OPERATIONS INFO*/
 	/***********************************/
 

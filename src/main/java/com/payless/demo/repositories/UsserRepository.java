@@ -20,8 +20,9 @@ public interface UsserRepository extends BaseUserRepository<Usser>{
 
 	/*Metodos comunes a Usser y sus herederos*/
 	Usser  findUsserById(long id);
-	List<Usser> findUsserByName(String name);
+	Optional<Usser> findUsserByName(String name);
 	List<Usser> findUsserByState(boolean state);
+	
 
 
 }
