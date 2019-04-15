@@ -75,11 +75,11 @@ public class AdminController {
 	
 	/**HOME WITH LIST*/
 	/**HOME WITH LIST*/
-	@RequestMapping(path="/")
+	/*@RequestMapping(path="/")
 	public String home(Model model){
 		model.addAttribute("message", "SpringBoot Thymeleaf rocks");
 		return "invoice"; 
-	}
+	}*/
 
     /*************************************************/    
     

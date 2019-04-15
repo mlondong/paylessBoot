@@ -1,46 +1,36 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layout">
-
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Home</title>
+    <title>Payless</title>
+<link rel="stylesheet"
+ href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
+ integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
+ crossorigin="anonymous"></link>
+   
 </head>
+<body class="text-center" data-gr-c-s-loaded="true">
+    <div class="modal-dialog text-center">
+                <form class="form-signin" th:action="@{/login}" method="post">
+                <h1 class="h3 mb-3 font-weight-normal">Please sign in PaylessBoot.</h1>
+                	<label for="username" class="sr-only">UserName</label>
+                    <input type="text" class="form-control" placeholder="UserName" id="username" name="username" required autofocus/>
+                    <label for="username" class="sr-only">Password</label>
+                    <input type="password" class="form-control" placeholder="Password" id="password" name="password" required/>
+                    <button type="submit" class="btn btn-lg btn-primary btn-block">Sign In</button>
+                </form>
 
-
-
-<body>
-	<div layout:fragment="content">
-	<h4>INTERFAZ DE ADMINISTRACION</h4>
-	
-	<table border="0">
-		<tbody>
-			<tr>
-				<td>Trader</td>
-				<td><a href="/main/register">Admin Trader</a></td>
-			</tr>
-			<tr>
-				<td>Consumer</td>
-				<td><a href="">Admin Consumer</a></td>
-			</tr>
-			<tr>
-				<td>Products</td>
-				<td><a href="">Admin Products</a></td>
-			</tr>
-	
-		</tbody>
-	</table>
-
-
-
-		<p>
-			
-		</p>
-
-
+                <div th:if="${param.error}" class="alert alert-danger" role="alert">
+		            Invalid username and password.
+		        </div>
+		        <div th:if="${param.logout}" class="alert alert-success" role="alert">
+		            You have been logged out.
+		        </div>
+    </div>
+    <footer class="footer mt-auto py-3">
+     <div class="container">
+			<span class="text-muted">Mauricio Londono Garcia - UNLP 2019</span>	            
 	</div>
-
+    </footer>
+     
 </body>
-
 </html>

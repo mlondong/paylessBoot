@@ -1,7 +1,7 @@
 package com.payless.demo.repositories;
 
 import java.util.List;
-
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -35,5 +35,11 @@ public interface ConsumerRepository  extends BaseUserRepository<Consumer>{
 	/*Queries*/
 	@Query("Select c from Consumer c where str(c.dni) like :dni% ")
 	List<Consumer> queryByDni(@Param("dni") long dni);
+	
+	@Query(value = " Select * FROM dbpayless.consumer c "
+			+  " inner join dbpayless.usser u ON U.user_id = C.user_id "
+		    +  " where u.name like %:name% ",  nativeQuery = true)
+	Optional<Consumer> findNameContainInConsumer(@Param("name")String name);
+
 	
 }
