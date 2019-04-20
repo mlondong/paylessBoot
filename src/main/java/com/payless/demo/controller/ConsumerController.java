@@ -57,6 +57,7 @@ public class ConsumerController {
 		System.out.println("llego ..."  + product.toString());
 		
 		
+		
 		/*		ModelAndView modelview= new ModelAndView("Products");
 			
 		if(name==""){

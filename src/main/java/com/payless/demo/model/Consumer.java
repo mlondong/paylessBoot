@@ -124,13 +124,15 @@ public class Consumer extends Usser {
 	public void removeInvoice(Invoice p){
 		this.invoices.remove(p);	
 	}
-	
 
 	@Override
 	public String toString() {
 		return "Consumer [dni=" + dni + ", firstName=" + firstName + ", lastName=" + lastName + ", invoices=" + invoices
-				+ "]";
+				+ ", address=" + address + "]";
 	}
+	
+
+
 
 
 

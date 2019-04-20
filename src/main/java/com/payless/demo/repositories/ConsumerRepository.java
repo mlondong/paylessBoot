@@ -19,7 +19,7 @@ public interface ConsumerRepository  extends BaseUserRepository<Consumer>{
 	/*CONSULTAS PROPIEDADES*/
 	Consumer findByDni(long dni);
 	
-
+	
 	/*CONSULTAS LIKE*/
 	List<Consumer> findByLastNameIsLike(String lastName);
 	List<Consumer> findByFirstNameLike(String lastName);
@@ -30,6 +30,15 @@ public interface ConsumerRepository  extends BaseUserRepository<Consumer>{
 	/*Queries*/
 	@Query("Select c from Consumer c where c.firstName like %:firstName%")
 	List<Consumer> queryByFirstName(@Param("firstName") String firstName);
+
+	
+	
+	/*Queries*/
+	@Query(value= "select * from dbpayless.usser u"+ 
+				  " inner join dbpayless.consumer c on u.user_id=c.user_id"+
+				  "	where u.name like %:name% ", nativeQuery = true)
+	Consumer queryFindByUserName(@Param("name") String name);
+	
 	
 	
 	/*Queries*/

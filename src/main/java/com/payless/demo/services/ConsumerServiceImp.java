@@ -19,6 +19,17 @@ public class ConsumerServiceImp implements ConsumerService{
 	
 	
 	@Override
+	public Consumer findByNameIslike(long dni) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Consumer queryFindByUserName(String name) {
+		return consumerRepository.queryFindByUserName(name);
+	}
+
+	@Override
 	public List<Consumer> queryByDni(long dni) {
 		return consumerRepository.queryByDni(dni);
 	}

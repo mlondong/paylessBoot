@@ -12,6 +12,11 @@ public interface ConsumerService {
 
 	Consumer save(Consumer entity);
 	Consumer findByDni(long dni);
+	Consumer findByNameIslike(long dni);
+	Consumer queryFindByUserName(String name);
+	
+	
+	
 	
 	Optional<Consumer> findById(Long id);
 	

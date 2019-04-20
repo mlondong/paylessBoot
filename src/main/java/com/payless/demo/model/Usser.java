@@ -40,7 +40,7 @@ public abstract class Usser {
 
 
 	@NotNull(message = "Name is mandatory")
-	@Column(name="NAME",nullable=false,updatable=true )
+	@Column(name="NAME",nullable=false,updatable=true ,unique=true)
 	private String name;
 	
 	@NotNull(message = "Password is mandatory")

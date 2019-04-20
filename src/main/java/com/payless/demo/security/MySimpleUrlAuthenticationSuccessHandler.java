@@ -93,6 +93,8 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
 	protected void clearAuthenticationAttributes(HttpServletRequest request) {
 		System.out.println("SESSION.... " + request.getSession());
 		HttpSession session = request.getSession(false);
+		//will return current session if current session exists, then it will not create a new session.
+		
 		if (session == null) {
 			return;
 		}
