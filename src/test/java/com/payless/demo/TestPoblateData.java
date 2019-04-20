@@ -1,6 +1,11 @@
 package com.payless.demo;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,15 +13,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.payless.demo.model.Address;
 import com.payless.demo.model.CareProduct;
 import com.payless.demo.model.City;
+import com.payless.demo.model.Consumer;
 import com.payless.demo.model.MeatProduct;
 import com.payless.demo.model.MilkProduct;
+import com.payless.demo.model.Role;
+import com.payless.demo.model.Trader;
 import com.payless.demo.model.Zone;
 import com.payless.demo.repositories.CareProductRepository;
 import com.payless.demo.repositories.CityRepository;
+import com.payless.demo.repositories.ConsumerRepository;
 import com.payless.demo.repositories.MeatProductRepository;
 import com.payless.demo.repositories.MilkProductRepository;
+import com.payless.demo.repositories.RoleRepository;
+import com.payless.demo.repositories.TraderRepository;
+import com.payless.demo.util.Passgenerator;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -35,9 +48,16 @@ public class TestPoblateData {
 	
 	@Autowired
 	private CareProductRepository cpRepository;
-
-
 	
+	@Autowired
+	private ConsumerRepository consumerRepository;
+
+	@Autowired
+	private TraderRepository traderRepository;
+
+	@Autowired
+	private RoleRepository roleRepository;
+
 	
 	@Test
 	public void generateProducts(){
@@ -69,10 +89,7 @@ public class TestPoblateData {
 	}
 
 	
-	
-	
-	
-	
+
 	
 	@Test
 	public void crearCity(){
@@ -119,7 +136,84 @@ public class TestPoblateData {
 		
 	}
 	
+	@Test
+	public void createConsumer(){
+		/***ROLES DEFINIDOS 	 * (1, 'ROLE_ADMIN');  (2, 'ROLE_CONSUMER'); (3, 'ROLE_TRADER');*/
 
+		Role roleAsiged = roleRepository.findById(2L).get();//ROLE_CONSUMER ID 2L PARA AMBOS CONSUMRES
+		Passgenerator encoder = new Passgenerator(4);
+		String pass= encoder.generate("1234");
+	
+		Consumer n1 = new Consumer("consumer1", pass , 10217047, "Fabio", "Londono", "calle 24" , 1, 1); 
+		consumerRepository.save(n1);
+		n1.addRole(roleAsiged);
+		consumerRepository.save(n1);
+
+		
+		Consumer n2 = new Consumer("consumer2", pass, 10217048, "Martha", "Garcia", "calle 24" , 1, 1); 
+		consumerRepository.save(n2);
+		n2.addRole(roleAsiged);
+		consumerRepository.save(n2);
+
+	}
+
+
+	@Test
+	public void createTrader(){
+		List <Address> address = new ArrayList<Address>();
+		address.add(new Address("Av Colon 1450", 1, 1));
+		address.add(new Address("Billinghuts 269", 1, 2));
+		address.add(new Address("Av Rivadavia 3045", 1, 5));
+		
+		Role roleAsiged = roleRepository.findById(3L).get();//ROLE_TRADER ID 2L PARA AMBOS traders
+		Passgenerator encoder = new Passgenerator(4);
+		String pass= encoder.generate("1234");
+	
+		Trader t1 = new  Trader("trader1", pass, 101111,address);
+		t1.setEmail("trader@gmail.com");
+		t1.setScore(5);
+		t1.setNameEnterprise("EXITO");
+		traderRepository.save(t1);
+		
+		t1.createStock();
+		t1.addRole(roleAsiged);
+		traderRepository.save(t1);
+		
+		
+	
+		List <Address> address2 = new ArrayList<Address>();
+		address2.add(new Address("Pueyredon 500", 1, 1));
+		Trader t2 = new  Trader("trader2", pass, 22222,address2); //ROLE_TRADER ID 2L PARA AMBOS traders
+		t2.setEmail("trader2@gmail.com");
+		t2.setScore(5);
+		t2.setNameEnterprise("CARULLA");
+		traderRepository.save(t2);
+		
+		t2.createStock();
+		t2.addRole(roleAsiged);
+		traderRepository.save(t2);
+
+	}	
+
+
+	@Test
+	public void createAdmin(){
+		Role roleAsiged = roleRepository.findById(1L).get();//ROLE_TRADER ID 1L PARA ADMIN
+		Passgenerator encoder = new Passgenerator(4);
+		String pass= encoder.generate("admin123");
+	
+		Trader admin = new  Trader("admin", pass, 987987);
+		admin.setEmail("admin@gmail.com");
+		admin.setScore(5);
+		admin.setNameEnterprise("ADMIN");
+		traderRepository.save(admin);
+	
+		admin.addRole(roleAsiged);
+		traderRepository.save(admin);
+	
+	}
+	
+	
 	
 	
 }

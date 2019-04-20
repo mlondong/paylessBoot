@@ -34,7 +34,7 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
 										throws IOException {
 		System.out.println("REQUEST " + request + "RESPONSE " + response);
 		handle(request, response, authentication);
-		//clearAuthenticationAttributes(request);
+		clearAuthenticationAttributes(request);
 	}
 
 	protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication)	throws IOException {
@@ -83,7 +83,7 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
 			return "/consumer";
 		}else if (target == 3) {
 			System.out.println("return trader");
-			return "/trader";
+			return "/admin";
 		}else {
 			System.out.println("ERRRRORRRRRRR... IllegalStateException()");
 			throw new IllegalStateException();
@@ -91,6 +91,7 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
 	}
 
 	protected void clearAuthenticationAttributes(HttpServletRequest request) {
+		System.out.println("SESSION.... " + request.getSession());
 		HttpSession session = request.getSession(false);
 		if (session == null) {
 			return;

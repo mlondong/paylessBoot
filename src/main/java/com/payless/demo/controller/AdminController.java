@@ -47,6 +47,7 @@ import org.springframework.stereotype.Controller;
  * @RestController = @Controller + @ResponseBody  
  * */
 @Controller
+@RequestMapping(path="/admin")
 public class AdminController {
 
 	@Autowired
@@ -319,7 +320,7 @@ public class AdminController {
 
 	
 	/**SAVE ADDRESS**/
-	@RequestMapping(path="/add-address" , method = {RequestMethod.POST, RequestMethod.GET})
+	@RequestMapping(path="/main/add-address" , method = {RequestMethod.POST, RequestMethod.GET})
 	public String addAddressTrader(@RequestParam(value="idtrader" , required = true) long idtrader, 
 			@RequestParam(value="city",required = true) Long idCity, 
 			@RequestParam(value="zone",required = true) Long idZone ,	
@@ -331,7 +332,8 @@ public class AdminController {
 				traderdb.addAddress(addressnew);
 				traderServiceImp.save(traderdb);
 		}
-		return "redirect:/main/addaddress?idtrader="+idtrader;
+
+		return "redirect:/admin/main/addaddress?idtrader="+idtrader;
 	}	
 
 
@@ -394,7 +396,7 @@ public class AdminController {
 			model.addAttribute("products", productServiceImp.findAll());
 			return "addproductinstock";
 		}else{
-			return "redirect:/main/viewformsearchstoch";	
+			return "redirect:/admin/main/viewformsearchstoch";	
 		}
 	}	
 
@@ -408,7 +410,7 @@ public class AdminController {
 			traderdb.getStock().addProduct(mt, cant);
 			traderServiceImp.save(traderdb);
 		}
-		return "redirect:/main/sendproducttostock/"+idtrader;
+		return "redirect:/admin/main/sendproducttostock/"+idtrader;
 	}	
 
 
@@ -421,7 +423,7 @@ public class AdminController {
 			model.addAttribute("stproductdb", stproduct); 
 			return "updateproduct";
 		}else{
-			return "redirect:/main/sendproducttostock/"+idtrader;
+			return "redirect:/admin/main/sendproducttostock/"+idtrader;
 		}
 	}
 

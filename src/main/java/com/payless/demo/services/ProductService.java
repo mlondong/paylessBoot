@@ -11,7 +11,7 @@ public interface ProductService {
 	Iterable<Product> findAll();
 	boolean existsById(Long id);
 	Optional<Product> findById(Long id);
-	
 
-	
+	/*Native Queries*/
+	List<Product>findByContainDescription(String name);
 }

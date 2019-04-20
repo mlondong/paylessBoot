@@ -5,13 +5,16 @@ import java.util.Collection;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.payless.demo.util.Passgenerator;
 
 
 @Entity
@@ -38,20 +41,24 @@ public class Consumer extends Usser {
 	private Collection<Invoice> invoices = new ArrayList<>();
 
 
+	/*MAPEO DE ADDRESS ONE TO ONE CONSUMER-ADDRESS*/
+	@Embedded
+	private Address address;
 
-
-
-
-
+	
+	
+	
 	/***************************************************************************************************************************************/	
 
 	public Consumer(){}
 
-	public Consumer(String _name, String _pass, long _dni, String _firstName, String _lastName  ){
+	public Consumer(String _name, String _pass, long _dni, String _firstName, String _lastName, String _street, int _city, int _zone   ){
 		super(_name, _pass);
 		this.dni=_dni;
 		this.firstName=_firstName;
 		this.lastName=_lastName;
+		this.address = new Address( _street,  _city, _zone);
+		
 	}
 
 
@@ -68,10 +75,22 @@ public class Consumer extends Usser {
 	//Metodos Gter and Setter
 
 
+	
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
+	
+	
 	public long getDni() {
 		return dni;
 	}
 		
+	
 	public void setDni(long dni) {
 		this.dni = dni;
 	}

@@ -41,14 +41,14 @@
 				<td th:text="${datos.date}"></td>
 			
 				<td>
-				<a th:href="@{/main/updateproduct/{idprod}/trader/{idtrader} (idprod=${datos.product.id} , idtrader=${trader.id}) }">
+				<a th:href="@{/admin/main/updateproduct/{idprod}/trader/{idtrader} (idprod=${datos.product.id} , idtrader=${trader.id}) }">
 				<img src="/images/see-ico.png" height="20px"
 					width="20px" alt="Update" title="Update Product"/>
 				</a>
 				</td>
 				
 				<td>
-				<a th:href="@{/main/deleteproduct/{idprod}/trader/{idtrader} (idprod=${datos.product.id} , idtrader=${trader.id})}">
+				<a th:href="@{/admin/main/deleteproduct/{idprod}/trader/{idtrader} (idprod=${datos.product.id} , idtrader=${trader.id})}">
 				<img src="/images/eliminar-ico.png" height="30px" width="30px" alt="Delete" title="Delete Product"/>
 				</a>
 				</td>
@@ -81,7 +81,7 @@
 				<td th:text="${product.producer}"></td>
 				<td th:text="${product.priceUnit}"></td>
 				<td>
-						<form action="/main/putproductinstock"  method="post">
+						<form action="/admin/main/putproductinstock"  method="get">
 								<input type="hidden" th:value="${traderInfo.id}"  name="trader"   />
 								<input type="hidden" th:value="${product.id}" name="product"      />
 								<input type="text" size=5  name="quantity"    />

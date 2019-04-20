@@ -9,7 +9,7 @@
 
 	<div id="div_search">
 		<h2>Add Products in Stock</h2>
-		<form th:action="@{/main/viewformsearchstoch}" th:object="${trader}" method="post">
+		<form th:action="@{/admin/main/viewformsearchstoch}" th:object="${trader}" method="post">
 			<div class="form-group">
 			<table>
 				<tbody>
@@ -51,8 +51,8 @@
 				<td th:text="${trader.score}"></td>
 			 	<td th:if="${trader.getStock() != null }" th:text="${trader.getStock().dateStock}"></td> 
 				<td align="center" th:if="${trader.stock!=null}" >
-				<a th:href="@{'/main/sendproducttostock/'+${trader.id}}">
-					<img src="../images/add-product-ico.png" height="25px"	width="25px" alt="Add Stock" title="Add Product"/>
+				<a th:href="@{'/admin/main/sendproducttostock/'+${trader.id}}">
+					<img src="/images/add-product-ico.png" height="25px"	width="25px" alt="Add Stock" title="Add Product"/>
 				</a>			
 				</td>
 				<td class="table-danger" th:if="${trader.stock==null}" th:text="WithOut_Stock"></td>

@@ -20,7 +20,7 @@
 <div>
 		<h2>Add Address</h2>
 
-		<form action="/add-address/" method=post >
+		<form action="/admin/main/add-address" method="get" >
 			<div class="form-group">
 			<table>
 				<tbody>
@@ -81,7 +81,7 @@
 				<td th:text="${address.zona}" />
 				<td>
 				<a th:href="@{/delete-address?idtrader={idtrader}&indice={indice}  (idtrader=${infoTrader.id} , indice=${index.index}) }">
-				<img src="../images/eliminar-ico.png" height="25px" width="25px" alt="Delete" title="Delete Address"/>
+				<img src="/images/eliminar-ico.png" height="25px" width="25px" alt="Delete" title="Delete Address"/>
 				</a>
 				</td>
 			</tr>

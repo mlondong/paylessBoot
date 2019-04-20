@@ -18,6 +18,8 @@ import javax.persistence.ManyToMany;
 
 import javax.validation.constraints.NotNull;
 
+
+
 /* 
  * Clase Abstracta User
  * se usa estrategia InheritanceType.JOINED para mapeo de Herencia
@@ -58,8 +60,6 @@ public abstract class Usser {
 			   inverseJoinColumns={@JoinColumn(name="ROLE_ID")} 
 			   )
 	private Set<Role> roles = new HashSet<Role>();
-	
-	
 	
 	
 	public Usser(){}
@@ -109,7 +109,9 @@ public abstract class Usser {
 		this.roles = roles;
 	}
 
-	
+	public void addRole(Role e){
+		this.roles.add(e);
+	}
 
 	
 	

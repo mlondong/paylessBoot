@@ -9,7 +9,7 @@
 
 	<div id="div_search">
 		<h2>Search Consumer</h2>
-		<form action="/consumer/search"  method="post">
+		<form action="/admin/consumer/search"  method="get">
 			<div class="form-group">
 			<table>
 				<tbody>
@@ -52,13 +52,13 @@
 				<td align="center"  th:text="${consumer.invoices.size()}" width="10%"></td>
 				
 				<td>
-				<a th:href="@{/consumer/show_update?idconsumer={idconsumer}        (idconsumer=${consumer.id} )     }  ">
-				<img src="../images/edit-ico.png" height="30px"	width="30px" alt="Update" title="Update Consumer"/>
+				<a th:href="@{/admin/consumer/show_update?idconsumer={idconsumer}        (idconsumer=${consumer.id} )     }  ">
+				<img src="/images/edit-ico.png" height="30px"	width="30px" alt="Update" title="Update Consumer"/>
 				</a></td>
 					
 				<td>
-				<a th:href="@{/consumer/delete?idconsumer={idconsumer}        (idconsumer=${consumer.id})}">
-				<img src="../images/delete-xxl.png" height="25px" width="25px" alt="Delete" title="Delete Consumer"/>
+				<a th:href="@{/admin/consumer/delete?idconsumer={idconsumer}        (idconsumer=${consumer.id})}">
+				<img src="/images/delete-xxl.png" height="25px" width="25px" alt="Delete" title="Delete Consumer"/>
 				</a>
 				</td>
 				

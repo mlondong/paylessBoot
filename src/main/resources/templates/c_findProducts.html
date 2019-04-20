@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+<title>Payless-Consumer</title>
+<th:block th:include="layout/header2"></th:block>
+<script type="text/javascript" 	src="http://code.jquery.com/jquery-1.10.2.js"> </script>
+<script type="text/javascript" 	src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"> </script>
+<link rel="stylesheet" 	href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+
+
+<script type="text/javascript">
+$(document).ready(function () {
+
+	$("form").keypress(function(e) {
+		  if (e.which == 13) {
+		    return false;
+		  }
+	});
+
+	
+	$('#btn_search').click(function() { 
+	    	var product = $('#description').val();
+	    	var flag=true;
+	    	
+	    	if(!isNaN(product)){
+	    		flag=false;
+				$('#span-error').after('<p>Please insert a correct value.</p>')
+			}
+
+	    	if(/^[a-zA-Z0-9]*$/.test(product) == false){
+	    		flag=false;
+			 	$('#span-error').after('<p>Please insert a correct value.</p>')
+	    	}
+
+	    	if(flag==true){
+				$( "#formFindProduct" ).submit();
+			}
+	    	
+	});
+
+});
+
+
+
+
+</script>
+</head>
+
+
+<body>
+	<div id="div_search">
+		<h2>Search Products</h2>
+		th:action="@{/main/result}" th:object="${trader}"
+		<form th:action="@{/consumer/product}" th:object="${meatproduct}"  method="post" id="formFindProduct"  >
+			<div class="form-group">
+				<table>
+					<tbody>
+						<tr>
+							<td><label>By Name Product:</label></td>
+							<td><input type="text" id="description"  name="description" maxlength="8"/>
+							</td>
+							<td>
+								<button type="button" id="btn_search" class="btn btn-primary">Search Product</button>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><span id="span-error"> </span></td>
+						</tr>
+						
+					</tbody>
+				</table>
+			</div>
+		</form>
+	</div>
+
+
+	<div th:if="${products != null}">
+		<h3 th:text="${products}"></h3>
+	</div>
+
+
+</body>
+</html>

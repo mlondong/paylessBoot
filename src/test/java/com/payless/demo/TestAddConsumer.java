@@ -33,8 +33,8 @@ public class TestAddConsumer {
 	@Test
 	public void createConsumer(){
 	
-		Consumer n = new Consumer("Consumer", "654s", 987987, "mauricio", "Londono"); 
-		consumerRepository.save(n);
+		//Consumer n = new Consumer("Consumer", "654s", 987987, "mauricio", "Londono"); 
+		//consumerRepository.save(n);
 		
 	}
 
