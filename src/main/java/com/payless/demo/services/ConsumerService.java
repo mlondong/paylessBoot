@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.payless.demo.model.Consumer;
 import com.payless.demo.model.Invoice;
+import com.payless.demo.model.Trader;
 
 public interface ConsumerService {
 
@@ -15,8 +16,7 @@ public interface ConsumerService {
 	Consumer findByNameIslike(long dni);
 	Consumer queryFindByUserName(String name);
 	
-	
-	
+		
 	
 	Optional<Consumer> findById(Long id);
 	
@@ -37,5 +37,6 @@ public interface ConsumerService {
 	void deleteById(Long id);
 	void delete(Consumer entity);
 	void deleteAll();
+	
 	
 }

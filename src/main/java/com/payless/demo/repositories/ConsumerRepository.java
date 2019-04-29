@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.payless.demo.model.Consumer;
+import com.payless.demo.model.Trader;
 
 
 

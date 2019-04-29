@@ -17,6 +17,32 @@ $(document).ready(function () {
 		  }
 	});
 
+
+
+	 $("#description").autocomplete({
+	        source: function(request, response) {
+	         var description = $('#description').val();
+			       if(description.length >=4 ) {
+							$.ajax({
+		                     url: "/consumer/getdescription",
+		                     type: "GET",
+		                     data: { description: $('#description').val() },
+		                     dataType: "json",
+		                     success: function(data){
+														response($.map (data, function(v,i){
+																alert(v);				
+															return {
+																//label: v.dni+' - '+v.firstName+' - '+v.lastName,
+															    //value: v.dni
+															   };			
+														 }));
+		                                            }
+		                   }); 
+			       }	                   
+	        }   
+	    });
+
+	
 	
 	$('#btn_search').click(function() { 
 	    	var product = $('#description').val();
@@ -50,14 +76,27 @@ $(document).ready(function () {
 <body>
 	<div id="div_search">
 		<h2>Search Products</h2>
-		th:action="@{/main/result}" th:object="${trader}"
-		<form th:action="@{/consumer/product}" th:object="${meatproduct}"  method="post" id="formFindProduct"  >
+		<div th:if="${data!= null}">
+			<h3 th:text="${data}"></h3>
+			
+		</div>
+	
+		<form action="/consumer/resulproducts"  method="get" id="formFindProduct"  >
 			<div class="form-group">
 				<table>
 					<tbody>
 						<tr>
+							
 							<td><label>By Name Product:</label></td>
-							<td><input type="text" id="description"  name="description" maxlength="8"/>
+							<td>
+							<label for="description"></label> 
+							<input type="text" id="description"  name="description" min="4" maxlength="8"/>
+							<input type="hidden" id="dni"  name="dni" th:if="${data!=null}" th:value="${data.dni}">
+							<input type="hidden" id="city"  name="city" th:if="${data!=null}" th:value="${data.address.city}">
+							<input type="hidden" id="zone"  name="zone" th:if="${data!=null}" th:value="${data.address.zona}">
+							
+							
+							
 							</td>
 							<td>
 								<button type="button" id="btn_search" class="btn btn-primary">Search Product</button>
@@ -65,13 +104,17 @@ $(document).ready(function () {
 						</tr>
 						<tr>
 							<td></td>
-							<td><span id="span-error"> </span></td>
+							<td><span id="data"> </span></td>
 						</tr>
 						
 					</tbody>
 				</table>
 			</div>
 		</form>
+	</div>
+
+	<div th:if="${notFilterProducts != null}">
+		<h3 th:text="${notFilterProducts}"></h3>
 	</div>
 
 

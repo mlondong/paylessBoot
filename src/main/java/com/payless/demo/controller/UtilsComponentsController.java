@@ -48,14 +48,13 @@ public class UtilsComponentsController {
 	}
 	
 	
-	@RequestMapping(path="/consumer",method={RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
+
+	@RequestMapping(path="/consumer/dni",method={RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
 	@ResponseBody
 	public List<Consumer> getConsumerByDni(@RequestParam("dni") long dni){
-		System.out.println("llego.. " + dni);
 		List<Consumer> listConsumers = consumerServiceImp.queryByDni(dni);
 		return listConsumers;
 	}
-
 
 	
 	

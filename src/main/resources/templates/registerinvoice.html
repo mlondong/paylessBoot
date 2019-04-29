@@ -26,7 +26,7 @@ $(document).ready(function () {
     }
 
     function getTraderInZone(){
-        var url = "/traders?idzone=";
+        var url = "/admin/traders?idzone=";
 		 if ($('#zone').val() != 0) {
            url = url + $('#zone').val();
      	    $('#traders').load(url);  //load fragment and replace content
@@ -38,7 +38,7 @@ $(document).ready(function () {
     $("#dni-autocomplete").autocomplete({
         source: function(request, response) {
 			$.ajax({
-                     url: "/consumer",
+                     url: "/admin/consumer/dni",
                      type: "GET",
                      data: { dni: $('#dni-autocomplete').val() },
                      dataType: "json",
@@ -123,7 +123,7 @@ $(document).ready(function () {
 				<td><label>Dni Consumer:</label></td>
 				<td>
 				<label for="dni-autocomplete"></label> 
-				<input type="text"	id="dni-autocomplete" name="dni-autocomplete"  style/></td>
+				<input type="text"	id="dni-autocomplete" name="dni-autocomplete" /></td>
 			<tr>
 			<tr>
 				<td>&nbsp;</td>

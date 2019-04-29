@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.payless.demo.model.Consumer;
 import com.payless.demo.model.Invoice;
+import com.payless.demo.model.Trader;
 import com.payless.demo.repositories.ConsumerRepository;
 
 @Service
@@ -18,9 +19,9 @@ public class ConsumerServiceImp implements ConsumerService{
 
 	
 	
+	
 	@Override
 	public Consumer findByNameIslike(long dni) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

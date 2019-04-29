@@ -21,10 +21,15 @@ public class TraderServiceImp implements TraderService{
 	@Autowired
 	private TraderRepository traderRepository;
 	
+	
+	
+	
+	
+	@Override
+	public List<Trader> queryByParametersCityZone(int zone, int city) {
+		return traderRepository.queryByParametersCityZone(zone, city);
+	}
 
-	
-	
-	
 	@Override
 	public Trader searchByCuit(long cuit) {
 		return traderRepository.findByCuit(cuit);

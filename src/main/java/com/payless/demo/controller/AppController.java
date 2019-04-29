@@ -31,15 +31,6 @@ public class AppController {
 		return "admin"; 
 	}
 	
-	@GetMapping("/consumer")
-	public ModelAndView consumer() {
-		ModelAndView modelAndView = new ModelAndView("consumer");
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Consumer consumer = consumerServiceImp.queryFindByUserName(auth.getName());
-        modelAndView.addObject("userName", "Welcome " + consumer.getFirstName() + " " + consumer.getLastName() + " (" + consumer.getDni() + ")");
-        modelAndView.addObject("info", consumer.toString());
-        return modelAndView;
-	}
 	
 	
 	/*
