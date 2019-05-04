@@ -30,6 +30,10 @@ function deleteProduct(index) {
 
 
 function showSelected(){
+	 var total= 0;
+	 var subtotal= 0;
+	 var totalquantities= 0;
+			
 	 var html = "<p><h3 style='background-color:#FFE333' >Added in your Cart</h3></p>";
 	     html += "<table class='table' >";
  	 html += "<thead class='thead-dark'><tr><th scope='col'>Trader</th>";
@@ -37,7 +41,9 @@ function showSelected(){
  	 html += "<th scope='col'>Code</th>";
  	 html += "<th scope='col'>Description</th>";
      html += "<th scope='col'>Price</th>";
-     html += "<th scope='col'>Quantity</th></tr></thead>";
+     html += "<th scope='col'>Quantity</th>";
+     html += "<th scope='col'>Subtotal ($)</th>";
+     html +="</tr></thead>";
  for (var i = 0; i < products.length; i++) {
     	 html += "<tr>";
     	 html += "<td>" + products[i].p_trader + "</td>";
@@ -46,8 +52,19 @@ function showSelected(){
     	 html += "<td>" + products[i].p_description + "</td>";
     	 html += "<td>" + products[i].p_price+ "</td>";
     	 html += "<td>" + products[i].p_quantity+ "</td>";
+    	 html += "<td>" + subtotal+ "</td>";
     	 html += "</tr>";
+    	 totalquantities+= Number(products[i].p_quantity);
+    	 subtotal=products[i].p_quantity * products[i].p_price;
+    	 total+=subtotal; 
+    	 
  }
+
+ html += "<tr>";
+ html += "<td colspan='4'></td>";
+ html += "<td style='font-weight: bold; background-color:#FFAE33'>Total Invoice</td>";
+ html += "<td style='font-weight: bold; background-color:#FFAE33'>"+totalquantities+" Un.</td>";
+ html +="<td style='font-weight: bold; background-color:#FFAE33'>$ "+total+"</td></tr";
  html += "</table>";
  document.getElementById("selections").innerHTML = html;
 
