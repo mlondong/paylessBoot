@@ -99,8 +99,11 @@ public class ConsumerController {
 	        }
 	     
 	    }
-	    modelAndView.addObject("consumer", consumer);
-	    modelAndView.addObject("stockproducts", matchStockProducts);
+	   
+	 	modelAndView.addObject("consumer", consumer);
+	   	modelAndView.addObject("stockproducts", matchStockProducts);
+	    
+	    
 	    return modelAndView;
 	}
 

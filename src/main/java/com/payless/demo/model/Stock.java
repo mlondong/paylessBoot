@@ -89,11 +89,8 @@ public class Stock {
 	public void removeProduct(Product p){
 		 for (Iterator<StockProducts> iterator = stockproducts.iterator(); iterator.hasNext(); ) {
 			     StockProducts stockproducs = iterator.next();
-		 
 		        if (stockproducs.getProduct().equals(this) && stockproducs.getStock().equals(p)) {
 		            iterator.remove();
-		            System.out.println("stocks .." + stockproducs.getStock());
-		            //stockproducs.setProduct(null);
 		        }
 		 }
 	}
@@ -118,7 +115,6 @@ public class Stock {
 		List<StockProducts> stockProductsList= (List<StockProducts>) this.stockproducts; 
 		StockProducts stproduct=null;
 		for(StockProducts stp : stockProductsList ){
-			System.out.println("info in stockprod: " + stp.getProduct().getCode() + " prod: " + product.getCode());
 			if(stp.getProduct().getCode().equals(product.getCode())){
 				stproduct=stp;  
 				break;
