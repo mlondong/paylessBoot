@@ -1,9 +1,12 @@
 package com.payless.demo.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
+import org.springframework.data.repository.query.Param;
 
 import com.payless.demo.model.Product;
 
@@ -27,5 +30,8 @@ public interface BaseProductRepository<T extends Product> extends CrudRepository
 	void deleteById(Long id);
 
 	void delete(T entity);
+	
+	List<T>findByContainDescription(String description);
+
 
 }

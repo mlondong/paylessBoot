@@ -87,7 +87,7 @@ public class StockService {
 		if(productRepository.existsById(idprod)){
 			System.out.println("existe");
 			Product mt =  productRepository.findById(idprod).get();
-			traderdb.getStock().addProduct(mt, cantidad);
+			//traderdb.getStock().addProduct(mt, cantidad);
 		}
 
 		traderRepository.save(traderdb);

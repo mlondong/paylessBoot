@@ -44,6 +44,11 @@ public class StockProducts {
 	@Column(name="QUANTITY")
 	private int quantity;
 	
+	@Column(name="SALESPRICE")
+	private int salesprice;
+	
+	
+	
 	@Temporal(TemporalType.DATE)
 	@Column(name="CREATION_DATE")
 	private Date date = new Date();
@@ -52,12 +57,13 @@ public class StockProducts {
 	public StockProducts(){}
 	
 	
-	public StockProducts(Stock stock, Product product, int cantidad) {
+	public StockProducts(Stock stock, Product product, int cantidad,int salesprice) {
 		super();
 		this.id = new StockProducId(stock.getId(), product.getId());
 		this.stock = stock;
 		this.product = product;
 		this.quantity=cantidad;
+		this.salesprice=salesprice;
 	}
 
 
@@ -115,6 +121,16 @@ public class StockProducts {
 
 
 	
+
+	public int getSalesprice() {
+		return salesprice;
+	}
+
+
+	public void setSalesprice(int salesprice) {
+		this.salesprice = salesprice;
+	}
+
 
 	@Override
 	public String toString() {

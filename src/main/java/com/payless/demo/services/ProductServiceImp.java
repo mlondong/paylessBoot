@@ -18,10 +18,13 @@ public class ProductServiceImp implements ProductService {
 	private ProductRepository productRepository;
 
 	
+	
+
+
 	@Override
-	public List<Product>findByContainDescription(String name) {
+	public List<Product> findByContainDescription(String description) {
 		// TODO Auto-generated method stub
-		return productRepository.findByContainDescription(name);
+		return productRepository.findByContainDescription(description);
 	}
 
 

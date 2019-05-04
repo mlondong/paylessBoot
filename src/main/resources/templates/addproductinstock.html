@@ -28,6 +28,7 @@
 				<th>Code</th>
 				<th>Description</th>
 				<th>Units</th>
+				<th>Sales Price</th>
 				<th>Date register</th>
 				<th colspan="2"></th>
 				</tr>	
@@ -38,6 +39,7 @@
 				<td th:text="${datos.product.code} +' - ' + ${datos.product.id}"></td>
 				<td th:text="${datos.product.description}"></td>
 				<td th:text="${datos.quantity}"></td>
+				<td th:text="${datos.salesprice}"></td>
 				<td th:text="${datos.date}"></td>
 			
 				<td>
@@ -70,7 +72,12 @@
 				<th>Description</th>
 				<th>Branch</th>
 				<th>Price</th>
-				<th>Units Required</th>				
+				<th></th>
+				<th></th>
+				<th></th>
+				
+				<th colspan="7">Add Values and Quantity in Product</th>
+				
 			</tr>
 			</thead>
 
@@ -80,13 +87,22 @@
 				<td th:text="${product.description}"></td>
 				<td th:text="${product.producer}"></td>
 				<td th:text="${product.priceUnit}"></td>
-				<td>
+				<td></td>
+		<td></td>
+		<td></td>
+		
+				<td  align="left">
+						<div>
 						<form action="/admin/main/putproductinstock"  method="get">
-								<input type="hidden" th:value="${traderInfo.id}"  name="trader"   />
-								<input type="hidden" th:value="${product.id}" name="product"      />
-								<input type="text" size=5  name="quantity"    />
-						<button type="submit">Add</button>
+							Units
+							<input type="hidden" th:value="${traderInfo.id}"  name="trader"/>
+							<input type="hidden" th:value="${product.id}" name="product"/>
+							<input type="text" size=5  name="quantity" />
+							Sales Price
+							<input type="text" size=5  name="salesprice" />
+							<button type="submit">Add</button>							
 						</form>
+						</div>
 				</td>
 			</tr>
 		</table>

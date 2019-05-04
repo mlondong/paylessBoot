@@ -89,8 +89,8 @@ public class Trader extends Usser {
 		this.stock.setTrader(this);
 	}
 
-	public void addStockProducts(Product p, int quantity){
-		this.stock.addProduct(p, quantity);
+	public void addStockProducts(Product p, int quantity, int salesprice){
+		this.stock.addProduct(p, quantity, salesprice);
 	}
 
 	public void removeStockProducts(Product p){

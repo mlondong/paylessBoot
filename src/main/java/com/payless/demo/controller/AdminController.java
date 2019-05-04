@@ -406,13 +406,15 @@ public class AdminController {
 	}	
 
 	@RequestMapping(path="/main/putproductinstock" ,  method = {RequestMethod.POST, RequestMethod.GET})
-	public String putProductInStock(@RequestParam("trader") long idtrader,	@RequestParam("product") long idprod,  
-			@RequestParam("quantity") int cant) {
+	public String putProductInStock(@RequestParam("trader") long idtrader,	
+								    @RequestParam("product") long idprod,  
+								    @RequestParam("quantity") int cant,
+								    @RequestParam("salesprice") int salesprice	) {
 
 		Trader traderdb = traderServiceImp.getTrader(idtrader);
 		if(productServiceImp.existsById(idprod)){
 			Product mt =  productServiceImp.findById(idprod).get();
-			traderdb.getStock().addProduct(mt, cant);
+			traderdb.getStock().addProduct(mt, cant, salesprice);
 			traderServiceImp.save(traderdb);
 		}
 		return "redirect:/admin/main/sendproducttostock/"+idtrader;

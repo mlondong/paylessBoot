@@ -81,8 +81,8 @@ public class Stock {
 	 * USA EL METODO REMOVE ABAJO DESCRITO PARA REMOVER LOS STOCKPRODUCTS CON SU PRODUCTO ejemplo tomado de
 	 * https://vladmihalcea.com/the-best-way-to-map-a-many-to-many-association-with-extra-columns-when-using-jpa-and-hibernate/*/
 	
-	public void addProduct(Product p, int quantity){
-		StockProducts stockproducs = new StockProducts(this,p, quantity);
+	public void addProduct(Product p, int quantity, int salesprice){
+		StockProducts stockproducs = new StockProducts(this,p, quantity, salesprice);
 		stockproducts.add(stockproducs);
 	}
 	
@@ -111,6 +111,24 @@ public class Stock {
 		
 		return stproduct;
 	}
+	
+	
+	
+	public StockProducts findProductInOwnStock(Product product){
+		List<StockProducts> stockProductsList= (List<StockProducts>) this.stockproducts; 
+		StockProducts stproduct=null;
+		for(StockProducts stp : stockProductsList ){
+			System.out.println("info in stockprod: " + stp.getProduct().getCode() + " prod: " + product.getCode());
+			if(stp.getProduct().getCode().equals(product.getCode())){
+				stproduct=stp;  
+				break;
+			}
+		}
+		
+		return stproduct;
+	}
+	
+	
 	
 	
 	

@@ -12,6 +12,7 @@ public interface ProductService {
 	boolean existsById(Long id);
 	Optional<Product> findById(Long id);
 
-	/*Native Queries*/
-	List<Product>findByContainDescription(String name);
+
+	List<Product>findByContainDescription(String description);
+
 }

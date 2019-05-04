@@ -1,5 +1,6 @@
 package com.payless.demo.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -28,6 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.payless.demo.model.Consumer;
 import com.payless.demo.model.Product;
+import com.payless.demo.model.Stock;
 import com.payless.demo.model.StockProducts;
 import com.payless.demo.model.Trader;
 import com.payless.demo.services.ConsumerServiceImp;
@@ -69,7 +71,8 @@ public class ConsumerController {
 		ModelAndView modelAndView = new ModelAndView("c_findProducts");
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Consumer consumer = consumerServiceImp.queryFindByUserName(auth.getName());
-        modelAndView.addObject("data", consumer);
+        modelAndView.addObject("consumer", consumer);
+       
    	return modelAndView;
 	}
 	
@@ -83,25 +86,30 @@ public class ConsumerController {
 		ModelAndView modelAndView= new ModelAndView("c_findProducts");
 	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 	    Consumer consumer = consumerServiceImp.queryFindByUserName(auth.getName());
-	    modelAndView.addObject("data", consumer);
-	    
-	    
-	    
+	    /*TRADERS IN ZONE OF CONSUMER*/
 	    List<Trader> traders = traderServiceImp.queryByParametersCityZone(zone, city);
-	    Map<String, List<StockProducts>> filters = UtilOperations.filterByProductInZone(traders, desc);
-	    
-	    
-	    modelAndView.addObject("notFilterProducts", traders );
-	    modelAndView.addObject("products", filters );
-		return modelAndView;
+	    /*RESULT OF PRODUCTS FIND IT*/
+	    List<Product> findProducts = productServiceImp.findByContainDescription(desc);
+	   
+	    /*MATCH BETWEEN PRODUCTS AND TRADERS IN ZONE*/
+		List<StockProducts> matchStockProducts= new ArrayList<StockProducts>(); 
+	    for(Trader trader: traders){
+	        for(Product product: findProducts){
+	        	matchStockProducts.add(trader.getStock().findProductInOwnStock(product));
+	        }
+	     
+	    }
+	    modelAndView.addObject("consumer", consumer);
+	    modelAndView.addObject("stockproducts", matchStockProducts);
+	    return modelAndView;
 	}
 
 	
-	@RequestMapping(path="/consumer/getdescription", method={RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
+	/*@RequestMapping(path="/consumer/getdescription", method={RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
 	@ResponseBody
 	public List<Product> getProductName(@RequestParam("description") String description){
 		return productServiceImp.findByContainDescription(description);
-	} 
+	} */
 
 
 
