@@ -52,10 +52,10 @@ function showSelected(){
     	 html += "<td>" + products[i].p_description + "</td>";
     	 html += "<td>" + products[i].p_price+ "</td>";
     	 html += "<td>" + products[i].p_quantity+ "</td>";
+    	 subtotal=products[i].p_quantity * products[i].p_price;
     	 html += "<td>" + subtotal+ "</td>";
     	 html += "</tr>";
     	 totalquantities+= Number(products[i].p_quantity);
-    	 subtotal=products[i].p_quantity * products[i].p_price;
     	 total+=subtotal; 
     	 
  }
@@ -107,7 +107,6 @@ function addProduct(index) {
 	 if(isPresent(newProduct) == false){
 		 products.push(newProduct);
 	  }
-
 	 showSelected();
 }
 
@@ -242,6 +241,8 @@ $(document).ready(function () {
 	</div>
 
 
+	<div id="selections">
+	</div>
 	
 	
 	<div th:if="${#ctx.containsVariable('stockproducts')}">

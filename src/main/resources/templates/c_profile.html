@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+<title>Payless-Consumer</title>
+<th:block th:include="layout/header2"></th:block>
+<script type="text/javascript"
+	src="http://code.jquery.com/jquery-1.10.2.js"> </script>
+<script type="text/javascript"
+	src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"> </script>
+<link rel="stylesheet"
+	href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+</head>
+
+
+<body>
+
+	<div id="div_reg"  th:if="${ not #lists.isEmpty(consumer)}" >
+		<form action="/consumer/upgeneral" method="get" >
+				<table border=0 style="display: table;  margin: 0 auto;position: absolute; top:20%; left:30%;">
+					<tr>
+						<td colspan=2 style='font-weight: bold; background-color:#FFE333'><h5>General information</h5></td>
+					</tr>
+
+					<tr>
+						<td><label>Firts Name:</label></td>
+						<td>
+							<input type="hidden" id="id" name="id" th:value="${consumer.getId()}" />
+							<input type="text" id="firstName"  name="firstName"th:value="${consumer.firstName}" />
+						</td>
+					<tr>
+					<tr>
+						<td><label>Last Name:</label></td>
+						<td><input type="text" id="lastName" name="lastName" th:value="${consumer.lastName}" /></td>
+					</tr>
+					<tr>
+						<td><label>Dni</label></td>
+						<td><input type="text" id="dni"	 name="dni" th:value="${consumer.dni}" /></td>
+					</tr>
+					<tr>
+						<td><button type="submit" class="btn btn-primary">Update My General Information</button></td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<span th:if="${Error}" th:text="${Error}"></span> 
+							<span th:if="${Update}" th:text="${Update}"></span>
+						</td>
+					</tr>
+				</table>
+		</form>		
+		
+		</div>
+
+
+
+		<br>
+
+
+	<div id="div_reg" class="form-group" th:if="${ not #lists.isEmpty(consumer)}" >
+		<form action="/consumer/uplogin" method="get" >
+		<table border=0 style="display: table;  margin: 0 auto;position: absolute; top:50%; left:30%;">
+			<tr>
+				<td colspan=2 style='font-weight: bold; background-color:#FFE333'><h5>Login Information</h5></td>
+			</tr>
+			<tr>
+				<td><label>UserName:</label></td>
+				<td><input type="text" id="username" name="username"	th:value="${consumer.getName()}" /></td>
+			</tr>
+			<tr>
+				<td><label>Actual Password:</label></td>
+				<td><input type="password" disabled="disabled"	th:value="${consumer.getPassword()}" /></td>
+			<tr>
+			<tr>
+				<td><label>New Password:</label></td>
+				<td><input type="password" id="pass"  name="pass"  /></td>
+			</tr>
+			<tr>
+				<td><button type="submit" class="btn btn-primary">Update My Login Information</button></td>
+			</tr>
+			<tr>
+						<td colspan="2">
+						<span th:if="${ErrorLogin}" th:text="${ErrorLogin}"></span> 
+						<span th:if="${UpdateLogin}" th:text="${UpdateLogin}"></span>
+					</td>		
+			</tr>	
+		</table>
+	</form>
+	</div>
+	
+	<br>
+
+
+	<div id="div_reg" class="form-group" th:if="${ not #lists.isEmpty(consumer)}" >
+		<form action="/consumer/upaddress" method="get" >
+		<table border=0 style="display: table;  margin: 0 auto;position: absolute; top:80%; left:30%;">
+			<tr>
+				<td colspan=2 style='font-weight: bold; background-color:#FFE333'><h5>Address information</h5></td>
+			</tr>
+				<tr>
+					<td>Description:</td>
+					<td><input type="text" th:if="${consumer.address!=null}" id="description" name="description"
+						th:value="${consumer.address.description}" /></td>
+				</tr>
+				<tr>
+					<td>City:</td>
+					<td><input type="text" th:if="${consumer.address!=null}" id="city" name="city"
+						th:value="${consumer.address.city}" /></td>
+				</tr>
+				<tr>
+					<td>Zone:</td>
+					<td><input type="text" th:if="${consumer.address!=null}" id="zona" name="zona"
+						th:value="${consumer.address.zona}" /></td>
+				</tr>
+				<tr>
+					<td><button type="submit" class="btn btn-primary">Update My Address Information</button></td>
+				</tr>
+				<tr>
+				<td colspan="2">
+					<span th:if="${ErrorAddress}" th:text="${ErrorAddress}"></span> 
+					<span th:if="${UpdateAddress}" th:text="${UpdateAddress}"></span>
+				</td>
+				</tr>
+			</table>
+	
+		</form>	
+	</div>
+
+
+
+
+</body>
+</html>
