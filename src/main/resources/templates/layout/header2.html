@@ -19,12 +19,29 @@
 </head>
 
 <body>
-	<table>
+	<table >
 		<tbody>
 			<tr>
 				<td><img src="/images/consumer-ico.png" height="50px"
 					width="50px" /></td>
 				<td><h2>CONSUMER</h2></td>
+				<td>
+					<table border=0 style="display: table;  margin: 0 auto;position: absolute; top:2%; left:80%;">
+						<tr>
+							<td>Welcome:
+								<span align th:if="${#ctx.containsVariable('consumer')}" 
+											th:text="${consumer.firstName}+' '+ ${consumer.lastName}" ></span>
+							</td>
+							<td>
+							 <form th:action="@{/logout}" method="post">
+								<input type="submit"  style="border-radius: 12px;background-color: #FFAE33"  value="Close Sesion"/>
+  							 </form>
+							</td>
+						</tr>			
+					</table>
+				</td>
+				
+				
 			</tr>
 		</tbody>
 	</table>
@@ -33,12 +50,9 @@
   <a class="navbar-brand" href="/consumer">Home</a>
   <a class="navbar-brand" href="/consumer/findproducts">Search Products</a>
   <a class="navbar-brand" href="#">My Food Basket</a>
-  <a class="navbar-brand" href="#">My Purchases</a>
+  <a class="navbar-brand" href="/consumer/purchase">My Purchases</a>
   <a class="navbar-brand" href="/consumer/viewprofile">My Profile</a>
-  <form th:action="@{/logout}" method="post">
-	<input type="submit" value="Cerrar Sesion"/>
-  </form>
-</nav>
+ </nav>
 
 
 	

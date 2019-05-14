@@ -67,6 +67,8 @@ public class Invoice {
 	private Collection<InvoiceProduct> products;
 	
 	
+	
+	
 	@Column(name="NUM_INVOICE", updatable=false, nullable=false, unique=true)
 	private long numInvoice;
 	

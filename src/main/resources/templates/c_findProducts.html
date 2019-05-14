@@ -34,7 +34,7 @@ function showSelected(){
 	 var subtotal= 0;
 	 var totalquantities= 0;
 			
-	 var html = "<p><h3 style='background-color:#FFE333' >Added in your Cart</h3></p>";
+	 var html = "<p><h3 style='background-color:#FFAE33' >Added in your Cart</h3></p>";
 	     html += "<table class='table' >";
  	 html += "<thead class='thead-dark'><tr><th scope='col'>Trader</th>";
  	 html += "<th scope='col'>Branch</th>";
@@ -253,7 +253,7 @@ $(document).ready(function () {
 	
 	<div th:if="${#ctx.containsVariable('stockproducts')}">
 		<div th:if="${ not #lists.isEmpty(stockproducts)}" >
-			<h4 style="background-color:#FFE333">Products found near to your city <label th:text="${consumer.address.city}"></label> and zone <label th:text="${consumer.address.zona}"></label></h4>
+			<h4 style="background-color:#FFAE33">Products found near to your city <label th:text="${consumer.address.city}"></label> and zone <label th:text="${consumer.address.zona}"></label></h4>
 		</div>
 	</div>
 	

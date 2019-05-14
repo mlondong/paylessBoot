@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+<title>Payless-Consumer</title>
+<th:block th:include="layout/header2"></th:block>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.js"> </script>
+<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"> </script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+</head>
+
+<script th:inline="javascript">
+
+function getInvoice(numInvoice){
+	var url = "/services/invoice/getinvoice?numInvoice="+numInvoice;
+	$.getJSON(url, {}, function (data) {
+		showModal(data);
+	 });
+}
+
+function showModal(data){
+
+if(data.products.length>0){		
+	$('#label-details').text(data.numInvoice);
+	for(var i=0; i<data.products.length;i++){
+	    $('#table_description tr:last').after('<tr>'+
+	    	    							  '<td>'+data.products[i].poduct.code+'</td>'+
+	    	    							  '<td>'+data.products[i].poduct.description+'</td>'+
+	    	    							  '<td>'+data.products[i].poduct.producer+'</td>'+
+	    	    							  '<td>'+data.products[i].poduct.priceUnit+'</td>'+
+	    	    							  '<td>'+data.products[i].quantity+'</td>'+
+	    	    							  '</tr>');
+	}
+}else{
+			alert("Empty Invoice!.");
+	 }
+
+
+}
+
+
+function putBlack(){
+	$("#table_description").find("tr:gt(0)").remove();
+}
+
+</script>
+
+<body>
+
+
+<!--MODAL FOR UPDATE  -->
+<div th:id="umodal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Details Invoice:  <label id="label-details" name="label-details"></label></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="putBlack();">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                    <fieldset class="form-group">
+                        <table width="100%" id="table_description" name="table_description">
+                        <tr style='font-weight: bold; background-color:#FFAE33'>
+                        	<td>Code</td>
+                        	<td>Description</td>
+                        	<td>Branch</td>
+                        	<td>Price </td>
+                        	<td>Quantity</td>
+                        </tr>
+                       </table>
+                    </fieldset>
+                
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+<br>
+<div th:if="${#ctx.containsVariable('error')}" th:text=${error}></div>
+
+<div th:if="${#ctx.containsVariable('invoices')}" >
+		<table class="table">
+		<thead class="thead-dark">
+			<tr>
+				<th scope="col">Invoice Number</th>
+				<th scope="col">Invoice Date</th>
+				<th scope="col">Trader</th>
+				<th scope="col">Units</th>
+				<th scope="col">Value Invoice</th>
+				<th scope="col">See details</th>
+			</tr>
+		</thead>	
+		<tbody>
+			<tr  scope="row" th:each="invoice: ${invoices}" >
+				<td th:if="${invoice!=null}" th:text="${invoice.numInvoice}"></td>
+				<td th:if="${invoice!=null}" th:text="${invoice.dateInvoice}"></td>
+				<td th:if="${invoice!=null}" th:text="${invoice.trader.nameEnterprise}"></td>
+				<td th:text="${#aggregates.sum(invoice.getProducts().![quantity])}"></td>
+				<td th:text="${#aggregates.sum(invoice.getProducts().![quantity * poduct.priceUnit])}"></td>
+			    <td>
+							<a data-toggle="modal" data-target="#umodal" th:onclick="'getInvoice(\''+${invoice.numInvoice}+ '\' );'">
+                    		<img src="/images/see-ico-yellow.png" height="30px" width="30px" alt="Update" title="Update"/>
+                    		</a>
+					</td>
+			</tr>	
+		</tbody>
+		</table>	
+</div>
+
+
+
+
+</body>

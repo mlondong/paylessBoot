@@ -12,6 +12,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author root
@@ -26,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 public class InvoiceProduct {
 
 	@EmbeddedId
+	@JsonIgnore
 	private InvoiceProductId invProdId;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -36,7 +40,7 @@ public class InvoiceProduct {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
     @MapsId("PRODUCT_ID")
-	@JsonBackReference
+	@JsonManagedReference
 	private Product poduct;
 	
 	@Column(name="CUANTITY")

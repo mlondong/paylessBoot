@@ -1,10 +1,14 @@
 package com.payless.demo.controller;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -30,16 +34,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.payless.demo.model.Address;
 import com.payless.demo.model.Consumer;
+import com.payless.demo.model.Invoice;
+import com.payless.demo.model.InvoiceProduct;
+import com.payless.demo.model.MeatProduct;
 import com.payless.demo.model.Product;
 import com.payless.demo.model.Stock;
 import com.payless.demo.model.StockProducts;
 import com.payless.demo.model.Trader;
 import com.payless.demo.services.ConsumerServiceImp;
+import com.payless.demo.services.InvoiceServiceImp;
 import com.payless.demo.services.ProductServiceImp;
 import com.payless.demo.services.TraderServiceImp;
 import com.payless.demo.util.Passgenerator;
+
+
+
 
 
 
@@ -57,6 +70,11 @@ public class ConsumerController {
 	private  TraderServiceImp traderServiceImp;
 	
 	
+	@Autowired
+	private  InvoiceServiceImp invoiceServiceImp;
+	
+	
+	
 	
 	
 	@GetMapping("/consumer")
@@ -65,7 +83,7 @@ public class ConsumerController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Consumer consumer = consumerServiceImp.queryFindByUserName(auth.getName());
         modelAndView.addObject("userName", "Welcome " + consumer.getFirstName() + " " + consumer.getLastName() + " (" + consumer.getDni() + ")");
-        modelAndView.addObject("info", consumer.toString());
+        modelAndView.addObject("consumer", consumer);
         return modelAndView;
 	}
 	
@@ -196,6 +214,26 @@ public class ConsumerController {
 		return modelAndView;
 	}
 
+	
+	
+	@GetMapping(path="/consumer/purchase")
+	public ModelAndView myPurchases(){
+		ModelAndView modelAndView = new ModelAndView("c_mypurchase");
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Consumer consumer = consumerServiceImp.queryFindByUserName(auth.getName());
+        modelAndView.addObject("consumer", consumer);
+       
+        Collection<Invoice> invoices = consumer.getInvoices();
+        
+        if(invoices.isEmpty()){
+        	modelAndView.addObject("error", "Invoices not found!.");
+        }else{
+        		modelAndView.addObject("invoices", invoices);
+              }
+        
+   	return modelAndView;
+	}
+	
 	
 	
 	

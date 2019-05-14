@@ -19,6 +19,11 @@ public class InvoiceServiceImp implements InvoiceService{
 	
 	
 	@Override
+	public Optional<Invoice> findInvoiceDetails(Long  numInvoice) {
+		return invoiceRepositoty.findInvoiceDetails(numInvoice);
+	}
+
+	@Override
 	public Optional<Invoice> findByNumInvoice(long numInvoice) {
 		return invoiceRepositoty.findByNumInvoice(numInvoice);
 	}

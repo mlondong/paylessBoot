@@ -644,7 +644,10 @@ public class AdminController {
 	
 	@RequestMapping(path="/invoice/add" ,method = {RequestMethod.POST, RequestMethod.GET})
 	public ModelAndView create_Invoice(@RequestParam("traders") Long idTrader, 
-			@RequestParam("dni-autocomplete") Long dni, RedirectAttributes attributes){
+									   @RequestParam("dni-autocomplete") Long dni, 
+									   RedirectAttributes attributes){
+		
+		System.out.println("AQUIIIII..");
 		
 		ModelAndView modelAndView = null; 
 		Consumer consumerdb = consumerServiceImp.findByDni(dni);
@@ -658,7 +661,7 @@ public class AdminController {
 				Trader traderdb     = traderServiceImp.getTrader(idTrader);
 				Invoice inv = new  Invoice(traderdb, consumerdb);
 				invoicetServiceImp.save(inv);	
-				modelAndView = new ModelAndView("redirect:/invoice/addproducts?numInvoice="+inv.getNumInvoice());
+				modelAndView = new ModelAndView("redirect:/admin/invoice/addproducts?numInvoice="+inv.getNumInvoice());
 		}
 		return modelAndView;
 	}

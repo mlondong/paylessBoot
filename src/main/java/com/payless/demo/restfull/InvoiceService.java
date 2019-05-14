@@ -1,17 +1,26 @@
 package com.payless.demo.restfull;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.payless.demo.model.Consumer;
 import com.payless.demo.model.Invoice;
 import com.payless.demo.model.Product;
@@ -23,6 +32,7 @@ import com.payless.demo.repositories.ConsumerRepository;
 import com.payless.demo.repositories.InvoiceRepository;
 import com.payless.demo.repositories.ProductRepository;
 import com.payless.demo.repositories.TraderRepository;
+import com.payless.demo.services.InvoiceServiceImp;
 
 /**
  * THIS SERVICE INVOICE FOR TRADER:
@@ -36,7 +46,7 @@ import com.payless.demo.repositories.TraderRepository;
 
 
 @RestController
-@RequestMapping(path="/paylessboot") 
+@RequestMapping(path="/services") 
 public class InvoiceService {
 
 
@@ -51,8 +61,26 @@ public class InvoiceService {
 
 	@Autowired
 	private ConsumerRepository consumerRepository;
+	
+	@Autowired
+	private  InvoiceServiceImp invoiceServiceImp;
 
 
+
+	
+	@GetMapping(path = "/invoice/getinvoice",produces={MediaType.APPLICATION_JSON_VALUE})
+	public Invoice myPurchases(@RequestParam("numInvoice") Long numInvoice){
+		Optional<Invoice>  invoice = invoiceServiceImp.findInvoiceDetails(numInvoice);
+		Invoice resutl=null;	
+		if(invoice.isPresent()){
+			resutl=invoice.get();
+		}
+		return resutl;
+	}
+
+	
+	
+	
 	@PostMapping(path="/invoice/addinvoice/trader/{idtrader}/consumer/{idconsumer}")
 	public Invoice addInvoice(@PathVariable("idtrader") long idTrader , @PathVariable("idconsumer") long idConsumer ){
 		

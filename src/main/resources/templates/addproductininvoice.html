@@ -16,7 +16,7 @@ function deleteEntity(url) {
 
 	var idInvoice =  $('#delete-idInvoice').val();
 	var idProduct =  $('#delete-idProduct').val();
-	var url ="/invoice/deleteinvoice?idinvoice="+idInvoice+"&idprod="+idProduct;
+	var url ="/admin/invoice/deleteinvoice?idinvoice="+idInvoice+"&idprod="+idProduct;
 
 	$.post(url, function (data) {	
 
@@ -34,7 +34,7 @@ function closeModal(name) {
 
 
 function showEditModal(idInvoice, idProd, cant) {
-	var url = "/invoice/getInvoiceProduct?idInvoice="+idInvoice+"&idProd="+idProd;
+	var url = "/admin/invoice/getInvoiceProduct?idInvoice="+idInvoice+"&idProd="+idProd;
 	$('#update-idprod').val(idProd);
 	$('#update-idinvoice').val(idInvoice);
 	$('#update-quantity').val(cant);
@@ -77,7 +77,7 @@ $(document).ready(function () {
 	
 		if(flag2==true){
 			 $.ajax({
-                url: "/invoice/updateprod",
+                url: "/admin/invoice/updateprod",
                 type: "GET",
                 data: { idprod: 	$('#update-idprod').val(),
                 		idinvoice:  $('#update-idinvoice').val(), 
@@ -124,7 +124,7 @@ $(document).ready(function () {
 	    	
 			if(flag==true){
 				$.ajax({
-                    url: "/invoice/addprodinv",
+                    url: "/admin/invoice/addprodinv",
                     type: "GET",
                     data: { numInvoice: $('#numInvoice'+index).val(),
                     		idProduct:  $('#idProduct'+index).val(), 
@@ -187,7 +187,7 @@ function reload() {
                 </button>
             </div>
             <div class="modal-body">
-                <form id="edit-form" role="form" action="/invoice/updateprod" method="GET">
+                <form id="edit-form" role="form" action="/admin/invoice/updateprod" method="GET">
                     <input id="update-idprod" type="hidden" />
                     <input id="update-idinvoice" type="hidden" />
                     <fieldset class="form-group">
@@ -360,7 +360,7 @@ function reload() {
 					<td th:text="${stockproduct.quantity}"></td>
 					<td>
 
-						<form method="get" action="/invoice/addprodinv"	th:id="'myForm' + ${index.index}">
+						<form method="get" action="/admin/invoice/addprodinv"	th:id="'myForm' + ${index.index}">
 							<input type="hidden" th:id="'numInvoice' + ${index.index}"	th:value="${invoice.getNumInvoice()}" />
 							<input type="hidden" th:id="'idProduct' + ${index.index}"	th:value="${stockproduct.product.id}" />
 							<input type="hidden" th:id="'cant_db' + ${index.index}"	th:value="${stockproduct.quantity}" /> 

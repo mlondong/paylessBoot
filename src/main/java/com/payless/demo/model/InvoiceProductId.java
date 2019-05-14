@@ -5,6 +5,8 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 /**
  * @author root
  * ESTA TABLA ES UNA TABLAID de ESTRATEGIA MUCHOS A MUCHOS CON CAMPOS ADICIONALES 
@@ -76,6 +78,11 @@ public class InvoiceProductId implements Serializable{
 		if (PRODUCT_ID != other.PRODUCT_ID)
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "InvoiceProductId [INVOICE_ID=" + INVOICE_ID + ", PRODUCT_ID=" + PRODUCT_ID + "]";
 	}
 
 

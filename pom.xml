@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -13,14 +12,14 @@
 	</parent>
 
 	<groupId>com.payless</groupId>
-		<artifactId>demo</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-		<name>PaylessBoot</name>
-		<description>Demo project for Spring Boot</description>
+	<artifactId>demo</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>PaylessBoot</name>
+	<description>Demo project for Spring Boot</description>
 
-		<properties>
-			<java.version>1.8</java.version>
-		</properties>
+	<properties>
+		<java.version>1.8</java.version>
+	</properties>
 
 
 
@@ -38,7 +37,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-		
+
 		<!-- CONF THYMELEAF -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -50,7 +49,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
-	
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -84,7 +83,7 @@
 			<artifactId>jackson-dataformat-xml</artifactId>
 		</dependency>
 
-
+	
 
 	</dependencies>
 

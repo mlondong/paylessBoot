@@ -33,6 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         	.antMatchers("/","/index","/login**","/callback/", "/webjars/**", "/error**").permitAll()
         	.antMatchers("/admin*").access("hasRole('ADMIN')")
         	.antMatchers("/consumer*").access("hasRole('CONSUMER')")
+        	.antMatchers("/services*").access("hasRole('CONSUMER')")
             .antMatchers("/trader*").access("hasRole('TRADER')")
         	.anyRequest().authenticated()
             
