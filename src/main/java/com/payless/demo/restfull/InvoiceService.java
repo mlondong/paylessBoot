@@ -13,19 +13,14 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+
 import com.payless.demo.model.Consumer;
 import com.payless.demo.model.Invoice;
 import com.payless.demo.model.Product;
-import com.payless.demo.model.Stock;
-import com.payless.demo.model.StockProducts;
 import com.payless.demo.model.Trader;
 import com.payless.demo.model.InvoiceProduct;
 import com.payless.demo.repositories.ConsumerRepository;
@@ -71,13 +66,24 @@ public class InvoiceService {
 	@GetMapping(path = "/invoice/getinvoice",produces={MediaType.APPLICATION_JSON_VALUE})
 	public Invoice myPurchases(@RequestParam("numInvoice") Long numInvoice){
 		Optional<Invoice>  invoice = invoiceServiceImp.findInvoiceDetails(numInvoice);
-		Invoice resutl=null;	
+		Invoice result=null;	
 		if(invoice.isPresent()){
-			resutl=invoice.get();
+			result=invoice.get();
 		}
-		return resutl;
+		System.out.println(result);
+		return result;
 	}
 
+	/*ojo esta es para traer los comentarios aun no eta implementada en c_mypurchase*/
+	@GetMapping(path = "/invoice/getinvoicecomments",produces={MediaType.APPLICATION_JSON_VALUE})
+	public List<InvoiceProduct> getInvoiceComments(@RequestParam("numInvoice") Long numInvoice){
+		Optional<Invoice>  invoice = invoiceServiceImp.findInvoiceDetails(numInvoice);
+		List<InvoiceProduct> invoiceProduct = (List<InvoiceProduct>) invoice.get().getProducts();
+		return invoiceProduct;
+	}
+
+	
+	
 	
 	
 	

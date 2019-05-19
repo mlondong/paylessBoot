@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+<title>Payless-Consumer</title>
+<th:block th:include="layout/header2"></th:block>
+<script type="text/javascript"
+	src="http://code.jquery.com/jquery-1.10.2.js"> </script>
+<script type="text/javascript"
+	src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"> </script>
+<link rel="stylesheet"
+	href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+</head>
+<body>
+	
+	<br>
+	<div th:if="${#ctx.containsVariable('invoiceproducts')}">
+		<table class="table">
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col">Invoice Number</th>
+					<th scope="col">Invoice Date</th>
+					<th scope="col">Trader</th>
+					<th scope="col">Code Product</th>
+					<th scope="col">Description</th>
+					<th scope="col">Branch</th>
+					<th scope="col">Rating</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="invoiceproduct,index: ${invoiceproducts}" th:with="cantidad=${#lists.size(invoiceproduct.getRatings())}, 
+																				suma=${#aggregates.sum(invoiceproduct.getRatings().![score])}">
+					<td th:if="${invoiceproduct!=null}" th:text="${invoiceproduct.invoice.numInvoice}">	</td>
+					<td th:if="${invoiceproduct!=null}" th:text="${invoiceproduct.invoice.dateInvoice}">	</td>
+					<td th:if="${invoiceproduct!=null}" th:text="${invoiceproduct.invoice.trader.nameEnterprise}">	</td>
+					<td th:if="${invoiceproduct!=null}" th:text="${invoiceproduct.poduct.code}">	</td>
+					<td th:if="${invoiceproduct!=null}" th:text="${invoiceproduct.poduct.description}">	</td>
+					<td th:if="${invoiceproduct!=null}" th:text="${invoiceproduct.poduct.producer}">	</td>
+					<td th:with="result=${suma/cantidad}" th:if="${suma != null and cantidad != 0}">
+						<label th:text="${result}"></label>
+						<img th:if="${result >= 4}" src="/images/arrow-green-ico.png" height="30px" width="30px" title="Good Rating"/>
+						<img th:if="${result < 4}" src="/images/arrow-red-ico.png" height="30px" width="30px" title="Bad Rating"/>
+					</td>
+					<td  th:if="${suma == null or cantidad == 0}" >
+						<label  th:text="${'0'}"></label>
+					</td>
+				
+				</tr>
+			</tbody>
+
+		</table>
+
+	</div>
+
+</body>
+</html>

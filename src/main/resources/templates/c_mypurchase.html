@@ -3,12 +3,24 @@
 <head lang="en">
 <title>Payless-Consumer</title>
 <th:block th:include="layout/header2"></th:block>
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.js"> </script>
-<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"> </script>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+<script type="text/javascript"
+	src="http://code.jquery.com/jquery-1.10.2.js"> </script>
+<script type="text/javascript"
+	src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"> </script>
+<link rel="stylesheet"
+	href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
 </head>
 
 <script th:inline="javascript">
+
+function getInvoice2(numInvoice){
+	var url = "/services/invoice/getinvoice?numInvoice="+numInvoice;
+	$.getJSON(url, {}, function (data) {
+		showModal2(data);
+	 });
+}
+
+
 
 function getInvoice(numInvoice){
 	var url = "/services/invoice/getinvoice?numInvoice="+numInvoice;
@@ -17,19 +29,67 @@ function getInvoice(numInvoice){
 	 });
 }
 
+
+function showModal2(data){
+			
+	if(data.products.length>0){		
+		$('#label-comment-invoice').text(data.numInvoice);
+		$('#label-comment-invoice-date').text(data.dateInvoice);
+	
+		for(var i=0; i<data.products.length;i++){
+		    $('#table_comments tr:last')
+		    	.after('<tr>'+
+		    		   '<td>'+data.products[i].poduct.code+'</td>'+
+		    	       '<td>'+data.products[i].poduct.description+'</td>'+
+		    	       '<td>'+data.products[i].poduct.producer+'</td>'+
+		    	       '<td>'+
+		    	       '<form action="/admin/main/add-address" method="get">'+
+		    	       '<textarea rows="2" cols="15" id="comment" name="comment"></textarea>'+
+		    	       
+		    	       '<textarea rows="2" cols="15" id="comment" name="comment"></textarea>'+
+		    	       '<input type="submit" value="Publish"  style="border-radius: 10px;background-color: #FFAE33" >'+
+		    	       '</form></td>'+
+		    	     '</tr>');
+			}
+	}else{
+				alert("Comments banned!.");
+		 }
+}
+
+
+
 function showModal(data){
 
 if(data.products.length>0){		
 	$('#label-details').text(data.numInvoice);
+	var total=0; 
+	var subtotal=0; 
+	var units=0; 
+
+	
 	for(var i=0; i<data.products.length;i++){
-	    $('#table_description tr:last').after('<tr>'+
-	    	    							  '<td>'+data.products[i].poduct.code+'</td>'+
-	    	    							  '<td>'+data.products[i].poduct.description+'</td>'+
-	    	    							  '<td>'+data.products[i].poduct.producer+'</td>'+
-	    	    							  '<td>'+data.products[i].poduct.priceUnit+'</td>'+
-	    	    							  '<td>'+data.products[i].quantity+'</td>'+
-	    	    							  '</tr>');
+		 subtotal=data.products[i].poduct.priceUnit*data.products[i].quantity
+	     total+=subtotal;
+		 units+=data.products[i].quantity;
+	     
+		 
+		 $('#table_description tr:last')
+	    .after('<tr>'+
+	    	    '<td>'+data.products[i].poduct.code+'</td>'+
+	    	    '<td>'+data.products[i].poduct.description+'</td>'+
+	    	    '<td>'+data.products[i].poduct.producer+'</td>'+
+	    	    '<td align=center>'+data.products[i].poduct.priceUnit+'</td>'+
+	    	    '<td align=center>'+data.products[i].quantity+'</td>'+
+	    	    '<td align=right>$ '+subtotal+'</td>'+
+	    		'</tr>');
+		   			    
 	}
+	$('#table_description tr:last')
+		.after('<tr  style="font-weight: bold; font-family:Georgia, Garamond, Serif;color:black;font-style:italic; background-color: #FFAE33">'+
+			   '<td></td><td></td><td></td><td>Totals</td><td align=center>'+units+'</td>'+
+			   '<td align=right>'+total+'</td>'+
+		       '</tr>');
+
 }else{
 			alert("Empty Invoice!.");
 	 }
@@ -38,8 +98,12 @@ if(data.products.length>0){
 }
 
 
-function putBlack(){
+function putBlack(table){
 	$("#table_description").find("tr:gt(0)").remove();
+}
+
+function putBlack2(){
+	$("#table_comments").find("tr:gt(0)").remove();
 }
 
 </script>
@@ -47,68 +111,130 @@ function putBlack(){
 <body>
 
 
-<!--MODAL FOR UPDATE  -->
-<div th:id="umodal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Details Invoice:  <label id="label-details" name="label-details"></label></h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="putBlack();">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                    <fieldset class="form-group">
-                        <table width="100%" id="table_description" name="table_description">
-                        <tr style='font-weight: bold; background-color:#FFAE33'>
-                        	<td>Code</td>
-                        	<td>Description</td>
-                        	<td>Branch</td>
-                        	<td>Price </td>
-                        	<td>Quantity</td>
-                        </tr>
-                       </table>
-                    </fieldset>
-                
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+	<!--MODAL FOR UPDATE  -->
+	<div th:id="umodal" class="modal fade" tabindex="-1" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">
+						Details Invoice: <label id="label-details" name="label-details"></label>
+					</h4>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close" onclick="putBlack();">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<fieldset class="form-group">
+						<table width="100%" id="table_description"
+							name="table_description">
+							<tr style='font-weight: bold; background-color: #FFAE33'>
+								<td>Code</td>
+								<td>Description</td>
+								<td>Branch</td>
+								<td>Price</td>
+								<td>Quantity</td>
+								<td>Subtotal</td>
+							</tr>
+						</table>
+					</fieldset>
+
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+
+
+<!--MODAL FOR COMMENTS-->
+	<div th:id="cmodal" class="modal fade" tabindex="-1" role="dialog">
+		<div class="modal-dialog" >
+			<div class="modal-content">
+				<div class="modal-header">
+					<table borde="1" cellspacing="0" cellpadding="0">
+					<tr><td><h4 class="modal-title">Invoice Comments</h4></td></tr>
+					<tr><td><h6 class="modal-title">Date Invoice: <label id="label-comment-invoice-date" name="label-comment-invoice-date"></label></h6></td>
+						<td><h6 class="modal-title">Invoice Number: <label id="label-comment-invoice" name="label-comment-invoice"></label></h6></td></tr>
+					</table>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close" onclick="putBlack2();">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<fieldset class="form-group">
+						<table width="100%" id="table_comments"
+							name="table_comments">
+							<tr style='font-weight: bold; background-color: #FFAE33'>
+								<td>Code</td>
+								<td>Description</td>
+								<td>Branch</td>
+								<td>Comment</td>
+								<td></td>
+								
+							</tr>
+						</table>
+					</fieldset>
+
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
 
 
 
 
-<br>
-<div th:if="${#ctx.containsVariable('error')}" th:text=${error}></div>
 
-<div th:if="${#ctx.containsVariable('invoices')}" >
+
+
+
+
+
+	<br>
+	<div th:if="${#ctx.containsVariable('error')}" th:text=${error}></div>
+
+	<div th:if="${#ctx.containsVariable('invoices')}">
 		<table class="table">
-		<thead class="thead-dark">
-			<tr>
-				<th scope="col">Invoice Number</th>
-				<th scope="col">Invoice Date</th>
-				<th scope="col">Trader</th>
-				<th scope="col">Units</th>
-				<th scope="col">Value Invoice</th>
-				<th scope="col">See details</th>
-			</tr>
-		</thead>	
-		<tbody>
-			<tr  scope="row" th:each="invoice: ${invoices}" >
-				<td th:if="${invoice!=null}" th:text="${invoice.numInvoice}"></td>
-				<td th:if="${invoice!=null}" th:text="${invoice.dateInvoice}"></td>
-				<td th:if="${invoice!=null}" th:text="${invoice.trader.nameEnterprise}"></td>
-				<td th:text="${#aggregates.sum(invoice.getProducts().![quantity])}"></td>
-				<td th:text="${#aggregates.sum(invoice.getProducts().![quantity * poduct.priceUnit])}"></td>
-			    <td>
-							<a data-toggle="modal" data-target="#umodal" th:onclick="'getInvoice(\''+${invoice.numInvoice}+ '\' );'">
-                    		<img src="/images/see-ico-yellow.png" height="30px" width="30px" alt="Update" title="Update"/>
-                    		</a>
-					</td>
-			</tr>	
-		</tbody>
-		</table>	
-</div>
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col">Invoice Number</th>
+					<th scope="col">Invoice Date</th>
+					<th scope="col">Buyed in</th>
+					<th scope="col">Units in Invoice</th>
+					<th scope="col">Value Invoice</th>
+					<th scope="col">See details</th>
+					<th scope="col">Add comments</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr scope="row" th:each="invoice: ${invoices}">
+					<td th:if="${invoice!=null}" th:text="${invoice.numInvoice}"></td>
+					<td th:if="${invoice!=null}" th:text="${invoice.dateInvoice}"></td>
+					<td th:if="${invoice!=null}"
+						th:text="${invoice.trader.nameEnterprise}"></td>
+					<td th:text="${#aggregates.sum(invoice.getProducts().![quantity]) + '  Und.'}"></td>
+					<td
+						th:text="${'$ '+#aggregates.sum(invoice.getProducts().![quantity * poduct.priceUnit])}"></td>
+					<td><a data-toggle="modal" data-target="#umodal"
+						th:onclick="'getInvoice(\''+${invoice.numInvoice}+ '\' );'"> <img
+							src="/images/see-ico-yellow.png" height="30px" width="30px"
+							alt="Update" title="See details" />
+					</a></td>
+					<td><a data-toggle="modal" data-target="#cmodal"
+						th:onclick="'getInvoice2(\''+${invoice.numInvoice}+ '\' );'"> <img
+							src="/images/comments.png" height="30px" width="30px"
+							alt="Comments" title="Add Comments" />
+					</a></td>
+
+				</tr>
+			</tbody>
+		</table>
+	</div>
 
 
 

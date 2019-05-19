@@ -53,7 +53,7 @@ public class Stock {
 	@OneToMany(mappedBy="stock", 
 			   cascade=CascadeType.ALL,
 			   orphanRemoval=true)
-	@JsonManagedReference
+	@JsonBackReference
 	private Collection<StockProducts> stockproducts;
 	
 	

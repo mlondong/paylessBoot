@@ -2,6 +2,8 @@ package com.payless.demo.controller;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -100,36 +102,7 @@ public class ConsumerController {
 	}
 	
 
-	@RequestMapping(path="/consumer/resulproducts", method={RequestMethod.POST, RequestMethod.GET})
-	public ModelAndView resultSearchProducts(@RequestParam("description") String desc , 
-									   @RequestParam("dni") Long id, 
-									   @RequestParam("zone") int zone, 
-									   @RequestParam("city") int city){
 	
-		ModelAndView modelAndView= new ModelAndView("c_findProducts");
-	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	    Consumer consumer = consumerServiceImp.queryFindByUserName(auth.getName());
-	    /*TRADERS IN ZONE OF CONSUMER*/
-	    List<Trader> traders = traderServiceImp.queryByParametersCityZone(zone, city);
-	    /*RESULT OF PRODUCTS FIND IT*/
-	    List<Product> findProducts = productServiceImp.findByContainDescription(desc);
-	   
-	    /*MATCH BETWEEN PRODUCTS AND TRADERS IN ZONE*/
-		List<StockProducts> matchStockProducts= new ArrayList<StockProducts>(); 
-	    for(Trader trader: traders){
-	        for(Product product: findProducts){
-	        	matchStockProducts.add(trader.getStock().findProductInOwnStock(product));
-	        }
-	     
-	    }
-	   
-	 	modelAndView.addObject("consumer", consumer);
-	   	modelAndView.addObject("stockproducts", matchStockProducts);
-	    
-	    
-	    return modelAndView;
-	}
-
 	
 	@GetMapping("/consumer/viewprofile")
 	public ModelAndView viewProfile() {
@@ -235,6 +208,24 @@ public class ConsumerController {
 	}
 	
 	
+	@GetMapping(path="/consumer/getallmyratings")
+	public ModelAndView viewMyRating(){
+		ModelAndView modelAndView = new ModelAndView("c_myrating");
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    Consumer consumer = consumerServiceImp.queryFindByUserName(auth.getName());
+	    Collection<Invoice> invoices = consumer.getInvoices();
+	    List<InvoiceProduct> invoiceProducts = new  ArrayList<InvoiceProduct>(); 
+	    for(Invoice i :invoices){
+	    	for(InvoiceProduct ivp : i.getProducts()){
+	    		invoiceProducts.add(ivp);
+	    	}
+	    }
+	    	
+	    
+	    modelAndView.addObject("consumer", consumer);
+	    modelAndView.addObject("invoiceproducts", invoiceProducts);
+		return modelAndView;
+	}
 	
 	
 }
