@@ -20,6 +20,7 @@ import javax.validation.Valid;
 import org.apache.catalina.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,6 +45,7 @@ import com.payless.demo.model.Invoice;
 import com.payless.demo.model.InvoiceProduct;
 import com.payless.demo.model.MeatProduct;
 import com.payless.demo.model.Product;
+import com.payless.demo.model.Rating;
 import com.payless.demo.model.Stock;
 import com.payless.demo.model.StockProducts;
 import com.payless.demo.model.Trader;
@@ -220,11 +222,30 @@ public class ConsumerController {
 	    		invoiceProducts.add(ivp);
 	    	}
 	    }
-	    	
-	    
 	    modelAndView.addObject("consumer", consumer);
 	    modelAndView.addObject("invoiceproducts", invoiceProducts);
 		return modelAndView;
+	}
+	
+	
+	@GetMapping(path = "/consumer/invoice")
+	public ModelAndView consumerProductsOnnvoice(@RequestParam("numInvoice") Long numInvoice){
+		ModelAndView modelAndView = new ModelAndView("c_invoice_products");
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    Consumer consumer = consumerServiceImp.queryFindByUserName(auth.getName());
+	    Optional<Invoice>  invoice = consumer.findInvoiceByNumber(numInvoice) ;
+		if(invoice.isPresent()){
+			modelAndView.addObject("invoice", invoice.get() );
+		}
+		modelAndView.addObject("consumer", consumer);
+		return modelAndView;
+	}
+
+	
+	@GetMapping(path = "/consumer/comment")
+	public String addCommentInProduct(@Valid Rating rating, BindingResult result, Model model){
+		System.out.println(rating);
+		return null;
 	}
 	
 	

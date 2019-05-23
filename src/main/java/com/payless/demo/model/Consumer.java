@@ -2,6 +2,7 @@ package com.payless.demo.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -9,12 +10,9 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.payless.demo.util.Passgenerator;
 
 
 @Entity
@@ -46,9 +44,6 @@ public class Consumer extends Usser {
 	private Address address;
 
 	
-	
-	
-	/***************************************************************************************************************************************/	
 
 	public Consumer(){}
 
@@ -61,19 +56,10 @@ public class Consumer extends Usser {
 		
 	}
 
-
-	/***************************************************************************************************************************************/	
-	//ANOTHER OPERATIONS
-
-
-
-
-
-
-
-	/***************************************************************************************************************************************/
-	//Metodos Gter and Setter
-
+	
+	public Optional<Invoice> findInvoiceByNumber(Long numInvoice){
+		return this.invoices.stream().filter(invoice-> numInvoice.equals(invoice.getNumInvoice()) ).findFirst();
+	}
 
 	
 	public Address getAddress() {

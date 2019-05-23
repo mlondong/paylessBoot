@@ -12,51 +12,12 @@
 </head>
 
 <script th:inline="javascript">
-
-function getInvoice2(numInvoice){
-	var url = "/services/invoice/getinvoice?numInvoice="+numInvoice;
-	$.getJSON(url, {}, function (data) {
-		showModal2(data);
-	 });
-}
-
-
-
 function getInvoice(numInvoice){
 	var url = "/services/invoice/getinvoice?numInvoice="+numInvoice;
 	$.getJSON(url, {}, function (data) {
 		showModal(data);
 	 });
 }
-
-
-function showModal2(data){
-			
-	if(data.products.length>0){		
-		$('#label-comment-invoice').text(data.numInvoice);
-		$('#label-comment-invoice-date').text(data.dateInvoice);
-	
-		for(var i=0; i<data.products.length;i++){
-		    $('#table_comments tr:last')
-		    	.after('<tr>'+
-		    		   '<td>'+data.products[i].poduct.code+'</td>'+
-		    	       '<td>'+data.products[i].poduct.description+'</td>'+
-		    	       '<td>'+data.products[i].poduct.producer+'</td>'+
-		    	       '<td>'+
-		    	       '<form action="/admin/main/add-address" method="get">'+
-		    	       '<textarea rows="2" cols="15" id="comment" name="comment"></textarea>'+
-		    	       
-		    	       '<textarea rows="2" cols="15" id="comment" name="comment"></textarea>'+
-		    	       '<input type="submit" value="Publish"  style="border-radius: 10px;background-color: #FFAE33" >'+
-		    	       '</form></td>'+
-		    	     '</tr>');
-			}
-	}else{
-				alert("Comments banned!.");
-		 }
-}
-
-
 
 function showModal(data){
 
@@ -147,54 +108,6 @@ function putBlack2(){
 	</div>
 	<!-- /.modal -->
 
-
-<!--MODAL FOR COMMENTS-->
-	<div th:id="cmodal" class="modal fade" tabindex="-1" role="dialog">
-		<div class="modal-dialog" >
-			<div class="modal-content">
-				<div class="modal-header">
-					<table borde="1" cellspacing="0" cellpadding="0">
-					<tr><td><h4 class="modal-title">Invoice Comments</h4></td></tr>
-					<tr><td><h6 class="modal-title">Date Invoice: <label id="label-comment-invoice-date" name="label-comment-invoice-date"></label></h6></td>
-						<td><h6 class="modal-title">Invoice Number: <label id="label-comment-invoice" name="label-comment-invoice"></label></h6></td></tr>
-					</table>
-					<button type="button" class="close" data-dismiss="modal"
-						aria-label="Close" onclick="putBlack2();">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<fieldset class="form-group">
-						<table width="100%" id="table_comments"
-							name="table_comments">
-							<tr style='font-weight: bold; background-color: #FFAE33'>
-								<td>Code</td>
-								<td>Description</td>
-								<td>Branch</td>
-								<td>Comment</td>
-								<td></td>
-								
-							</tr>
-						</table>
-					</fieldset>
-
-				</div>
-			</div>
-			<!-- /.modal-content -->
-		</div>
-		<!-- /.modal-dialog -->
-	</div>
-	<!-- /.modal -->
-
-
-
-
-
-
-
-
-
-
 	<br>
 	<div th:if="${#ctx.containsVariable('error')}" th:text=${error}></div>
 
@@ -217,7 +130,8 @@ function putBlack2(){
 					<td th:if="${invoice!=null}" th:text="${invoice.dateInvoice}"></td>
 					<td th:if="${invoice!=null}"
 						th:text="${invoice.trader.nameEnterprise}"></td>
-					<td th:text="${#aggregates.sum(invoice.getProducts().![quantity]) + '  Und.'}"></td>
+					<td
+						th:text="${#aggregates.sum(invoice.getProducts().![quantity]) + '  Und.'}"></td>
 					<td
 						th:text="${'$ '+#aggregates.sum(invoice.getProducts().![quantity * poduct.priceUnit])}"></td>
 					<td><a data-toggle="modal" data-target="#umodal"
@@ -225,11 +139,12 @@ function putBlack2(){
 							src="/images/see-ico-yellow.png" height="30px" width="30px"
 							alt="Update" title="See details" />
 					</a></td>
-					<td><a data-toggle="modal" data-target="#cmodal"
-						th:onclick="'getInvoice2(\''+${invoice.numInvoice}+ '\' );'"> <img
-							src="/images/comments.png" height="30px" width="30px"
+					<td>
+							<a th:href="@{/consumer/invoice?numInvoice={numInvoice} (numInvoice=${invoice.numInvoice})}"> 
+							<img src="/images/comments.png" height="30px" width="30px"
 							alt="Comments" title="Add Comments" />
-					</a></td>
+							</a>
+						</td>
 
 				</tr>
 			</tbody>

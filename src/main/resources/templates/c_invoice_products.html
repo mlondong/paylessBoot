@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+<title>Payless-Consumer</title>
+<th:block th:include="layout/header2"></th:block>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.js"> </script>
+<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"> </script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+<script th:inline="javascript">
+
+function  generateComment(invoiceid, productid){
+	var url = "/services/invoice/getinvoice?numInvoice="+numInvoice;
+
+
+
+	$.getJSON(url, {}, function (data) {
+		showModal(data);
+	 });
+}
+
+
+
+</script>
+
+</head>
+
+
+<body>
+<br>
+<h2>Add Comments on Invoice <label th:text="${invoice.numInvoice}" ></label> buyed <label th:text="${invoice.dateInvoice}" ></label> </h2>
+<h4>Select an product and add comment</h4>
+
+<!--MODAL FOR UPDATE  -->
+	<div th:id="umodal" class="modal fade" tabindex="-1" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">
+						Comment in Product: <label id="label-code" name="label-code"></label> <label id="label-description" name="label-description"></label>
+					</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<fieldset class="form-group">
+						<form th:action="@{/consumer/comment}" th:object="${rating}" method="post">
+						  <table width="100%" id="table_description"	name="table_description">
+							<tr>
+								<td>Comment:</td>
+								<td><textarea rows="3" cols="20" id="comment"  ></textarea></td>
+							</tr>
+							<tr>	
+								<td>Score:</td>
+								<td align=left>
+								<input type="text" size=2 id="score" />
+								</td>
+								<td><input type="button" id="btn-comment"   value="Publish" style="border-radius: 10px;background-color: #FFAE33" ></td>	
+							</tr>
+						  </table>
+						</form>
+					</fieldset>
+
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+
+
+
+
+
+<br>
+	<div th:if="${#ctx.containsVariable('invoice')}">
+		<table class="table">
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col">Code</th>
+					<th scope="col">Description</th>
+					<th scope="col">Branch</th>
+					<th scope="col">Quantity</th>
+					<th scope="col">Comment</th>
+					<th scope="col">View Comments in general</th>
+					
+				</tr>
+			</thead>
+			<tbody>
+				<tr scope="row" th:each="invoiceProduct: ${invoice.products}">
+					<td th:if="${invoiceProduct!=null}" th:text="${invoiceProduct.poduct.code}"></td>
+					<td th:if="${invoiceProduct!=null}" th:text="${invoiceProduct.poduct.description}"></td>
+					<td th:if="${invoiceProduct!=null}" th:text="${invoiceProduct.poduct.producer}"></td>
+					<td th:if="${invoiceProduct!=null}" th:text="${invoiceProduct.quantity + '  Und.' }"></td>
+					<td><a data-toggle="modal" data-target="#umodal" 
+						th:onclick="'
+									generateComment(\''+${invoice.id}+ '\' , \''+${invoiceProduct.poduct.id}+ '\' );
+									'"> 
+					    <img src="/images/comments.png" height="30px" width="30px"  title="Add comment" />
+					</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	
+	
+	
+	
+	
+</body>
+</html>
