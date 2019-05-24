@@ -14,13 +14,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import com.google.gson.JsonObject;
 import com.payless.demo.model.Consumer;
 import com.payless.demo.model.Invoice;
 import com.payless.demo.model.Product;
+import com.payless.demo.model.Rating;
 import com.payless.demo.model.Trader;
 import com.payless.demo.model.InvoiceProduct;
 import com.payless.demo.repositories.ConsumerRepository;
@@ -62,6 +64,14 @@ public class InvoiceService {
 
 
 
+	@GetMapping(path = "/invoice/commentproduct", produces={MediaType.APPLICATION_JSON_VALUE})
+	public Collection<Rating> getCommenstInProduct(@RequestParam("idProduct") Long idProd, @RequestParam("idInvoice") Long idInvoice){
+		Invoice invoice = invoiceServiceImp.findById(idInvoice).get();
+		InvoiceProduct invP = invoice.getInvoiceProductWithProduct(idProd);
+		return invP.getRatings();
+	}
+	
+	
 	
 	@GetMapping(path = "/invoice/getinvoice",produces={MediaType.APPLICATION_JSON_VALUE})
 	public Invoice myPurchases(@RequestParam("numInvoice") Long numInvoice){

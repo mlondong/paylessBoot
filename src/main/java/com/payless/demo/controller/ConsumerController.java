@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -19,6 +20,7 @@ import javax.validation.Valid;
 
 import org.apache.catalina.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jackson.JsonObjectDeserializer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,8 +39,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonObject;
 import com.payless.demo.model.Address;
 import com.payless.demo.model.Consumer;
 import com.payless.demo.model.Invoice;
@@ -242,11 +246,22 @@ public class ConsumerController {
 	}
 
 	
-	@GetMapping(path = "/consumer/comment")
-	public String addCommentInProduct(@Valid Rating rating, BindingResult result, Model model){
-		System.out.println(rating);
-		return null;
+	@RequestMapping(path = "/consumer/comment", method={RequestMethod.POST, RequestMethod.GET})
+	public String addCommentInProduct(@RequestParam("idProduct") Long idProd,
+									  @RequestParam("idInvoice") Long idInvoice,
+									  @RequestParam("comment") String comment,
+									  @RequestParam("score") int score){
+	
+		Invoice invoice = invoiceServiceImp.findById(idInvoice).get();
+		InvoiceProduct invP = invoice.getInvoiceProductWithProduct(idProd);
+		invP.getRatings().add(new Rating(invP, score, comment));
+		invoiceServiceImp.save(invoice);
+		return "redirect:/consumer/invoice?numInvoice="+invoice.getNumInvoice();
 	}
+	
+	
+	
+	
 	
 	
 }

@@ -9,28 +9,75 @@
 <script th:inline="javascript">
 
 function  generateComment(invoiceid, productid){
-	var url = "/services/invoice/getinvoice?numInvoice="+numInvoice;
-
-
-
-	$.getJSON(url, {}, function (data) {
-		showModal(data);
-	 });
+	$('#idProduct').val(productid);
+	$('#idInvoice').val(invoiceid);
 }
 
+function viewComment(invoiceid, productid){
+	var url = "/services/invoice/commentproduct?idInvoice="+invoiceid+"&idProduct="+productid;
 
+	$.ajax({
+        url : url,
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+            $.each(data,function(i,item){
+                $('#table_comments tr:last').after('<tr><td>'+item.comment+'</td><td>'+item.score+'</td></tr>');
+    		});
+        },
+        error: function(data) { alert("error"); },
+        });
+}
+
+function blanckData(){
+	  $('#table_comments').find("tr:gt(0)").remove();
+}
 
 </script>
-
 </head>
 
 
 <body>
 <br>
-<h2>Add Comments on Invoice <label th:text="${invoice.numInvoice}" ></label> buyed <label th:text="${invoice.dateInvoice}" ></label> </h2>
-<h4>Select an product and add comment</h4>
+<h2>Add Comments on Invoice <label style="color:red;" th:text="${invoice.numInvoice}" ></label> payed in <label style="color:red;" th:text="${invoice.dateInvoice}" ></label> </h2>
 
-<!--MODAL FOR UPDATE  -->
+
+
+<!--MODAL FOR view COMMENTS  -->
+	<div th:id="vmodal" class="modal fade" tabindex="-1" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">
+						Comments in Product: <label id="label-code" name="label-code"></label> <label id="label-description" name="label-description"></label>
+					</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="blanckData();">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<fieldset class="form-group">
+						<form action="/consumer/comment"  method="get">
+						  <table width="100%" id="table_comments"	name="table_comments">
+							<tr style='font-weight: bold; background-color: #FFAE33'>
+								<td >Comments</td><td>Score</td>
+							</tr>
+						  </table>
+						</form>
+					</fieldset>
+
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+
+
+
+
+<!--MODAL FOR COMMENTS  -->
 	<div th:id="umodal" class="modal fade" tabindex="-1" role="dialog">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -44,18 +91,28 @@ function  generateComment(invoiceid, productid){
 				</div>
 				<div class="modal-body">
 					<fieldset class="form-group">
-						<form th:action="@{/consumer/comment}" th:object="${rating}" method="post">
-						  <table width="100%" id="table_description"	name="table_description">
+						<form action="/consumer/comment"  method="get">
+						  <table width="100%" id="table_description" name="table_description">
 							<tr>
 								<td>Comment:</td>
-								<td><textarea rows="3" cols="20" id="comment"  ></textarea></td>
+								<td>
+								<input type="hidden" id="idProduct" name="idProduct"/>
+								<input type="hidden"  id="idInvoice" name="idInvoice"/>
+								<textarea rows="3" cols="20" id="comment" name="comment" ></textarea>
+								</td>
 							</tr>
 							<tr>	
 								<td>Score:</td>
 								<td align=left>
-								<input type="text" size=2 id="score" />
+								  <select id="score" name="score">
+  										<option value="1">1</option>
+  										<option value="2">2</option>
+  										<option value="3">3</option>
+									    <option value="4">4</option>
+									    <option value="5">5</option>
+									</select>
 								</td>
-								<td><input type="button" id="btn-comment"   value="Publish" style="border-radius: 10px;background-color: #FFAE33" ></td>	
+								<td><input type="submit" id="btn-comment"   value="Publish" style="border-radius: 10px;background-color: #FFAE33" ></td>	
 							</tr>
 						  </table>
 						</form>
@@ -75,28 +132,47 @@ function  generateComment(invoiceid, productid){
 
 <br>
 	<div th:if="${#ctx.containsVariable('invoice')}">
-		<table class="table">
+		<table class="table" border=1>
 			<thead class="thead-dark">
 				<tr>
 					<th scope="col">Code</th>
 					<th scope="col">Description</th>
 					<th scope="col">Branch</th>
 					<th scope="col">Quantity</th>
-					<th scope="col">Comment</th>
-					<th scope="col">View Comments in general</th>
+					<th width="10%" align ="center" colspan="2">View my Comments</th>
+					<th width="10%" scope="col">Average Score </th>
+					<th scope="col">Add Comment</th>
 					
 				</tr>
 			</thead>
 			<tbody>
-				<tr scope="row" th:each="invoiceProduct: ${invoice.products}">
+				<tr scope="row" th:each="invoiceProduct: ${invoice.products}" th:with="cantidad=${#lists.size(invoiceProduct.getRatings())}, 
+																				suma=${#aggregates.sum(invoiceProduct.getRatings().![score])}">
 					<td th:if="${invoiceProduct!=null}" th:text="${invoiceProduct.poduct.code}"></td>
 					<td th:if="${invoiceProduct!=null}" th:text="${invoiceProduct.poduct.description}"></td>
 					<td th:if="${invoiceProduct!=null}" th:text="${invoiceProduct.poduct.producer}"></td>
 					<td th:if="${invoiceProduct!=null}" th:text="${invoiceProduct.quantity + '  Und.' }"></td>
+					<td align ="center" width="10%" th:if="${invoiceProduct!=null}" th:text="${cantidad}"></td>
+					<td align ="left" width="5%">
+					<a data-toggle="modal" data-target="#vmodal" 
+						th:onclick="'viewComment(\''+${invoice.id}+ '\' , \''+${invoiceProduct.poduct.id}+ '\' );'"> 
+					    <img src="/images/see-ico-yellow.png" height="30px" width="30px"  title="Show comments" />
+					</a>
+					</td>
+					
+					<td th:with="result=${suma/cantidad}" th:if="${suma != null and cantidad != 0}">
+						<label th:text="${#numbers.formatDecimal(result,1,2,'COMMA')}"></label>
+						<img th:if="${result >= 3.5}" src="/images/arrow-green-ico.png" height="30px" width="30px" title="Good Rating"/>
+						<img th:if="${result < 3.5}" src="/images/arrow-red-ico.png" height="30px" width="30px" title="Bad Rating"/>
+					</td>
+					<td  th:if="${suma == null or cantidad == 0}" >
+						<label  th:text="${'0'}"></label>
+					</td>
+					
+					
+					
 					<td><a data-toggle="modal" data-target="#umodal" 
-						th:onclick="'
-									generateComment(\''+${invoice.id}+ '\' , \''+${invoiceProduct.poduct.id}+ '\' );
-									'"> 
+						th:onclick="'generateComment(\''+${invoice.id}+ '\' , \''+${invoiceProduct.poduct.id}+ '\' );'"> 
 					    <img src="/images/comments.png" height="30px" width="30px"  title="Add comment" />
 					</a></td>
 				</tr>
