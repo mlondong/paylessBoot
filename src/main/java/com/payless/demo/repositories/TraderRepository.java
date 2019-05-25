@@ -35,6 +35,11 @@ public interface TraderRepository extends BaseUserRepository<Trader>{
 	List<Trader> queryByParametersCityZone(@Param("zone") int zone, @Param("city") int city);
 
 	
-	
+
+	/*Queries*/
+	@Query(value= "select * from dbpayless.usser u"+ 
+				  " inner join dbpayless.trader t on u.user_id=t.user_id"+
+				  "	where u.name like %:name% ", nativeQuery = true)
+	Trader queryFindByUserName(@Param("name") String name);
 	
 }

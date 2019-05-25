@@ -3,26 +3,28 @@ package com.payless.demo.services;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.payless.demo.model.Stock;
 import com.payless.demo.model.Trader;
 import com.payless.demo.repositories.TraderRepository;
-import com.payless.demo.repositories.UsserRepository;
 
 
 @Service
 public class TraderServiceImp implements TraderService{
 	
 	
+	
 	@Autowired
 	private TraderRepository traderRepository;
 	
 	
-	
+	@Override
+	public Trader queryFindByUserName(String firstName) {
+		return traderRepository.queryFindByUserName(firstName);
+	}
+
 	
 	
 	@Override

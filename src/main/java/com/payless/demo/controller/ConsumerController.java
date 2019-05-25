@@ -85,18 +85,6 @@ public class ConsumerController {
 	
 	
 	
-	@GetMapping("/consumer")
-	public ModelAndView consumer() {
-		ModelAndView modelAndView = new ModelAndView("consumer");
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Consumer consumer = consumerServiceImp.queryFindByUserName(auth.getName());
-        modelAndView.addObject("userName", "Welcome " + consumer.getFirstName() + " " + consumer.getLastName() + " (" + consumer.getDni() + ")");
-        modelAndView.addObject("consumer", consumer);
-        return modelAndView;
-	}
-	
-	
-	
 	@GetMapping(path="/consumer/findproducts")
 	public ModelAndView findProducts(){
 		ModelAndView modelAndView = new ModelAndView("c_findProducts");

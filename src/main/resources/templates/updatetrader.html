@@ -11,12 +11,17 @@
 	</div>
 	
 	<div class="form-group">
-			<h2>Update Trader Form</h2>
+			<h2 style='font-weight: bold; background-color:#FFAE33'>Update Trader Form</h2>
 		
 			 
-			<form action="#" th:action="@{/main/update/{id}(id=${traderdb.id})}"  th:object="${traderdb}" method="post">
+			<form action="#" th:action="@{/admin/main/update/{id}(id=${traderdb.id})}"  th:object="${traderdb}" method="post">
 				<table>
 					<tbody>
+						<tr>
+						<td></td>
+						<td ><label style='font-weight: bold; background-color:#FFAE33'>General Information</label></td>
+						</tr>
+						
 						<tr>
 							<td><label>Social Name</label></td>
 							<td><input type="text" th:field="*{nameEnterprise}" th:value="${traderdb.nameEnterprise}"/></td>
@@ -40,15 +45,21 @@
 						</tr>
 						<tr>
 							<td>Score</td>
-							<td><input type="text" id="score" th:field="*{score}" th:value="${traderdb.score}" /></td>
-							<td th:if="${#fields.hasErrors('score')}" th:errors="*{score}"></td>
-			
+							<td>
+							<select id="score" th:field="*{score}" th:value="${traderdb.score}" >
+							  <option value="1">1</option>
+							  <option value="2">2</option>
+							  <option value="3">3</option>
+							  <option value="4">4</option>
+							  <option value="5">5</option>
+							</select>
+					
 						</tr>
 
 
 						<tr>
 							<td></td>				
-							<td><label>Information for login</label></td>
+							<td><label style='font-weight: bold; background-color:#FFAE33'>Information for login</label></td>
 						</tr>
 
 						<tr>

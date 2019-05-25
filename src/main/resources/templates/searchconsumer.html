@@ -8,7 +8,7 @@
 <body>
 
 	<div id="div_search">
-		<h2>Search Consumer</h2>
+		<h2 style='font-weight: bold; background-color:#FFAE33'>Search Consumer</h2>
 		<form action="/admin/consumer/search"  method="get">
 			<div class="form-group">
 			<table>
@@ -30,26 +30,27 @@
 
 <p></p>
 <div id="div_list" th:if="${not #lists.isEmpty(consumers)}" class="table table-striped">
-		<table>
+		<table width="100%">
 			<tr>
 				<th>DNI</th>
 				<th>First Name</th>
 				<th>Last Name</th>
 				<th>State</th>
 				<th>Invoices</th>
+				<th>Address</th>
 				<th colspan="5"></th>
 			</tr>
 			<tr th:each="consumer : ${consumers}">
 				<td th:text="${consumer.dni}"></td>
 				<td align="center" th:text="${consumer.firstName}"></td>
 				<td align="center" th:text="${consumer.lastName}"></td>
-				
 				<td align="center" th:if="${consumer.state==false}"  th:text="Inacive"></td>
 				<td align="center" th:if="${consumer.state==true}" th:text="Active"></td>
+				<td align="center" th:text="${consumer.invoices.size()}" width="10%"></td>
+				<td  th:if="${consumer.address!=null}" th:text="${consumer.address.description +' - '+ consumer.address.city +' - '+consumer.address.zona } "></td>
+				<td  th:if="${consumer.address==null}"></td>
 				
 				
-				
-				<td align="center"  th:text="${consumer.invoices.size()}" width="10%"></td>
 				
 				<td>
 				<a th:href="@{/admin/consumer/show_update?idconsumer={idconsumer}        (idconsumer=${consumer.id} )     }  ">

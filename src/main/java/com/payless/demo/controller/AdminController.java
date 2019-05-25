@@ -1,5 +1,15 @@
 package com.payless.demo.controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,30 +28,19 @@ import com.payless.demo.model.Consumer;
 import com.payless.demo.model.Invoice;
 import com.payless.demo.model.InvoiceProduct;
 import com.payless.demo.model.Product;
+import com.payless.demo.model.Role;
 import com.payless.demo.model.Stock;
 import com.payless.demo.model.StockProducts;
 import com.payless.demo.model.Trader;
-
 import com.payless.demo.repositories.CityRepository;
 import com.payless.demo.repositories.ZoneRepository;
-
-import com.payless.demo.services.TraderServiceImp;
 import com.payless.demo.services.ConsumerServiceImp;
 import com.payless.demo.services.InvoiceServiceImp;
 import com.payless.demo.services.ProductServiceImp;
+import com.payless.demo.services.RoleServiceImpl;
 import com.payless.demo.services.StockServiceImp;
-
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import com.payless.demo.services.TraderServiceImp;
+import com.payless.demo.util.Passgenerator;
 
 /**
  * @RestController = @Controller + @ResponseBody  
@@ -62,6 +61,11 @@ public class AdminController {
 	private  InvoiceServiceImp invoiceServiceImp;
 	@Autowired
 	private  StockServiceImp stockServiceImp;
+	
+	@Autowired
+	private  RoleServiceImpl roleServiceImpl;
+	
+	
 	@Autowired
 	private CityRepository cityrepository;
 	@Autowired
@@ -103,7 +107,7 @@ public class AdminController {
 		
 		if (result.hasErrors()) {
 			model.addAttribute("errors", result.getFieldError() );	
-			return "redirect:/main/formupdate/"+id;
+			return "redirect:/admin/main/formupdate/"+id;
 		}else{
 			Trader taderdb= traderServiceImp.getTrader(id);
 			taderdb.setName(trader.getName());
@@ -112,7 +116,7 @@ public class AdminController {
 			taderdb.setCuit(trader.getCuit());
 			taderdb.setScore(trader.getScore());
 			traderServiceImp.save(taderdb);			
-			return "redirect:/main/searchtrader?cuit="+trader.getCuit();
+			return "redirect:/admin/main/searchtrader?cuit="+trader.getCuit();
 		}		
 	}
 
@@ -120,7 +124,7 @@ public class AdminController {
 	@RequestMapping(path="/main/delete/{id}")
 	public String deleteTrader( @PathVariable("id") long id) {
 		traderServiceImp.deleteTrader(id);
-		return "redirect:/main/search";
+		return "redirect:/admin/main/viewform";
 	}	
 
 
@@ -142,10 +146,14 @@ public class AdminController {
 		if (result.hasErrors() || trader.getName().isEmpty() || trader.getPassword().isEmpty()) {
 			model.addAttribute("error", "Information incorrect or not complete, please verify!");
 		}else{
+			Passgenerator p = new Passgenerator(4);
+			Optional<Role> role = roleServiceImpl.findById(3L);
+			trader.setPassword(p.generate(trader.getPassword()));
+			trader.addRole(role.get());;
 			
-			 traderServiceImp.save(trader); 
-			 Trader traderdb = traderServiceImp.searchByCuit(trader.getCuit());
-			 model.addAttribute("traderInfo", traderdb);
+			traderServiceImp.save(trader); 
+			Trader traderdb = traderServiceImp.searchByCuit(trader.getCuit());
+			model.addAttribute("traderInfo", traderdb);
 			 
 			}	
 		return "registertrader";
@@ -155,7 +163,7 @@ public class AdminController {
 	@RequestMapping(path="/redirect_trader/{cuit}" ,method = {RequestMethod.POST, RequestMethod.GET})
 	public RedirectView redirectTrader( @PathVariable("idinvoice") long cuit , RedirectAttributes redirectAttributes ) {
 		redirectAttributes.addAttribute("cuit", cuit);
-		return new RedirectView("/main/search");
+		return new RedirectView("/admin/main/searchtrader");
 	}
 
 
@@ -173,7 +181,7 @@ public class AdminController {
 
 	
 	@RequestMapping(path="/main/searchtrader", method = {RequestMethod.POST, RequestMethod.GET})
-	public String searchTrader(@RequestParam(name="cuit" , required=false) long cuit,  Model model) {
+	public String searchTrader(@RequestParam(name="cuit" , required=false) Long cuit,  Model model) {
 		Trader traderdb=  traderServiceImp.searchByCuit(cuit); 
 		if(traderdb==null){
 			model.addAttribute("notfind", "Cuit: "+ cuit + " not find it.. ");
@@ -228,6 +236,12 @@ public class AdminController {
 		if (result.hasErrors()) {
 			model.addAttribute("errors", result.getFieldError() );	
 		}else{
+				Passgenerator p = new Passgenerator(4);
+				Optional<Role> role = roleServiceImpl.findById(3L);
+				
+				consumer.setPassword(p.generate(consumer.getPassword()));
+				consumer.addRole(role.get());
+				
 				Consumer consumerdb =  consumerServiceImp.save(consumer);
 				model.addAttribute("consumerInfo", consumerdb);
 			}
@@ -276,15 +290,17 @@ public class AdminController {
 			model.addAttribute("Error", "Error en data Information...");
 			return "updateconsumer";
 		}else{
+			
+			   Passgenerator p = new Passgenerator(4);
 			   consumerdb = consumerServiceImp.findById(consumer.getId()).get();
 			   consumerdb.setFirstName(consumer.getFirstName());
 			   consumerdb.setLastName(consumer.getLastName());
 			   consumerdb.setName(consumer.getName());
-			   consumerdb.setPassword(consumer.getPassword());
+			   consumerdb.setPassword(p.generate(consumer.getPassword()));
 			   consumerdb.setState(consumer.isState());
 			   consumerdb.setDni(consumer.getDni());
 			   consumerServiceImp.save(consumerdb);
-			   return "redirect:/consumer/search?dni="+consumer.getDni();
+			   return "redirect:/admin/consumer/search?dni="+consumer.getDni();
 		}
 	}
 			
@@ -292,7 +308,7 @@ public class AdminController {
 	@RequestMapping(path="/consumer/delete" , method={RequestMethod.POST, RequestMethod.GET})
 	public String deleteConsumer(@RequestParam("idconsumer") Long idConsumer){
 		consumerServiceImp.deleteById(idConsumer);
-		return "redirect:/consumer/search";
+		return "redirect:/admin/consumer/search";
 	}	
 	
 	
@@ -350,7 +366,7 @@ public class AdminController {
 		Trader traderdb = traderServiceImp.getTrader(idtrader);
 		traderdb.getAddress().remove(indice);
 		traderServiceImp.save(traderdb);		
-		return "redirect:/main/addaddress?idtrader="+idtrader;
+		return "redirect:/admin/main/addaddress?idtrader="+idtrader;
 	} 
 
 	
@@ -374,7 +390,7 @@ public class AdminController {
 		st.setTrader(traderdb);
 		traderdb.setStock(st);
 		traderServiceImp.save(traderdb);
-		return "redirect:/main/searchtrader?cuit="+traderdb.getCuit();
+		return "redirect:/admin/main/searchtrader?cuit="+traderdb.getCuit();
 	}
 
 
@@ -386,7 +402,7 @@ public class AdminController {
 		if(traderdb != null ){
 			model.addAttribute("traderInfo", traderdb);
 		}else{
-			model.addAttribute("notfind", "Cuit not find.. ");
+			model.addAttribute("notfind", "Cuit not find it .. "+trader.getCuit());
 		}
 		return "showproductinstock";
 	}	
@@ -448,7 +464,7 @@ public class AdminController {
 				traderServiceImp.save(traderdb);
 			}
 		}
-		return "redirect:/main/sendproducttostock/"+idTrader;
+		return "redirect:/admin/main/sendproducttostock/"+idTrader;
 	}
 
 
@@ -460,7 +476,7 @@ public class AdminController {
 		stockProducts =   traderdb.getStock().getStockproducts();
 		stockProducts.removeIf((StockProducts st) -> st.getProduct().equals(mt)  );
 		traderServiceImp.save(traderdb);
-		return "redirect:/main/sendproducttostock/"+idtrader;
+		return "redirect:/admin/main/sendproducttostock/"+idtrader;
 	} 
 
 
@@ -477,9 +493,10 @@ public class AdminController {
 		return "invoice";
 	}
 
-	@RequestMapping(path="/invoice/searchinvoice",  method = {RequestMethod.POST, RequestMethod.GET})
+	@RequestMapping(path="/invoice/searchinvoice")
 	public String searchInvoiceByCuit(@RequestParam(required=false, name="cuit", defaultValue="0" ) Long cuit, Model model){
-		if(cuit==0){
+		
+		 if(cuit==0){
 			model.addAttribute("Error", " Fill the form... to find information " );
 		}else{
 				Trader traderlist = traderServiceImp.searchByCuit(cuit);
@@ -579,7 +596,7 @@ public class AdminController {
 		invoicedb.removeInvoiceProduct(invoiceProduct);
 		invoicetServiceImp.save(invoicedb);
 		
-		return "redirect:/invoice/showdetail?idinvoice="+idinvoice+"&idtrader="+idProduct;
+		return "redirect:/admin/invoice/showdetail?idinvoice="+idinvoice+"&idtrader="+idProduct;
 	}
 	
 	
@@ -587,7 +604,7 @@ public class AdminController {
 	public RedirectView delete_Invoice(@PathVariable("idinvoice") long idinvoice , @PathVariable("cuit") long cuit , RedirectAttributes redirectAttributes   ){
 		invoicetServiceImp.deleteById(idinvoice);
 		redirectAttributes.addAttribute("cuit", cuit);
-		return new RedirectView("/invoice/searchinvoice");
+		return new RedirectView("/admin/invoice/searchinvoice");
 	}
 
 
@@ -769,7 +786,7 @@ public class AdminController {
 		productdb.setProducer(producer);
 		productdb.setPriceUnit(priceUnit);
 		productServiceImp.save(productdb);
-		return "redirect:/products";
+		return "redirect:/admin/products";
 	}
 
 }

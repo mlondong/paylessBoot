@@ -8,18 +8,13 @@
 <body>
 
 	<div id="div_stock" th:if="${traderInfo}">
-		<table>
-			<tr>
-				<td colspan="2"><h3>General Information in Stock:</h3></td>
-			</tr>
-			<tr>
-				<td>Date Stock:</td>
-				<td th:text="${traderInfo.getStock().dateStock}"></td>
+		<table width="100%">
+			<tr style='font-weight: bold; background-color:#FFAE33'>
+				<td colspan="2" ><h2>Stock Information - <label th:text="${traderInfo.cuit}"> </label></h2></td>
 			</tr>
 		</table>
 	</div>
 	
-	<p></p>
 	
 	<div>
 		<table class="table">

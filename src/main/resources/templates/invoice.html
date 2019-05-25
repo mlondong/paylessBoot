@@ -6,15 +6,15 @@
 </head>
 
 <body>
-<h2>Search Invoices</h2>
+<h2 style='font-weight: bold; background-color:#FFAE33'>Search Invoices</h2>
 		
 <table>
   <tr>
     <th>
     <div id="div_search" class="form-group">
-		<form action="/invoice/searchinvoice" method="post">
+   		<form th:action="@{/admin/invoice/searchinvoice}" method="post">
 		<div>
-				<label for="inputCuit">By Cuit:</label> 
+				<label for="inputCuit">Trader by Cuit:</label> 
 				<input type="text"	id="cuit" name="cuit" >
 				<button type="submit" class="btn btn-primary">By Cuit</button>
 		</div>
@@ -24,9 +24,9 @@
     
     <th>
     <div id="div_search" class="form-group">
-		<form action="/invoice/dnisearch" method="post">
+		<form th:action="@{/admin/invoice/dnisearch}" method="post">
 		<div>
-				<label for="inputDni">By Dni:</label> 
+				<label for="inputDni">Consumer by Dni:</label> 
 				<input type="text"	id="dni" name="dni" >
 				<button type="submit" class="btn btn-primary">By Dni</button>
 		</div>
@@ -36,7 +36,7 @@
 	
 	<th>
     <div id="div_search" class="form-group">
-		<form action="/invoice/numinvoice" method="post">
+		<form th:action="@{/admin/invoice/numinvoice}" method="post">
 		<div>
 				<label for="inputDni">By NumInvoice:</label> 
 				<input type="text"	id="numInvoice" name="numInvoice" >
@@ -102,10 +102,10 @@
 				<td th:text="${invoice.numInvoice}"></td>
 				<td th:text="${#lists.size(invoice.products)}"></td>
 				<td th:text="${invoice.consumer.firstName} +' '+${invoice.consumer.lastName}+' '+${invoice.consumer.dni}"></td>
-				<td><a th:href="@{/invoice/addproducts?numInvoice={idinvoice}  (idinvoice=${invoice.numInvoice}) }">
+				<td><a th:target="_blank" th:href="@{/admin/invoice/addproducts?numInvoice={idinvoice}  (idinvoice=${invoice.numInvoice}) }">
 					<img src="/images/see-ico.png" height="20px" width="20px" alt="See products in Invoice" title="See products in Invoice" />
 				</a></td>
-				<td><a th:href="@{/invoice/delete_Invoice/{idinvoice}/cuit/{cuit} (idinvoice=${invoice.id} , cuit=${TraderInfo.cuit} ) }">
+				<td><a th:href="@{/admin/invoice/delete_Invoice/{idinvoice}/cuit/{cuit} (idinvoice=${invoice.id} , cuit=${TraderInfo.cuit} ) }">
 					<img src="/images/eliminar-ico.png" height="30px" width="30px" alt="Delete" title="Delete Invoice with produtcs" />
 				</a></td>
 			</tr>
@@ -141,10 +141,10 @@
 				<td th:text="${invoice.numInvoice}"></td>
 				<td th:text="${#lists.size(invoice.products)}"></td>
 				<td th:text="${invoice.trader.cuit}+' '+${invoice.trader.nameEnterprise}"></td>
-				<td><a th:href="@{/invoice/addproducts?numInvoice={idinvoice}  (idinvoice=${invoice.numInvoice}) }">
+				<td><a th:target="_blank" th:href="@{/admin/invoice/addproducts?numInvoice={idinvoice}  (idinvoice=${invoice.numInvoice}) }">
 					<img src="/images/see-ico.png" height="20px" width="20px" alt="See products in Invoice" title="See products in Invoice" />
 				</a></td>
-				<td><a th:href="@{/invoice/delete_Invoice/{idinvoice}/cuit/{cuit} (idinvoice=${invoice.id} , cuit=${invoice.trader.cuit} ) }">
+				<td><a th:href="@{/admin/invoice/delete_Invoice/{idinvoice}/cuit/{cuit} (idinvoice=${invoice.id} , cuit=${invoice.trader.cuit} ) }">
 					<img src="/images/eliminar-ico.png" height="30px" width="30px" alt="Delete" title="Delete Invoice with produtcs" />
 				</a></td>
 			</tr>

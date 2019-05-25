@@ -3,21 +3,69 @@
 <head lang="en">
 <title>Payless</title>
 <th:block th:include="layout/header"></th:block>
+<script type="text/javascript">
+$(document).ready(function () {
+	
+	$("form").keypress(function(e) {
+		if (e.which == 13) {
+		    return false;
+		}  	
+	});
+
+	
+	$('#btn-form').click(function() { 
+		
+				var cuit = $("#cuit").val();
+				var flag= true;
+
+
+					if(cuit.length==0){
+						flag= false;
+			   			$('#span-error').after('<p>Please Insert data.</p>')
+		 			}
+				
+					if(isNaN(cuit)){
+						flag= false;
+				   		$('#span-error').after('<p>Please insert a correct value num.</p>')
+			 		}
+					if(/^[a-zA-Z0-9]*$/.test(cuit) == false){
+						flag= false;
+				   	 	$('#span-error').after('<p>Please insert a correct value.</p>')
+			        }
+
+					if(flag===true){
+						$("#myForm").submit(); // Submit the form
+					}else {
+							setTimeout(clearSpan, 2000); 
+						  }			
+	});
+});	
+
+function clearSpan(){
+	document.getElementById("span-error").innerHTML= '';
+	
+}
+</script>
 </head>
 
 <body>
 
 	<div id="div_search">
-		<h2>Search Trader</h2>
-		<form th:action="@{/admin/main/searchtrader}"  method="post">
+		<h2 style='font-weight: bold; background-color:#FFAE33'>Search Trader</h2>
+		<form th:action="@{/admin/main/searchtrader}"  method="post" id="myForm">
 			<div class="form-group">
 			<table>
 				<tbody>
 					<tr>
 						<td><label>Cuit to Search:</label></td>
-						<td><input type="text" id="cuit" name="cuit" /></td>
 						<td>
-							<button type="submit" class="btn btn-primary">Search</button>
+						<input type="text" id="cuit" name="cuit" />
+						</td>
+						<td>
+							<button type="button" class="btn btn-primary" id="btn-form">Search</button>
+						</td>
+						<td>
+						<span id="span-error"  name="span-error" style='background-color: #FFE333; font-size: 16px'> </span>
 						</td>
 					</tr>
 				</tbody>

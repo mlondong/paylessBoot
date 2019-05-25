@@ -3,7 +3,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
 
-public class Passgenerator {
+public  class Passgenerator {
 
 	private BCryptPasswordEncoder bCryptPasswordEncoder=null;
 	
@@ -11,7 +11,7 @@ public class Passgenerator {
 		bCryptPasswordEncoder = new BCryptPasswordEncoder(strength);
 	}
 	
-	public String generate(String pass){
+	public  String generate(String pass){
 		return bCryptPasswordEncoder.encode(pass);
 	}
 	

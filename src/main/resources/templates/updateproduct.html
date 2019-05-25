@@ -8,7 +8,7 @@
 <body>
 
 	<div class="form-group" th:if="${stproductdb}">
-		<h2>Update Product in Stock</h2>
+		<h2 style='font-weight: bold; background-color:#FFAE33'>Update Product in Stock</h2>
 		<table  width="18%">
 				<tr>
 					<td>Product:</td>
@@ -20,7 +20,7 @@
 				</tr>
 		</table>
 
-		<form action="#" th:action="@{/main/save}" method="post">
+		<form action="#" th:action="@{/admin/main/save}" method="post">
 			<table  width="18%">
 				<tr>
 					<td>Quantity:</td>

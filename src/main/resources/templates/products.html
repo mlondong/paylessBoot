@@ -6,13 +6,7 @@
 </head>
 
 <body>
-
-
-
-
-	<p><h3>Update Products</h3></p>
-	
-
+<h3 style='font-weight: bold; background-color:#FFAE33'>Update Products</h3>
 
 	<div id="div_stock" th:if="${products}">
 		<table class="table">
@@ -49,7 +43,7 @@
 				<td></td>
 				</span>
 				<td>
-				<a th:href="@{/products/detail?id={id}  (id=${product.id})}">
+				<a th:href="@{/admin/products/detail?id={id}  (id=${product.id})}">
 				<img src="../images/edit-product.png" height="35px"	width="35px" alt="Update Product" title="Update Product"/>
 				</a>
 				</td>

@@ -8,8 +8,8 @@
 
 <body>
 
-		<h2>Create New Trader </h2>
-		<form th:action="@{/main/result}" th:object="${trader}" method="post">
+		<h2 style='font-weight: bold; background-color:#FFAE33'>Create New Trader </h2>
+		<form th:action="@{/admin/main/result}" th:object="${trader}" method="post">
 		<div id="div_reg" class="form-group">
 		   <table>
 				<tbody>
@@ -34,7 +34,7 @@
 					
 					<tr>
 						<td></td>				
-						<td><h6>Define information for login</h6></td>
+						<td><h6 style='font-weight: bold; background-color:#FFAE33'>Information for login</h6></td>
 					</tr>
 				
 					<tr>
@@ -66,7 +66,7 @@
 
 	<div id="div_list" th:if="${not #lists.isEmpty(traderInfo)}">
 		<h2>Store it!...</h2>
-		<a th:href="@{/main/searchtrader?cuit={cuit} (cuit=${traderInfo.cuit}) }"> See Details </a>
+		<a th:href="@{/admin/main/searchtrader?cuit={cuit} (cuit=${traderInfo.cuit}) }"> See Details </a>
 	</div>
 
 

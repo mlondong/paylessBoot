@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head lang="en">
-<title>Payless-Admin</title>
-<th:block th:include="layout/header"></th:block>
+<title>Payless-Consumer</title>
+<th:block th:include="layout/headerTrader"></th:block>
 </head>
 <body>
-<div th:if="${userName!= null}">
+
+	<div th:if="${userName!= null}">
 		<h3 th:text="${userName}"></h3>
 	</div>
 

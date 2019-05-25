@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html" charset="UTF-8"/>
  
 <!-- BOOTSTRAP -->
-<link rel="stylesheet"
+<link rel="stylesheet" 
  href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
  integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
  crossorigin="anonymous"></link>
@@ -19,18 +19,17 @@
 </head>
 
 <body>
-<table >
+	<table >
 		<tbody>
 			<tr>
-				<td><img src="/images/admin-ico.png" height="50px"
-					width="50px" /></td>
-				<td><h2>ADMIN</h2></td>
+				<td><img src="/images/trader-ico.png" height="50px" width="50px" /></td>
+				<td><h2>TRADER</h2></td>
 				<td>
 					<table border=0 style="display: table;  margin: 0 auto;position: absolute; top:2%; left:80%;">
 						<tr>
 							<td>Welcome:
-								<span align th:if="${#ctx.containsVariable('admin')}" 
-											th:text="${admin.nameEnterprise}" ></span>
+								<span align th:if="${#ctx.containsVariable('trader')}" 
+											th:text="${trader.nameEnterprise}" ></span>
 							</td>
 							<td>
 							 <form th:action="@{/logout}" method="post">
@@ -46,18 +45,9 @@
 		</tbody>
 	</table>
 
-
 <nav class="navbar navbar-dark bg-dark">
-  <a class="navbar-brand" href="/admin">Home</a>
-  <a class="navbar-brand" href="/admin/main/viewform">Search Trader</a>
-  <a class="navbar-brand" href="/admin/main/register">Add Trader</a>
-  <a class="navbar-brand" href="/admin/main/viewformsearchstock">Add Products in Stock</a>
-  <a class="navbar-brand" href="/admin/invoice/showforminvoice">Search Invoices</a>
-  <a class="navbar-brand" href="/admin/invoice/show_add">Add Invoice</a>
-  <a class="navbar-brand" href="/admin/consumer/add">Add Consumer</a>
-  <a class="navbar-brand" href="/admin/consumer/viewsearch">Search Consumer</a>
-  <a class="navbar-brand" href="/admin/products">Products</a>
- </nav>
+  <a class="navbar-brand" href="/trader">Home</a>
+</nav>
 
 
 	

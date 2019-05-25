@@ -83,7 +83,7 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
 			return "/consumer";
 		}else if (target == 3) {
 			System.out.println("return trader");
-			return "/admin";
+			return "/trader";
 		}else {
 			System.out.println("ERRRRORRRRRRR... IllegalStateException()");
 			throw new IllegalStateException();

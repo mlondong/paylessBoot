@@ -8,13 +8,13 @@
 <body>
 
 	<div id="div_search">
-		<h2>Add Products in Stock</h2>
+		<h2 style='font-weight: bold; background-color:#FFAE33'>Add Products in Trader Stock</h2>
 		<form th:action="@{/admin/main/viewformsearchstoch}" th:object="${trader}" method="post">
 			<div class="form-group">
 			<table>
 				<tbody>
 					<tr>
-						<td><label>Cuit to Search:</label></td>
+						<td><label>Search Trader by Cuit:</label></td>
 						<td><input type="text" th:field="*{cuit}" /></td>
 						<td>
 							<button type="submit" class="btn btn-primary">Search</button>
@@ -31,40 +31,57 @@
 	<h3 th:text="${notfind}"></h3>
 </div>
 
+
+
 <div class="table table-striped" id="div_list" th:if="${not #lists.isEmpty(traderInfo)}">
 <table  class="table" >
 		<thead class="thead-dark">
+			<tr>
 				<th>Name</th>
-				<th>State</th>
+				<th>Email</th>
 				<th>Cuit</th>
+				<th>State</th>
 				<th>Score</th>
 				<th>Stock Date</th>
+				<th>Total Products(Un.)</th>
 				<th>Add more Products</th>
 			</tr>
 		
-				<tr th:each="trader : ${traderInfo}">
+			<tr th:each="trader : ${traderInfo}">
 				<td th:text="${trader.name}"></td>
+				<td th:text="${trader.email}"></td>
+				<td th:text="${trader.cuit}"></td>
+			
 				<td class="table-danger" th:if="${trader.state==false}"  th:text="Inacive"></td>
 				<td th:if="${trader.state==true}" th:text="Active"></td>
 				
-				<td th:text="${trader.cuit}"></td>
 				<td th:text="${trader.score}"></td>
 			 	<td th:if="${trader.getStock() != null }" th:text="${trader.getStock().dateStock}"></td> 
-				<td align="center" th:if="${trader.stock!=null}" >
-				<a th:href="@{'/admin/main/sendproducttostock/'+${trader.id}}">
+	
+			 	 <td th:if="${trader.getStock() != null }" th:text="${ + #aggregates.sum(traderInfo.getStock().stockproducts.![quantity]) + ' Un. '}"></td> 
+			 
+		
+	
+				<td th:if="${trader.stock!=null}" >
+				<a th:target="_blank" th:href="@{'/admin/main/sendproducttostock/'+${trader.id}}">
 					<img src="/images/add-product-ico.png" height="25px"	width="25px" alt="Add Stock" title="Add Product"/>
 				</a>			
 				</td>
 				<td class="table-danger" th:if="${trader.stock==null}" th:text="WithOut_Stock"></td>
-				</tr>
+			</tr>
 		</table>		
 </div>
 
 
 <span th:if="${traderInfo}">
 <span th:if="${traderInfo.stock!=null}">
-<table  class="table" >
+<div>
+	<h4 style='font-weight: bold; background-color:#FFAE33'>Details in Stock <label th:text="${traderInfo.cuit}"> </label></h4>
+</div>
+
+<table  class="table">
 		<thead class="thead-dark">
+		<tr>
 				<th><h6>#</h6></th>
 				<th><h6>Date</h6></th>
 				<th><h6>Product Code</h6></th>
@@ -72,7 +89,9 @@
 				<th>Units</th>
 				<th></th>
 				<th></th>
+		</tr>
 		</thead>
+	
 		<tr  th:each="products, index : ${traderInfo.getStock().stockproducts}">
 					<td th:text="${index.index}"> </td>
 					<td th:text="${products.date}"> </td>

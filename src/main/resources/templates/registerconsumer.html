@@ -8,8 +8,8 @@
 
 <body>
 
-	<h2>Create New Consumer</h2>
-	<form th:action="@{/consumer/create}" th:object="${consumer}" method="post">
+	<h2 style='font-weight: bold; background-color:#FFAE33'>Create New Consumer</h2>
+	<form th:action="@{/admin/consumer/create}" th:object="${consumer}" method="post">
 		<div id="div_reg" class="form-group">
 			<table>
 				<tbody>
@@ -33,7 +33,7 @@
 				
 					<tr>
 						<td></td>				
-						<td><h6>Define information for login</h6></td>
+						<td style='font-weight: bold; background-color:#FFAE33'><h6>Information for login</h6></td>
 					</tr>
 				
 					<tr>
@@ -67,7 +67,7 @@
 
 <div id="div_list" th:if="${not #lists.isEmpty(consumerInfo)}">
 		<h2>Store it!...</h2>
-		<a th:href="@{/consumer/search?dni={dni} (dni=${consumerInfo.dni}) }"> See Details </a>
+		<a th:target="_blank" th:href="@{/admin/consumer/search?dni={dni} (dni=${consumerInfo.dni}) }"> See Details </a>
 </div>
 
 

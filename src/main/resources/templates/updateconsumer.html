@@ -8,10 +8,10 @@
 
 <body>
 		<div id="consumer_div" th:if="${consumer}">
-		<h2>
+		<h2 style='font-weight: bold; background-color:#FFAE33'>
 			Update Consumer <label th:text="${consumer.dni}"> </label>
 		</h2>
-		<form th:action="@{/consumer/update}" th:object="${consumer}"	method="post">
+		<form th:action="@{/admin/consumer/update}" th:object="${consumer}"	method="post">
 			<input type="hidden" th:field="*{id}"	 th:value="${consumer.getId()}" />
 			
 			<div id="div_reg" class="form-group">

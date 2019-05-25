@@ -33,16 +33,11 @@ public class Role {
 	@JsonBackReference
 	private Set<Usser> users = new HashSet<Usser>();
 	
-	
-
-
 
 	public Role(){}
 	
 	
-	public Role(long id, String name, Set<Usser> users) {
-		super();
-		this.id = id;
+	public Role(String name, Set<Usser> users) {
 		this.name = name;
 		this.users = users;
 	}
