@@ -1,7 +1,5 @@
 package com.payless.demo.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,9 +45,7 @@ public class AppController {
 	public ModelAndView trader() {
 		ModelAndView modelAndView = new ModelAndView("trader");
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-       
         Trader trader = traderServiceImp.queryFindByUserName(auth.getName());
-        System.out.println(trader);
         modelAndView.addObject("userName", "Welcome " + trader.getNameEnterprise() + " (" + trader.getCuit() + ")");
         modelAndView.addObject("trader", trader);
         return modelAndView;

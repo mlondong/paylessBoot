@@ -1,10 +1,6 @@
 package com.payless.demo;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,22 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.payless.demo.model.City;
+import com.payless.demo.model.Consumer;
+import com.payless.demo.model.Zone;
 import com.payless.demo.repositories.CareProductRepository;
 import com.payless.demo.repositories.CityRepository;
 import com.payless.demo.repositories.ConsumerRepository;
 import com.payless.demo.repositories.MeatProductRepository;
 import com.payless.demo.repositories.MilkProductRepository;
 import com.payless.demo.repositories.TraderRepository;
-
-import junit.framework.Assert;
-
-import com.payless.demo.model.CareProduct;
-import com.payless.demo.model.City;
-import com.payless.demo.model.Consumer;
-import com.payless.demo.model.MeatProduct;
-import com.payless.demo.model.MilkProduct;
-import com.payless.demo.model.Trader;
-import com.payless.demo.model.Zone;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -61,7 +50,7 @@ public class PaylessBootApplicationTests {
 	
 	@Test
 	public void crearCity(){
-		City c = new City("Buenos Aires");
+		/*City c = new City("Buenos Aires");
 		
 		Zone zone1 = new Zone("Recoleta");
 		zone1.setCiti(c);
@@ -73,6 +62,7 @@ public class PaylessBootApplicationTests {
 		c.addZone(zone2);
 		
 		cityRepository.save(c);
+	*/
 	}
 	
 	@Test

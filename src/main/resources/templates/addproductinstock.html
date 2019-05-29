@@ -29,7 +29,6 @@
 				</tr>	
 			</thead>
 			
-		
 			<tr th:each="datos : ${traderInfo.getStock().stockproducts}">
 				<td th:text="${datos.product.code} +' - ' + ${datos.product.id}"></td>
 				<td th:text="${datos.product.description}"></td>
@@ -57,7 +56,7 @@
 
 	<p></p>
 	<p><h3>Form to Add Products</h3></p>
-
+  
 	<div id="div_stock" th:if="${products}">
 		<table class="table table-bordered table-dark">
 			<thead>
@@ -102,7 +101,6 @@
 			</tr>
 		</table>
 	</div>
-
 
 
 </body>

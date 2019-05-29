@@ -10,7 +10,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -27,27 +26,29 @@ public class City {
 	private String name;
 	
 
-	@OneToMany(mappedBy="citi", 
+	@OneToMany(mappedBy="city", 
 			 fetch=FetchType.LAZY,
 			 cascade = CascadeType.ALL, 
 			 orphanRemoval = true)
-	@JsonManagedReference//esto evita mal formacion en el json como es el ref de stock en trader
-	private List<Zone> zone =  new ArrayList<>();;
+	@JsonManagedReference
+	private List<Zone> zone =  new ArrayList<Zone>();
 
 
 	
-	public City() {
-	}
 	
+	
+	public City() {	}
 	
 	public City(String name) {
-		super();
 		this.name = name;
 	}
-
-
-	public void addZone(Zone e){
-		this.zone.add(e);
+	
+	public void addZone(Zone zone){
+		this.zone.add(zone);
+	}
+	
+	public void removeZone(Zone zone){
+		this.zone.remove(zone);
 	}
 	
 	public long getId() {
@@ -66,11 +67,9 @@ public class City {
 		this.name = name;
 	}
 
-
 	public List<Zone> getZone() {
 		return zone;
 	}
-
 
 	public void setZone(List<Zone> zone) {
 		this.zone = zone;

@@ -2,10 +2,7 @@ package com.payless.demo;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +13,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.payless.demo.model.Address;
 import com.payless.demo.model.CareProduct;
 import com.payless.demo.model.City;
-import com.payless.demo.model.Consumer;
 import com.payless.demo.model.MeatProduct;
 import com.payless.demo.model.MilkProduct;
 import com.payless.demo.model.Role;
@@ -93,7 +89,7 @@ public class TestPoblateData {
 	
 	@Test
 	public void crearCity(){
-		City baires = new City("Buenos Aires");
+	/*	City baires = new City("Buenos Aires");
 		Zone baires_zone1 = new Zone("Recoleta");
 		Zone baires_zone2= new Zone("Palermo");
 		Zone baires_zone3 = new Zone("Boedo");
@@ -132,7 +128,7 @@ public class TestPoblateData {
 		baires.addZone(plata_zone2);
 		baires.addZone(plata_zone3);
 		
-		cityRepository.save(plata);		
+		cityRepository.save(plata);		*/
 		
 	}
 	
@@ -140,7 +136,7 @@ public class TestPoblateData {
 	public void createConsumer(){
 		/***ROLES DEFINIDOS 	 * (1, 'ROLE_ADMIN');  (2, 'ROLE_CONSUMER'); (3, 'ROLE_TRADER');*/
 
-		Role roleAsiged = roleRepository.findById(2L).get();//ROLE_CONSUMER ID 2L PARA AMBOS CONSUMRES
+		/*Role roleAsiged = roleRepository.findById(2L).get();//ROLE_CONSUMER ID 2L PARA AMBOS CONSUMRES
 		Passgenerator encoder = new Passgenerator(4);
 		String pass= encoder.generate("1234");
 	
@@ -153,14 +149,14 @@ public class TestPoblateData {
 		Consumer n2 = new Consumer("consumer2", pass, 10217048, "Martha", "Garcia", "calle 24" , 1, 1); 
 		consumerRepository.save(n2);
 		n2.addRole(roleAsiged);
-		consumerRepository.save(n2);
+		consumerRepository.save(n2);*/
 
 	}
 
 
 	@Test
 	public void createTrader(){
-		List <Address> address = new ArrayList<Address>();
+	/*	List <Address> address = new ArrayList<Address>();
 		address.add(new Address("Av Colon 1450", 1, 1));
 		address.add(new Address("Billinghuts 269", 1, 2));
 		address.add(new Address("Av Rivadavia 3045", 1, 5));
@@ -191,7 +187,7 @@ public class TestPoblateData {
 		
 		t2.createStock();
 		t2.addRole(roleAsiged);
-		traderRepository.save(t2);
+		traderRepository.save(t2);*/
 
 	}	
 

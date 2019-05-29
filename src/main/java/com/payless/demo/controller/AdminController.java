@@ -32,14 +32,15 @@ import com.payless.demo.model.Role;
 import com.payless.demo.model.Stock;
 import com.payless.demo.model.StockProducts;
 import com.payless.demo.model.Trader;
-import com.payless.demo.repositories.CityRepository;
-import com.payless.demo.repositories.ZoneRepository;
+import com.payless.demo.services.AddressServiceImp;
+import com.payless.demo.services.CityServiceImp;
 import com.payless.demo.services.ConsumerServiceImp;
 import com.payless.demo.services.InvoiceServiceImp;
 import com.payless.demo.services.ProductServiceImp;
 import com.payless.demo.services.RoleServiceImpl;
 import com.payless.demo.services.StockServiceImp;
 import com.payless.demo.services.TraderServiceImp;
+import com.payless.demo.services.ZoneServiceImp;
 import com.payless.demo.util.Passgenerator;
 
 /**
@@ -61,33 +62,19 @@ public class AdminController {
 	private  InvoiceServiceImp invoiceServiceImp;
 	@Autowired
 	private  StockServiceImp stockServiceImp;
-	
 	@Autowired
 	private  RoleServiceImpl roleServiceImpl;
-	
-	
 	@Autowired
-	private CityRepository cityrepository;
+	private CityServiceImp cityServiceImp;
 	@Autowired
-	private ZoneRepository zonerepository;
-
+	private ZoneServiceImp zoneServiceImp;
+	@Autowired
+	private AddressServiceImp addressServiceImp;
 	
 
 	
 	
 	
-	
-	
-	/**HOME WITH LIST*/
-	/**HOME WITH LIST*/
-	/*@RequestMapping(path="/")
-	public String home(Model model){
-		model.addAttribute("message", "SpringBoot Thymeleaf rocks");
-		return "invoice"; 
-	}*/
-
-    /*************************************************/    
-    
     
     /***********************************/
 	/**CONTROLS TRADER OPERATIONS INFO*/
@@ -192,30 +179,35 @@ public class AdminController {
 		return "searchtrader";
 	}
 
+	
+	@RequestMapping(path="/zones",method={RequestMethod.POST, RequestMethod.GET})
+	public String getZonesInCity(@RequestParam("idcity") long idcity,  Model model){
+		model.addAttribute("zones", zoneServiceImp.findAllZonesByIdCity(idcity));
+		return "registerinvoice :: #zone";
+	}
 
 	@SuppressWarnings("null")
 	@RequestMapping(path="/traders",method={RequestMethod.POST, RequestMethod.GET})
 	public String getTraderInZone(@RequestParam("idzone") int idZone,  Model model){
-		List <Trader> lista = traderServiceImp.getAllTraders();
+	
+		List <Trader> allTraders = traderServiceImp.getAllTraders();
 		List <Trader> filterTraders= new ArrayList<>();
 		
-		for(Trader t: lista){
-			List <Address> address = t.getAddress();
-			for(Address a: address){
-				if(a.getZona()==idZone && t.getStock()!=null){
-					if(!filterTraders.contains(t)){
-						filterTraders.add(t);
+		for(Trader trader: allTraders){
+			List <Address> addressList = trader.getAddress();
+			if(trader.getStock()!=null){
+				for(Address address: addressList){
+					if(address.getZone().getId()== idZone){
+						if(!filterTraders.contains(trader)){
+							filterTraders.add(trader);
+						}
 					}
 				}
 			}
 		}
-	
-		System.out.println(filterTraders);	
 		model.addAttribute("traders", filterTraders);
-	
 		return "registerinvoice :: #traders";
 	}
-
 
 	
 	
@@ -237,7 +229,7 @@ public class AdminController {
 			model.addAttribute("errors", result.getFieldError() );	
 		}else{
 				Passgenerator p = new Passgenerator(4);
-				Optional<Role> role = roleServiceImpl.findById(3L);
+				Optional<Role> role = roleServiceImpl.findById(2L);
 				
 				consumer.setPassword(p.generate(consumer.getPassword()));
 				consumer.addRole(role.get());
@@ -313,7 +305,35 @@ public class AdminController {
 	
 	
 	
-
+	@RequestMapping(path="/consumer/addaddress" , method={RequestMethod.POST, RequestMethod.GET})
+	public ModelAndView viewAddressConsumer(@RequestParam(value="idconsumer", required=true) Long idConsumer){
+		ModelAndView modelAndView = new ModelAndView("addaddressconsumer");
+		Consumer consumer = consumerServiceImp.findById(idConsumer).get();
+		modelAndView.addObject("consumer", consumer);
+		modelAndView.addObject("selectCities", cityServiceImp.findAll());
+		return modelAndView; 
+	}	
+	
+	@RequestMapping(path="/consumer/address/add" , method={RequestMethod.POST, RequestMethod.GET})
+	public ModelAndView addAddressConsumer(@RequestParam(value="idconsumer", required=true) Long idConsumer,
+										   @RequestParam(value="city", required=true) Long idCity,
+										   @RequestParam(value="zone", required=true) Long idZone,
+										   @RequestParam(value="description", required=true) String description ){
+		ModelAndView modelAndView = new ModelAndView("redirect:/admin/consumer/addaddress?idconsumer="+idConsumer);
+		Consumer consumer = consumerServiceImp.findById(idConsumer).get();
+		consumer.setAddress(new Address(description, cityServiceImp.findById(idCity).get(), zoneServiceImp.findById(idZone).get())); 
+		consumerServiceImp.save(consumer);
+		return modelAndView; 
+	}
+	
+	@RequestMapping(path="/consumer/address/del" , method={RequestMethod.POST, RequestMethod.GET})
+	public ModelAndView delAddressConsumer(@RequestParam(value="idaddress", required=true) Long idAddress ,@RequestParam(value="idconsumer", required=true) Long idConsumer){
+		ModelAndView modelAndView = new ModelAndView("redirect:/admin/consumer/addaddress?idconsumer="+idConsumer);
+		Address  address = addressServiceImp.findById(idAddress).get();
+		addressServiceImp.delete(address);
+		
+		return modelAndView; 
+	}
 	
 	
 	
@@ -333,22 +353,30 @@ public class AdminController {
 
 		Trader traderdb = traderServiceImp.getTrader(idtrader);
 		model.addAttribute("infoTrader", traderdb);
-		model.addAttribute("selectCities", cityrepository.findAll());
-		model.addAttribute("selectZones", zonerepository.findAll());
+		model.addAttribute("selectCities", cityServiceImp.findAll());
 		return "addaddress";
 	
 	}
 
 	
+	@RequestMapping(path="/address/zones",method={RequestMethod.POST, RequestMethod.GET})
+	public String zonesInCity(@RequestParam("idcity") long idcity,  Model model){
+		model.addAttribute("zones", zoneServiceImp.findAllZonesByIdCity(idcity));
+		return "addaddress :: #zone";
+	}
+
+	
+	
+	
 	/**SAVE ADDRESS**/
 	@RequestMapping(path="/main/add-address" , method = {RequestMethod.POST, RequestMethod.GET})
 	public String addAddressTrader(@RequestParam(value="idtrader" , required = true) long idtrader, 
-			@RequestParam(value="city",required = true) Long idCity, 
-			@RequestParam(value="zone",required = true) Long idZone ,	
-			@RequestParam(value="description",required = true) String descrp, Model model) {
+								   @RequestParam(value="city",required = true) Long idCity, 
+								   @RequestParam(value="zone",required = true) Long idZone ,	
+								   @RequestParam(value="description",required = true) String descrp, Model model) {
 		
 		if(idCity!=null || idZone!= null ){
-				Address addressnew = new Address(descrp, idCity.intValue() ,idZone.intValue() );
+				Address addressnew = new Address(descrp, cityServiceImp.findById(idCity).get(), zoneServiceImp.findById(idZone).get() );
 				Trader traderdb = traderServiceImp.getTrader(idtrader);
 				traderdb.addAddress(addressnew);
 				traderServiceImp.save(traderdb);
@@ -411,7 +439,6 @@ public class AdminController {
 	public String sendProductInStock(@PathVariable("id") long id  , @Valid Trader trader, BindingResult result, Model model ) {
 		Trader traderdb = traderServiceImp.getTrader(id);
 
-		System.out.println(traderdb);	
 		if(traderdb!=null ){
 			model.addAttribute("traderInfo", traderdb);	
 			model.addAttribute("products", productServiceImp.findAll());
@@ -610,7 +637,7 @@ public class AdminController {
 
 	@RequestMapping(path="/invoice/show_add" ,method = {RequestMethod.POST, RequestMethod.GET})
 	public String show_create_Invoice(Model model){
-		model.addAttribute("selectCities", cityrepository.findAll());
+		model.addAttribute("selectCities", cityServiceImp.findAll());
 		return "registerinvoice";
 	}
 	
@@ -648,7 +675,7 @@ public class AdminController {
 				System.out.println(" datos "  + invoicedb.isPresent());
 				
 				if(invoicedb.isPresent()==false){
-					model.addAttribute("Error", " Consumer not find it, with Dni. " + numInvoice);
+					model.addAttribute("Error", " Consumer not find it, with Invoice. " + numInvoice);
 				}else{
 					  model.addAttribute("consumerInvoices", invoicedb.get() );	
 				}
@@ -663,9 +690,6 @@ public class AdminController {
 	public ModelAndView create_Invoice(@RequestParam("traders") Long idTrader, 
 									   @RequestParam("dni-autocomplete") Long dni, 
 									   RedirectAttributes attributes){
-		
-		System.out.println("AQUIIIII..");
-		
 		ModelAndView modelAndView = null; 
 		Consumer consumerdb = consumerServiceImp.findByDni(dni);
 		

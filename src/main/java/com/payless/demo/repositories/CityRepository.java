@@ -15,5 +15,7 @@ import com.payless.demo.model.City;
 public interface CityRepository extends CrudRepository<City, Long> {
 	
 	List<City> findAll();
-
+	boolean existsById(Long arg0);
+	Optional<City> findById(Long arg0);
+	<S extends City> S save(S arg0);
 }

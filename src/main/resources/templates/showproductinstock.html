@@ -32,7 +32,6 @@
 </div>
 
 
-
 <div class="table table-striped" id="div_list" th:if="${not #lists.isEmpty(traderInfo)}">
 <table  class="table" >
 		<thead class="thead-dark">
@@ -57,10 +56,11 @@
 				
 				<td th:text="${trader.score}"></td>
 			 	<td th:if="${trader.getStock() != null }" th:text="${trader.getStock().dateStock}"></td> 
+	  			  
+			 	<td th:if="${traderInfo.stock.stockproducts.size() == 0}"  th:text="${'0 Un.'}"></td> 
 	
-			 	 <td th:if="${trader.getStock() != null }" th:text="${ + #aggregates.sum(traderInfo.getStock().stockproducts.![quantity]) + ' Un. '}"></td> 
-			 
-		
+			 	<td th:if="${traderInfo.stock.stockproducts.size() > 0}" th:text="${ + #aggregates.sum(traderInfo.getStock().stockproducts.![quantity]) + ' Un. '}"></td> 
+				
 	
 				<td th:if="${trader.stock!=null}" >
 				<a th:target="_blank" th:href="@{'/admin/main/sendproducttostock/'+${trader.id}}">
@@ -73,13 +73,13 @@
 </div>
 
 
-<span th:if="${traderInfo}">
-<span th:if="${traderInfo.stock!=null}">
-<div>
-	<h4 style='font-weight: bold; background-color:#FFAE33'>Details in Stock <label th:text="${traderInfo.cuit}"> </label></h4>
-</div>
+<div  th:if="${not #lists.isEmpty(traderInfo)  && traderInfo.stock.stockproducts.size() > 0}" >
 
-<table  class="table">
+	<div>
+		<h4 style='font-weight: bold; background-color:#FFAE33'>Details in Stock <label th:text="${traderInfo.cuit}"> </label></h4>
+	</div>
+
+	<table  class="table">
 		<thead class="thead-dark">
 		<tr>
 				<th><h6>#</h6></th>
@@ -100,8 +100,7 @@
 					<td th:text="${products.quantity}"> </td>					
 		</tr>
 </table>
-</span>
-</span>
+</div>
 
 
 </body>

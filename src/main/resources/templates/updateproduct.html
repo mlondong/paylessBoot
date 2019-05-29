@@ -9,7 +9,7 @@
 
 	<div class="form-group" th:if="${stproductdb}">
 		<h2 style='font-weight: bold; background-color:#FFAE33'>Update Product in Stock</h2>
-		<table  width="18%">
+		<table>
 				<tr>
 					<td>Product:</td>
 					<td align="left" th:text="${stproductdb.product.code}"></td>
@@ -18,26 +18,34 @@
 					<td>Description:</td>
 					<td align="left" th:text="${stproductdb.product.description}"></td>
 				</tr>
+				<tr>
+					<td colspan=2>
+					<form action="#" th:action="@{/admin/main/save}" method="post">
+						<table>
+									<tr>
+										<td>Quantity:</td>
+										<td >
+										   <input type="text"  name="quantity" maxlength="4" size="4" id="quantity"  th:value="${stproductdb.quantity}"  /> 
+										   <input type="hidden" name="idproduct"  id="idproduct"  th:value="${stproductdb.product.id}"  /> 
+										   <input type="hidden" name="idtrader"  id="idtrader"  th:value="${traderdb.id}" />
+										</td>
+									</tr>
+									<tr>
+										<td>
+										</td>
+										<td>
+										   <button type="submit" class="btn btn-primary">Update</button>
+										</td>
+									</tr>
+									</tbody>
+								</table>
+					</form>
+					</td>		
+				
+				</tr>
 		</table>
 
-		<form action="#" th:action="@{/admin/main/save}" method="post">
-			<table  width="18%">
-				<tr>
-					<td>Quantity:</td>
-					<td align="right">
-					   <input type="text"  name="quantity"  id="quantity"  th:value="${stproductdb.quantity}"  /> 
-					   <input type="hidden" name="idproduct"  id="idproduct"  th:value="${stproductdb.product.id}"  /> 
-					   <input type="hidden" name="idtrader"  id="idtrader"  th:value="${traderdb.id}" />
-					</td>
-				</tr>
-				<tr>
-					<td align="right" colspan="2">
-						<button type="submit" class="btn btn-primary">Update</button>
-					</td>
-				</tbody>
-			</table>
-		</form>
-
+		
 	</div>
 
 

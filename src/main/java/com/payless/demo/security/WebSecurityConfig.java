@@ -29,7 +29,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // @formatter:off
-        http.authorizeRequests()
+    	System.out.println("en http " + http);
+    	http.authorizeRequests()
         	.antMatchers("/","/index","/login**","/callback/", "/webjars/**", "/error**").permitAll()
         	.antMatchers("/admin*").access("hasRole('ADMIN')")
         	.antMatchers("/consumer*").access("hasRole('CONSUMER')")
@@ -77,7 +78,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
 		bCryptPasswordEncoder = new BCryptPasswordEncoder(4);
-        return bCryptPasswordEncoder;
+		System.out.println("en BCryptPasswordEncoder" + bCryptPasswordEncoder.toString());
+		return bCryptPasswordEncoder;
     }
 	
     @Autowired
@@ -85,7 +87,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception { 
-        auth
+		System.out.println("en configureGlobal" + auth);
+    	auth
         	.userDetailsService(userDetailsService)
         	.passwordEncoder(passwordEncoder());     
     }
@@ -95,11 +98,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     @Bean("authenticationManager")
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
+    	System.out.println("en AuthenticationManager");
             return super.authenticationManagerBean();
     }
 
     @Bean
     public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
+     	System.out.println("en AuthenticationSuccessHandler" );
         return new MySimpleUrlAuthenticationSuccessHandler();
     }
 

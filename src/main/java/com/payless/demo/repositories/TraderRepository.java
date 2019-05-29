@@ -8,8 +8,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.payless.demo.model.Address;
-import com.payless.demo.model.Consumer;
 import com.payless.demo.model.Stock;
 import com.payless.demo.model.Trader;
 

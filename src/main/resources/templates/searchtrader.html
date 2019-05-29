@@ -79,7 +79,6 @@ function clearSpan(){
 	<h2 th:text="${notfind}"></h2>
 </div>
 
-
 	<div id="div_list" th:if="${not #lists.isEmpty(results)}" class="table table-striped">
 		<table>
 			<tr>
@@ -118,7 +117,7 @@ function clearSpan(){
 				</a>
 				</td>
 				
-				<td><a th:href="@{/admin/main/addaddress?idtrader={idtrader} (idtrader=${trader.id})}"> 
+				<td><a th:target="_blank" th:href="@{/admin/main/addaddress?idtrader={idtrader} (idtrader=${trader.id})}"> 
 				   <img src="/images/addressbook-icon.png" height="25px" width="25px"	alt="Add Address" title="Add Address" /></a></td>
 				<td>
 				<a th:if="${trader.stock==null}" th:href="@{'/admin/main/stock/'+${trader.id}}">
@@ -130,19 +129,23 @@ function clearSpan(){
 		
 		<p></p>
 		
-		<table th:if="${results.address!=null}">
-		<thead class="thead-dark">
-			<th>Address Descrition</th>
-			<th>City</th>
-			<th>Zone</th>
-		</thead>
-		<tr  th:each="address : ${results.address}">
-			<td th:text="${address.description}"></td>
-			<td th:text="${address.city}"></td>
-			<td th:text="${address.zona}"></td>
-		</tr>
-		</table>
 		
+		<table th:if="${results.address.size()>0}">
+			<thead class="thead-dark">
+				<tr>
+				<th>Address Descrition</th>
+				<th>City</th>
+				<th>Zone</th>
+				</tr>
+			</thead>
+			<tr  th:each="address : ${results.address}">
+				<td th:text="${address.description}"></td>
+				<td th:text="${address.city.name}"></td>
+				<td th:text="${address.zone.name}"></td>
+				
+				
+			</tr>
+		</table>  
 		
 		
 	</div>

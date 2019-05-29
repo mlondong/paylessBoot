@@ -2,66 +2,29 @@ package com.payless.demo.controller;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.TreeMap;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
-import org.apache.catalina.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jackson.JsonObjectDeserializer;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonObject;
 import com.payless.demo.model.Address;
 import com.payless.demo.model.Consumer;
 import com.payless.demo.model.Invoice;
 import com.payless.demo.model.InvoiceProduct;
-import com.payless.demo.model.MeatProduct;
-import com.payless.demo.model.Product;
 import com.payless.demo.model.Rating;
-import com.payless.demo.model.Stock;
-import com.payless.demo.model.StockProducts;
-import com.payless.demo.model.Trader;
 import com.payless.demo.services.ConsumerServiceImp;
 import com.payless.demo.services.InvoiceServiceImp;
 import com.payless.demo.services.ProductServiceImp;
 import com.payless.demo.services.TraderServiceImp;
 import com.payless.demo.util.Passgenerator;
-
-
-
-
 
 
 @Controller
@@ -77,11 +40,8 @@ public class ConsumerController {
 	@Autowired
 	private  TraderServiceImp traderServiceImp;
 	
-	
 	@Autowired
 	private  InvoiceServiceImp invoiceServiceImp;
-	
-	
 	
 	
 	
@@ -170,7 +130,7 @@ public class ConsumerController {
 	   	System.out.println(consumer);
 		
 		try{
-				Address address = new Address(description, city, zona);
+				Address address = new Address();
 				consumer.setAddress(address);;
 			    consumerServiceImp.save(consumer);
 				modelAndView.addObject("UpdateAddress", "Update it !"); 

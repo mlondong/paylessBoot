@@ -10,6 +10,8 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.Digits;
@@ -49,13 +51,7 @@ public class Trader extends Usser {
 	@JsonManagedReference//esto evita mal formacion en el json como es el ref de stock en trader
 	private Stock stock;
 
-
-	/*MAPEO A MUCHAS DIRECCIONES*/
-	@Column(name="USER_ID")
-	@ElementCollection
-	private List<Address> address = new ArrayList<Address>();
-
-	
+		
 	/*MAPEO BIDIRECCIONAL DE 1 TRADER A MUCHOS INVOICES*/
 	@OneToMany(mappedBy="trader", 
 			 fetch=FetchType.LAZY,
@@ -64,6 +60,16 @@ public class Trader extends Usser {
 	@JsonManagedReference//esto evita mal formacion en el json como es el ref de stock en trader
 	private Collection<Invoice> invoice = new ArrayList<>();
 	
+	/*MAPEO A MUCHAS DIRECCIONES*/
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinTable(
+	            name = "TRADER_ADDRESS",
+	            joinColumns = @JoinColumn(name = "USER_ID"),
+	            inverseJoinColumns = @JoinColumn(name = "ADDRESS_ID")
+			  )
+	@JsonManagedReference
+	private List<Address> address = new ArrayList<Address>();
+
 	
 	
 	
@@ -176,6 +182,10 @@ public class Trader extends Usser {
 		this.email = email;
 	}
 
+	
+	
+	
+	
 	@Override
 	public String toString() {
 		return "Trader [cuit=" + cuit + ", score=" + score + ", stock=" + stock + ", address=" + address + ", invoice="

@@ -18,7 +18,7 @@ $(document).ready(function () {
 
 
     function getZones() {
-        var url = "/zones?idcity=";
+        var url = "/admin/zones?idcity=";
 		 if ($('#city').val() != 0) {
             url = url + $('#city').val();
       	    $('#zone').load(url);  //load fragment and replace content
@@ -33,28 +33,7 @@ $(document).ready(function () {
   		  }
     }
 
-        
-    
-    $("#dni-autocomplete").autocomplete({
-        source: function(request, response) {
-			$.ajax({
-                     url: "/admin/consumer/dni",
-                     type: "GET",
-                     data: { dni: $('#dni-autocomplete').val() },
-                     dataType: "json",
-                     success: function(data){
-												response($.map (data, function(v,i){
-													return {
-														label: v.dni+' - '+v.firstName+' - '+v.lastName,
-													    value: v.dni
-													   };			
-												 }));
-                                            }
-                   });              
-         }   
-    });
-
-
+  
     
     $('#btnvalidate').click(function() { 
     	var traders = $('#traders').val();
@@ -70,18 +49,27 @@ $(document).ready(function () {
 		  		 msj+=' Please select a valid Trader';
 		   	 	 $('#dni-autocomplete').focus();
 		   	 	 flag= false;
-             }
-
+         }else if(isNaN(dni)){
+        		 msj+=' Please insert valid information.';
+    		 	 $('#dni-autocomplete').focus();
+	   		 	 flag= false;
+     	 }else if(/^[a-zA-Z0-9- ,_]*$/.test(dni) == false){
+	    		 msj+=' Please insert valid information.';
+			 	 $('#dni-autocomplete').focus();
+	   		 	 flag= false;
+         	 }
+    	
 		if(flag==true){
 			$( "#formInvoice" ).submit();
 		}else{
 					alert(msj);
 			}
-      })
-       
-	
+		
+    });
 
-})
+});
+
+
 </script>
 
 
@@ -104,8 +92,7 @@ $(document).ready(function () {
 				<td><label>Select Zone:</label></td>
 				<td><select id="zone" name="zone" class="custom-select">
 						<option selected="selected" value="0">-Select One Zone-</option>
-						<option th:each="zone : ${zones}" th:value="${zone.id}"
-							th:text="${zone.name}">
+						<option th:each="zone : ${zones}" th:value="${zone.id}"	th:text="${zone.name}"> </option>
 				</select></td>
 			<tr>
 			<tr>
@@ -114,7 +101,7 @@ $(document).ready(function () {
 				<span th:text="${traders}"></span> 
 				<select id="traders" name="traders" class="custom-select">
 						<option selected="selected" value="0">-Select Trader-</option>
-						<option th:each="trader : ${traders}" th:value="${trader.id}" th:text="${trader.nameEnterprise} +' - '+${trader.cuit}">
+						<option th:each="trader : ${traders}" th:value="${trader.id}" th:text="${trader.nameEnterprise} +' - '+${trader.cuit}"></option>
 				</select>
 				
 				</td>
@@ -122,9 +109,9 @@ $(document).ready(function () {
 			<tr>
 				<td><label>Dni Consumer:</label></td>
 				<td>
-				<label for="dni-autocomplete"></label> 
-				<input type="text"	id="dni-autocomplete" name="dni-autocomplete" /></td>
-			<tr>
+				<input type="text"	id="dni-autocomplete" name="dni-autocomplete" />
+				</td>
+			</tr>
 			<tr>
 				<td>&nbsp;</td>
 				<td>

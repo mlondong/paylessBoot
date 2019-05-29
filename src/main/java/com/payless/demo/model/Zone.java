@@ -22,19 +22,18 @@ public class Zone {
 	private String name;
 
 
-	/*MAPEO BIDIRECCIONAL DE MUCHOS */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CITY_ID")
-	@JsonBackReference//esto evita problemas en el json ver el ref en trader
-	private City citi;
+	@JsonBackReference
+	private City city;
 	
 	
 	public Zone(){ 	} 
 	
 	
-	public Zone(String name) {
-		super();
+	public Zone(String name, City city) {
 		this.name = name;
+		this.city=city;	
 	}
 
 
@@ -55,15 +54,18 @@ public class Zone {
 	}
 
 
-	public City getCiti() {
-		return citi;
+	public City getCity() {
+		return city;
 	}
 
 
-	public void setCiti(City citi) {
-		this.citi = citi;
+	public void setCity(City city) {
+		this.city = city;
 	}
-	
+
+
+
+
 	
 	
 	

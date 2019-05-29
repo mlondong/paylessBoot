@@ -40,7 +40,8 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
 	protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication)	throws IOException {
 
 		String targetUrl = determineTargetUrl(authentication);
-
+		System.out.println("handle " + targetUrl);
+		
 		if (response.isCommitted()) {
 			System.out.println("Response has already been committed. Unable to redirect to " + targetUrl);
 			logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
@@ -52,6 +53,7 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
 
 	protected String determineTargetUrl(Authentication authentication) {
 		int target=0;
+		System.out.println("--> determineTargetUrl " + authentication.getAuthorities());
 		Collection<? extends GrantedAuthority> authorities 	= authentication.getAuthorities();
 		
 		for (GrantedAuthority grantedAuthority : authorities) {

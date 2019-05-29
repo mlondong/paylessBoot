@@ -1,55 +1,65 @@
 package com.payless.demo.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.validation.constraints.Digits;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@Embeddable
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+@Entity
 public class Address {
+	
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="ADDRESS_ID",nullable=false,updatable=false)
+	private Long id; 
 	
 	@NotNull
 	@Size(min=2, max=30)
 	@Column(name="DESCRIPTION")
 	private String description;
 	
-	@NotNull
-	@Column(name="CITY_ID")
-	private int city;
 
-	@NotNull
-	@Column(name="ZONE")
-	private int zona;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "CITY_ID")
+	@JsonManagedReference
+	private City city;
 
 	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "ZONE_ID")
+	@JsonManagedReference
+	private Zone zone;
+
 	
 	public Address(){}
 	
 	
-	public Address(String description, int city, int zone) {
+	public Address(String description, City city, Zone zone) {
 		this.description = description;
 		this.city = city;
-		this.zona=zone;
-	}
-
-	
-	
-	/*********************************************************************************************************************************
-	 * metodos getter and setter * 
-	 */
-	
-	
-
-	public int getZona() {
-		return zona;
+		this.zone=zone;
 	}
 
 
-	public void setZona(int zona) {
-		this.zona = zona;
+	public Long getId() {
+		return id;
 	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getDescription() {
 		return description;
@@ -59,19 +69,34 @@ public class Address {
 		this.description = description;
 	}
 
-	public int getCity() {
+
+	public City getCity() {
 		return city;
 	}
 
-	public void setCity(int city) {
+
+	public void setCity(City city) {
 		this.city = city;
 	}
 
 
-	@Override
-	public String toString() {
-		return "Address [description=" + description + ", city=" + city + ", zona=" + zona + "]";
+	public Zone getZone() {
+		return zone;
 	}
+
+
+	public void setZone(Zone zone) {
+		this.zone = zone;
+	}
+
+	
+	
+
+	
+
+	
+	
+	
 	
 	
 }

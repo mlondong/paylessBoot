@@ -41,20 +41,9 @@ public class UtilsComponentsController {
 	
 	/*** CONTROLLES FOR COMPONENTS*/
 	
-	@RequestMapping(path="/zones",method={RequestMethod.POST, RequestMethod.GET})
-	public String getZonesInCity(@RequestParam("idcity") long idcity,  Model model){
-		model.addAttribute("zones", zoneRepository.findAllZonesByIdCity(idcity));
-		return "registerinvoice :: #zone";
-	}
 	
 	
 
-	@RequestMapping(path="/consumer/dni",method={RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
-	@ResponseBody
-	public List<Consumer> getConsumerByDni(@RequestParam("dni") long dni){
-		List<Consumer> listConsumers = consumerServiceImp.queryByDni(dni);
-		return listConsumers;
-	}
 
 	
 	

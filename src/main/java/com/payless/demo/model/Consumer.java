@@ -9,7 +9,10 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -40,42 +43,26 @@ public class Consumer extends Usser {
 
 
 	/*MAPEO DE ADDRESS ONE TO ONE CONSUMER-ADDRESS*/
-	@Embedded
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "ADDRESS_ID")
+	@JsonManagedReference
 	private Address address;
 
 	
 
 	public Consumer(){}
 
-	public Consumer(String _name, String _pass, long _dni, String _firstName, String _lastName, String _street, int _city, int _zone   ){
+	public Consumer(String _name, String _pass, long _dni, String _firstName, String _lastName ){
 		super(_name, _pass);
 		this.dni=_dni;
 		this.firstName=_firstName;
 		this.lastName=_lastName;
-		this.address = new Address( _street,  _city, _zone);
-		
 	}
-
-	
-	public Optional<Invoice> findInvoiceByNumber(Long numInvoice){
-		return this.invoices.stream().filter(invoice-> numInvoice.equals(invoice.getNumInvoice()) ).findFirst();
-	}
-
-	
-	public Address getAddress() {
-		return address;
-	}
-
-	public void setAddress(Address address) {
-		this.address = address;
-	}
-
-	
 	
 	public long getDni() {
 		return dni;
 	}
-		
 	
 	public void setDni(long dni) {
 		this.dni = dni;
@@ -93,8 +80,6 @@ public class Consumer extends Usser {
 		this.lastName = lastName;
 	}
 
-
-	
 	public Collection<Invoice> getInvoices() {
 		return invoices;
 	}
@@ -111,23 +96,22 @@ public class Consumer extends Usser {
 		this.invoices.remove(p);	
 	}
 
+	public Optional<Invoice> findInvoiceByNumber(Long numInvoice){
+		return this.invoices.stream().filter(invoice-> numInvoice.equals(invoice.getNumInvoice()) ).findFirst();
+	}
+	
+	
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
 	@Override
 	public String toString() {
 		return "Consumer [dni=" + dni + ", firstName=" + firstName + ", lastName=" + lastName + ", invoices=" + invoices
 				+ ", address=" + address + "]";
 	}
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

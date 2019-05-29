@@ -46,41 +46,38 @@ $(document).ready(function () {
     	}else{
 					alert(msj);
 			}
-
-    	
     });
-    
 });
+
 </script>
-
-
-
 </head>
 
 <body>
-<div class="card" th:if="${infoTrader!=null}">
+
+
+<div class="card">
   <div style='font-weight: bold; background-color:#FFAE33'>
-		<h2>Trader Information</h2>
+		<h2>Consumer Information</h2>
   </div>
   <div class="card-body">
-    <p class="card-text">Name: <label th:text="${infoTrader.nameEnterprise}"></label>
-    					 | Cuit: <label th:text="${infoTrader.cuit}"></label>
-    					 | Score: <label th:text="${infoTrader.score}"></label>
-    					 | State: <label th:text="${infoTrader.state} ? 'Active': 'Inactive'"></label></p>
+    <p class="card-text">
+    					 | Dni: <label th:text="${consumer.dni}"></label>
+    					 | Full Name: <label th:text="${consumer.firstName +' '+consumer.lastName}"></label>
+    					 | State: <label th:text="${consumer.state} ? 'Active': 'Inactive'"></label></p>
   </div>
 </div>
-<div>
-		
-		<h3>Add Address in Trader</h3>
 
-		<form action="/admin/main/add-address" method="get" id="formAddress" >
+
+<div th:if="${consumer.address==null}">
+		<h3>Add Address Consumer</h3>
+		<form action="/admin/consumer/address/add" method="get" id="formAddress" >
 			<div class="form-group">
 			<table>
 				<tbody>
 					<tr>
 						<td><label>Select City</label></td>
 						<td>
-						<input type="hidden" id="idtrader"  name="idtrader" th:if="${infoTrader!=null}" th:value="${infoTrader.id}">
+						<input type="hidden" id="idconsumer"  name="idconsumer" th:if="${consumer!=null}" th:value="${consumer.id}">
 						<select id="city" name="city" class="custom-select">
                             <option selected="selected"  value="">Select an City</option>
                             <option th:each="city : ${selectCities}"
@@ -113,33 +110,33 @@ $(document).ready(function () {
 			</table>
 	</div>
 	</form>
-	</div>
+</div>
 
-	<br>
-		<div th:if="${infoTrader.address.size() >0}"> 
-		<table class="table table-striped" th:if="${infoTrader!=null}">
+
+<br>
+		<div th:if="${consumer.address!=null}"> 
+		<table class="table table-striped" th:if="${consumer!=null}">
 			<thead class="thead-dark">
+				<tr>
 				<th><h6>Address Description</h6></th>
 				<th><h6>City</h6></th>
 				<th><h6>Zone</h6></th>
 				<th></th>
+				</tr>
 			</thead>
 			
-			<tr th:each="address,index : ${infoTrader.address}">
+			<tr th:each="address: ${consumer.address}">
 				<td th:text="${address.description}" />
 			  	<td th:text="${address.city.name}" />
 				<td th:text="${address.zone.name}" />
 				<td>
-				<a th:href="@{/admin/delete-address?idtrader={idtrader}&indice={indice}  (idtrader=${infoTrader.id} , indice=${index.index}) }">
+				<a th:href="@{/admin/consumer/address/del?idaddress={idaddress}&idconsumer={idconsumer}  (idaddress=${address.id} , idconsumer=${consumer.id} )   }">
 				<img src="/images/eliminar-ico.png" height="25px" width="25px" alt="Delete" title="Delete Address"/>
 				</a>
 				</td> 
 			</tr>
 		</table> 
 	</div>
-
-
-
 
 
 </body>
