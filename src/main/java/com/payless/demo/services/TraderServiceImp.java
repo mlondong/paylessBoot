@@ -25,13 +25,6 @@ public class TraderServiceImp implements TraderService{
 		return traderRepository.queryFindByUserName(firstName);
 	}
 
-	
-	
-	@Override
-	public List<Trader> queryByParametersCityZone(int zone, int city) {
-		return traderRepository.queryByParametersCityZone(zone, city);
-	}
-
 	@Override
 	public Trader searchByCuit(long cuit) {
 		return traderRepository.findByCuit(cuit);
@@ -83,6 +76,15 @@ public class TraderServiceImp implements TraderService{
 			
 		return list;
 	}
+
+	@Override
+	public List<Trader> queryByParametersCityZone(long zone, long city, List<Long> idsProducts) {
+		System.out.println("llego en metodo " + zone + city);
+		return traderRepository.queryByParametersCityZone(zone, city, idsProducts);
+	}
+
+
+
 
 
 

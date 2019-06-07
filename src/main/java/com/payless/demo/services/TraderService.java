@@ -19,8 +19,8 @@ public interface TraderService {
 	List<Trader> getAllTraders(int pageNumber, int pageSiz);
 	List<Trader> getAllTraders();
 	
-	List<Trader> queryByParametersCityZone(int zone, int city);
-
+	
 	Trader queryFindByUserName(String firstName);
+	List<Trader> queryByParametersCityZone(long zone, long city, List<Long> idsProducts);
 	
 }

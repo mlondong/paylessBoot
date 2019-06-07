@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,11 +22,16 @@ import com.payless.demo.model.Address;
 import com.payless.demo.model.Consumer;
 import com.payless.demo.model.Invoice;
 import com.payless.demo.model.InvoiceProduct;
+import com.payless.demo.model.Product;
 import com.payless.demo.model.Rating;
+import com.payless.demo.model.StockProducts;
+import com.payless.demo.model.Trader;
+import com.payless.demo.services.CityServiceImp;
 import com.payless.demo.services.ConsumerServiceImp;
 import com.payless.demo.services.InvoiceServiceImp;
 import com.payless.demo.services.ProductServiceImp;
 import com.payless.demo.services.TraderServiceImp;
+import com.payless.demo.services.ZoneServiceImp;
 import com.payless.demo.util.Passgenerator;
 
 
@@ -42,6 +50,12 @@ public class ConsumerController {
 	
 	@Autowired
 	private  InvoiceServiceImp invoiceServiceImp;
+	
+	@Autowired
+	private CityServiceImp cityServiceImp;
+	
+	@Autowired
+	private ZoneServiceImp zoneServiceImp;
 	
 	
 	
@@ -64,10 +78,22 @@ public class ConsumerController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Consumer consumer = consumerServiceImp.queryFindByUserName(auth.getName());
         modelAndView.addObject("consumer", consumer);
+        modelAndView.addObject("city", cityServiceImp.findAll());
+        modelAndView.addObject("zone", zoneServiceImp.findAll());
+        
+        
         return modelAndView;
 	}
 	
 
+	@RequestMapping(path="/consumer/address/zones",method={RequestMethod.POST, RequestMethod.GET})
+	public String zonesInCity(@RequestParam("idcity") long idcity,  Model model){
+		model.addAttribute("zone", zoneServiceImp.findAllZonesByIdCity(idcity));
+		return "c_profile :: #zone";
+	}
+
+	
+	
 	@RequestMapping(path="/consumer/upgeneral",  method={RequestMethod.POST, RequestMethod.GET})
 	public ModelAndView  updatingConsumer(@RequestParam("firstName") String firstName, 
 										  @RequestParam("lastName") String lastName, @RequestParam("dni") Long dni ){
@@ -83,7 +109,7 @@ public class ConsumerController {
 			   consumer.setName(consumer.getName());
 			   consumer.setDni(dni);
 			   consumerServiceImp.save(consumer);
-			   modelAndView.addObject("Update", "Update it !"); 
+			   modelAndView = new ModelAndView("redirect:/consumer/viewprofile");
 		}catch(Exception e){
 			modelAndView.addObject("Error", "Error in data Information...");
 		}
@@ -108,7 +134,8 @@ public class ConsumerController {
 			    consumer.setName(username);
 			    consumer.setPassword(newpass);
 			    consumerServiceImp.save(consumer);
-			   modelAndView.addObject("UpdateLogin", "Update it !"); 
+				modelAndView = new ModelAndView("redirect:/consumer/viewprofile");
+
 		}catch(Exception e){
 			modelAndView.addObject("ErrorLogin", "Error in data Information ...");
 		}
@@ -120,20 +147,22 @@ public class ConsumerController {
 	
 	@RequestMapping(path="/consumer/upaddress",  method={RequestMethod.POST, RequestMethod.GET})
 	public ModelAndView  updatingConsumerAddress(@RequestParam("description") String description,
-											     @RequestParam("city") int city,
-										         @RequestParam("zona") int zona){
+											     @RequestParam("city") Long city,
+										         @RequestParam("zone") Long zone){
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 	    Consumer consumer = consumerServiceImp.queryFindByUserName(auth.getName());
 	    ModelAndView modelAndView = new ModelAndView("c_profile");
 		modelAndView.addObject("consumer", consumer);
-	   	System.out.println(consumer);
 		
 		try{
-				Address address = new Address();
-				consumer.setAddress(address);;
-			    consumerServiceImp.save(consumer);
-				modelAndView.addObject("UpdateAddress", "Update it !"); 
+				Address address = consumer.getAddress();
+				address.setDescription(description);
+				address.setCity(cityServiceImp.findById(city).get());
+				address.setZone(zoneServiceImp.findById(zone).get());
+				consumerServiceImp.save(consumer);
+				modelAndView = new ModelAndView("redirect:/consumer/viewprofile");
+
 		}catch(Exception e){
 			modelAndView.addObject("ErrorAddress", "Error in data Information ...");
 		}
@@ -209,7 +238,29 @@ public class ConsumerController {
 	
 	
 	
-	
+	/***FIND ALL PRODUCTS BY DESCRIPTION IN ZONE CONSUMER*/
+	@GetMapping(path = "/consumer/findproduct")
+	public ModelAndView  resultSearchProducts(@RequestParam("description") String description ){
+
+		ModelAndView modelAndView = new ModelAndView("c_findProducts");
+
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    Consumer consumer = consumerServiceImp.queryFindByUserName(auth.getName());
+	    
+	    List<Product> productToFind = productServiceImp.findByContainDescription(description);
+	    List<Long> idsProducts =productToFind.stream().map(d->d.getId()).collect(Collectors.toList());
+	    
+		System.out.println("city " + consumer.getAddress().getCity().getId() +" zone "+consumer.getAddress().getZone().getId());
+		System.out.println(" productos " + idsProducts);
+		
+		List<Trader> traders =  traderServiceImp.queryByParametersCityZone(consumer.getAddress().getZone().getId(), consumer.getAddress().getCity().getId(), idsProducts ); 
+		System.out.println("traders--> " + traders);
+		
+		
+		return modelAndView;
+	}
+
+
 	
 	
 }

@@ -17,5 +17,5 @@ public interface ProductRepository extends BaseProductRepository<Product>{
 
 	@Query(value = "select p from Product p where p.description like %:description% ")
 	List<Product>findByContainDescription(@Param("description") String description);
-
+		
 }

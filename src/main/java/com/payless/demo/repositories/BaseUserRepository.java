@@ -10,6 +10,7 @@ import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.Repository;
 import org.springframework.stereotype.Indexed;
 
+import com.payless.demo.model.Trader;
 import com.payless.demo.model.Usser;
 
 
@@ -44,6 +45,7 @@ public interface BaseUserRepository<T extends Usser> extends Repository<T, Long>
 	void deleteById(Long id);
 
 	void delete(T entity);
+
 
 		
 }

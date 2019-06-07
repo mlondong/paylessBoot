@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import com.payless.demo.model.Consumer;
 import com.payless.demo.model.Invoice;
+import com.payless.demo.model.Product;
+import com.payless.demo.model.StockProducts;
 import com.payless.demo.model.Trader;
 import com.payless.demo.repositories.ConsumerRepository;
 
@@ -104,8 +107,9 @@ public class ConsumerServiceImp implements ConsumerService{
 	}
 
 	@Override
-	public void deleteAll() {
-		
-	}
+	public void deleteAll() {}
+
+	
+	
 
 }

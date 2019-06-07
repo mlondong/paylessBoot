@@ -328,7 +328,11 @@ public class AdminController {
 	
 	@RequestMapping(path="/consumer/address/del" , method={RequestMethod.POST, RequestMethod.GET})
 	public ModelAndView delAddressConsumer(@RequestParam(value="idaddress", required=true) Long idAddress ,@RequestParam(value="idconsumer", required=true) Long idConsumer){
+		
 		ModelAndView modelAndView = new ModelAndView("redirect:/admin/consumer/addaddress?idconsumer="+idConsumer);
+		Consumer consumer = consumerServiceImp.findById(idConsumer).get();
+		consumer.setAddress(null);
+		consumerServiceImp.save(consumer);
 		Address  address = addressServiceImp.findById(idAddress).get();
 		addressServiceImp.delete(address);
 		

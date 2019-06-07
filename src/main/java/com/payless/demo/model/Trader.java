@@ -62,11 +62,9 @@ public class Trader extends Usser {
 	
 	/*MAPEO A MUCHAS DIRECCIONES*/
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinTable(
-	            name = "TRADER_ADDRESS",
+	@JoinTable( name = "TRADER_ADDRESS",
 	            joinColumns = @JoinColumn(name = "USER_ID"),
-	            inverseJoinColumns = @JoinColumn(name = "ADDRESS_ID")
-			  )
+	            inverseJoinColumns = @JoinColumn(name = "ADDRESS_ID") )
 	@JsonManagedReference
 	private List<Address> address = new ArrayList<Address>();
 

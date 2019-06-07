@@ -22,15 +22,16 @@ public interface TraderRepository extends BaseUserRepository<Trader>{
 	List<Trader> findByStock(Stock stock);
 	Optional<Trader> findByName(String name);
 	
-/*	@Query(value = " SELECT * FROM dbpayless.trader T " +  
-				   " INNER JOIN dbpayless.trader_address A ON T.user_id = A.trader_user_id " +  
-				   " WHERE A.zone=1 and A.city_id=1 ", nativeQuery = true)*/
-	
-	@Query(value = " Select * FROM dbpayless.trader t "
-				 +  " inner join dbpayless.usser u ON U.user_id = t.user_id "
-				 +  " inner join dbpayless.trader_address ad ON U.user_id = AD.trader_user_id "  
-				 +  " where  AD.zone=:zone and AD.city_id=:city ",  nativeQuery = true)
-	List<Trader> queryByParametersCityZone(@Param("zone") int zone, @Param("city") int city);
+		
+	@Query(value=" Select * FROM trader T "
+				 +  "inner join usser U ON U.user_id = T.user_id "
+				 +  "inner join trader_address AD ON U.user_id = AD.user_id "  
+				 +  "inner join address A on A.address_id = AD.address_id "  
+				 +  "inner join dbpayless.stock S on S.user_id = U.user_id "
+				 +  "inner join dbpayless.stock_products ST on S.stock_id = ST.stock_stock_id "
+				 +  "where a.zone_id=?1 and a.city_id=?2 "
+				 +  "and ST.product_product_id in (?3) order by st.salesprice ", nativeQuery = true)
+	List<Trader> queryByParametersCityZone(@Param("zone") long zona, @Param("city") long ciudad, @Param("list") List<Long> idsProducts);
 
 	
 

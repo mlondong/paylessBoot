@@ -9,233 +9,11 @@
 
 
 <script type="text/javascript">
-
-var products = [ ];
-
-
-function isPresent(newProduct) {
-	for ( var index=0; index < products.length; index++ ) {
-		    if((products[index].p_trader === newProduct.p_trader)   &&  (products[index].p_code === newProduct.p_code)     ) {
-		   	    deleteProduct(index);
-		    }
-	}
-	return false;
-}
-
-function deleteProduct(index) {
-	products.splice(index, 1);
-}
-
-
-
-
-function showSelected(){
-	 var total= 0;
-	 var subtotal= 0;
-	 var totalquantities= 0;
-			
-	 var html = "<p><h3 style='background-color:#FFAE33' >Added in your Cart</h3></p>";
-	     html += "<table class='table' >";
- 	 html += "<thead class='thead-dark'><tr><th scope='col'>Trader</th>";
- 	 html += "<th scope='col'>Branch</th>";
- 	 html += "<th scope='col'>Code</th>";
- 	 html += "<th scope='col'>Description</th>";
-     html += "<th scope='col'>Price</th>";
-     html += "<th scope='col'>Quantity</th>";
-     html += "<th scope='col'>Subtotal ($)</th>";
-     html +="</tr></thead>";
- for (var i = 0; i < products.length; i++) {
-    	 html += "<tr>";
-    	 html += "<td>" + products[i].p_trader + "</td>";
-    	 html += "<td>" + products[i].p_branch + "</td>";
-    	 html += "<td>" + products[i].p_code + "</td>";
-    	 html += "<td>" + products[i].p_description + "</td>";
-    	 html += "<td>" + products[i].p_price+ "</td>";
-    	 html += "<td>" + products[i].p_quantity+ "</td>";
-    	 subtotal=products[i].p_quantity * products[i].p_price;
-    	 html += "<td>" + subtotal+ "</td>";
-    	 html += "</tr>";
-    	 totalquantities+= Number(products[i].p_quantity);
-    	 total+=subtotal; 
-    	 
- }
-
- html += "<tr>";
- html += "<td colspan='4'></td>";
- html += "<td style='font-weight: bold; background-color:#FFAE33'>Total Invoice</td>";
- html += "<td style='font-weight: bold; background-color:#FFAE33'>"+totalquantities+" Un.</td>";
- html +="<td style='font-weight: bold; background-color:#FFAE33'>$ "+total+"</td></tr";
- html += "</table>";
- document.getElementById("selections").innerHTML = html;
-
-}
-
-
-
-function removeProduct(index){
-	 var trader = document.getElementById("trader"+index).value;
-	 var code = document.getElementById("code"+index).value;
-	 var quantity= document.getElementById("val"+ index).value;
-		
-     for ( var index=0; index < products.length; index++ ) {
-		    if((products[index].p_trader === trader)   &&  (products[index].p_code === code)     ) {
-		    	products[index].p_quantity=quantity;
-		    }
-	 }
-     showSelected();     
-}
-
-function addProduct(index) {
-
-	 var trader = document.getElementById("trader"+index).value;
-	 var branch = document.getElementById("producer"+index).value;
-     var code = document.getElementById("code"+index).value;
-     var description = document.getElementById("description"+index).value;
-     var price = document.getElementById("priceUnit"+ index).value;
-     var quantity= document.getElementById("val"+ index).value;
-     
-
-     var newProduct = {   p_trader: null,  p_branch: null,  p_code: null,  p_description: null,	  p_price: 0,	  p_quantity: 0			};
-
-	 newProduct.p_trader=trader;
-     newProduct.p_branch=branch;
-     newProduct.p_code=code;
-     newProduct.p_description=description;
-     newProduct.p_price=price;
-     newProduct.p_quantity=quantity;
-
-	 if(isPresent(newProduct) == false){
-		 products.push(newProduct);
-	  }
-	 showSelected();
-}
-
-
-
-
-$(document).ready(function () {
-	$("form").keypress(function(e) {
-		  if (e.which == 13) {
-		    return false;
-		  }
+$(document).ready(function(){
+	  $("#btn_search").click(function(){
+		  $( "#formFindProduct" ).submit();
+	  });
 	});
-
-	$('form').each(function(index){
-		$('#btn_add'+index).on('click', function(){
-			alert(index);
-		    var value = parseInt($('#val'+index).val());
-		    var cant_db = parseInt($('#cant_db'+index).val());
-
-		    
-			    if(value < cant_db){
-						if(value < 100) {
-				         value = value + 1;
-					    }else {
-						        value =100;
-							    }
-						$('#val'+index).val(value);
-						addProduct(index );
-			    }
-   		   
-	    });
-
-		$('#btn_less'+index).on('click', function(){
-			var value = parseInt($('#val'+index).val());
-			
-			   if(value >= 1){
-			        value = value - 1;
-			    }else{
-			        value =0;
-			    }
-			 $('#val'+index).val(value);
-			 removeProduct(index );
-		});
-	 });
-
-	
-	$('#btn_search').click(function() { 
-	    	var product = $('#description').val();
-	    	var flag=true;
-	    	
-	    	
-	    	if(!isNaN(product)){
-	    		flag=false;
-				$('#span-error').after('<p>Please insert a correct value.</p>')
-			}
-
-	    	if(/^[a-zA-Z0-9]*$/.test(product) == false){
-	    		flag=false;
-			 	$('#span-error').after('<p>Please insert a correct value.</p>')
-	    	}
-
-	    	if(flag==true){
-				var city= document.getElementById("city").value;
-				var zone= document.getElementById("zone").value;
-				var description= document.getElementById("description").value;
-				var url = "/services/consumer/resulproducts?description="+description+"&city="+city+"&zone="+zone;
-
-				
-				$.get(url, function (data) {	
-				if(data.length<=0){
-			    		$('#div-error').append("<h4>Product Don't found! ...</h4>"); 
-			 	}else{
-			    		$('#div-with-data').append("<h4 style='background-color:#FFAE33'>Products found near me</h4>");
-			    		dataTable(data);
-			 		}
-				});
-			}
-	    	
-	});
-
-});
-
-function dataTable(data){
-
-		var html="<table class='table table-bordered table-dark'>"
-		html+="<tr>";
-		html+="<th>#</th>";
-		html+="<th>Trader</th>";
-		html+="<th>Position Trader</th>";
-		html+="<th>Branch</th>";
-		html+="<th>Code Product</th>";
-		html+="<th>Product Name</th>";
-		html+="<th>Price</th>";
-		html+="<th>Availables In Stock</th>";
-		html+="<th>Cart in units</th>";
-		html+="</tr>"; 
-		 for (var i = 0; i < data.length; i++) {
-			if(data[i]!=null){
-		     html += "<tr>";
-	    	 html += "<td>" + i + "</td>";
-	    	 html += "<td>Trader</td>";
-	    	 html += "<td>Position trader</td>";
-	    	 html += "<td>" + data[i].product.producer + "</td>";
-	    	 html += "<td>" + data[i].product.code+ "</td>";
-	    	 html += "<td>" + data[i].product.description+ "</td>";
-	    	 html += "<td>" + data[i].salesprice+ "</td>";
-	    	 html += "<td>" + data[i].quantity+ "</td>";
-
-	    	 html += "<td>";
-	    	 html +="<form id='myForm"+i+"'>";
-	    	 html +="<button type='button' id='btn_add"+i+"' style='background-color: #FFE333; font-size: 16px'>+</button>";
-	    	 html +="<input type='text' id='val"+i+"' value='0' disabled='disabled' size='3'>";
-	    	 html +="<input type='hidden' id='cant_db"+i+"'	 value="+data[i].quantity+" />";
-	    	 html +="<input type='hidden' id='trader"+i+"'	 value='enterprise' />"; 
-	    	 html +="<input type='hidden' id='producer"+i+"' value="+data[i].product.producer+" />"; 
-	    	 html +="<input type='hidden' id='code'"+i+"'	 value="+ data[i].product.code+ " />"; 
-	    	 html +="<input type='hidden' id='description"+i+"'	value="+ data[i].product.description+ " />";
-	    	 html +="<input type='hidden' id='priceUnit"+i+"'	value="+ data[i].salesprice+" />";
-	    	 html +="<button type='button' id='btn_less"+i+"' style='background-color: #FFE333; font-size: 16px'>-</button>";
-		    				
-		   html +="</form>";
-	    	 html +="<span th:id='span-add"+ i+"'> </span>";
-	    	 html += "</tr>";
-			} 
-		 }
-		html+="</table>";
-		$('#div-result').append(html);
-		
-}
 
 
 </script>
@@ -245,7 +23,7 @@ function dataTable(data){
 <body>
 	<div id="div_search">
 		<h2>Find Product:</h2>
-		<form action="/consumer/resulproducts"  method="get" id="formFindProduct"  >
+		<form action="/consumer/findproduct"  method="get" id="formFindProduct"  >
 			<div class="form-group">
 				<table>
 					<tbody>
@@ -255,8 +33,6 @@ function dataTable(data){
 							<td>
 							<label for="description"></label> 
 							<input type="text" id="description"  name="description" min="4" maxlength="8"/>
-							<input type="hidden" id="city"  name="city" th:if="${consumer!=null}" th:value="${consumer.address.city}">
-							<input type="hidden" id="zone"  name="zone" th:if="${consumer!=null}" th:value="${consumer.address.zona}">
 							</td>
 							<td>
 								<button type="button" id="btn_search" class="btn btn-primary">Search</button>
@@ -274,62 +50,6 @@ function dataTable(data){
 	</div>
 
 
-	<div id="selections">
-	</div>
-	
-	
-	<div id="div-error" name="div-error"></div>
-	
-	<div id="div-with-data" name="div-with-data"></div>
-
-	<div id="div-result" name="div-result"></div>
-	
-		<table class="table table-bordered table-dark">
-			<tr>
-				<th>#</th>
-				<th>Trader</th>
-				<th>Position Trader</th>
-				<th>Branch</th>
-				<th>Code Product</th>
-				<th>Product Name</th>
-				<th>Price</th>
-				<th>Availables In Stock</th>
-				<th>Cart in units</th>
-	
-			</tr>
-				<tr th:each="st,index: ${stockproducts}">
-					<td th:if="${st!=null}" th:text="${index.index+1}"></td>
-					<td th:if="${st!=null}" th:text="${st.stock.trader.nameEnterprise}"></td>
-					<td th:if="${st!=null}" cellpadding="0" cellspacing="0">
-							<span th:each="address: ${st.stock.trader.address}">
-								<div th:if="${consumer.address.zona==address.zona}" th:text="${address.description +' '+address.city+' '+address.zona}"></div>
-							</span>
-					</td>
-					<td th:if="${st!=null}" th:text="${st.product.producer}"></td>
-					<td th:if="${st!=null}" th:text="${st.product.code}"></td>
-					<td th:if="${st!=null}" th:text="${st.product.description}"></td>
-					<td th:if="${st!=null}" th:text="${st.product.priceUnit}"></td>
-					<td th:if="${st!=null}" th:text="${st.quantity}"></td>
-					<td th:if="${st!=null}">
-					    <form th:id="'myForm' + ${index.index+1}">
-					    <button type="button" th:id="'btn_add' + ${index.index+1}" style="background-color: #FFE333; font-size: 16px">+</button>
-					    <input type="text" th:id="'val' + ${index.index+1}" value="0" disabled="disabled" size="3">
-					  	<input type="hidden" th:id="'cant_db' + ${index.index+1}"	th:value="${st.quantity}" /> 
-					    <input type="hidden" th:id="'trader' + ${index.index+1}"	th:value="${st.stock.trader.nameEnterprise}" /> 
-					    <input type="hidden" th:id="'producer' + ${index.index+1}"	th:value="${st.product.producer}" /> 
-					    <input type="hidden" th:id="'code' + ${index.index+1}"	th:value="${st.product.code}" /> 
-					    <input type="hidden" th:id="'description' + ${index.index+1}"	th:value="${st.product.description}" />
-					    <input type="hidden" th:id="'priceUnit' + ${index.index+1}"	th:value="${st.product.priceUnit}" />
-					     
-					    <button type="button" th:id="'btn_less' + ${index.index+1}" style="background-color: #FFE333; font-size: 16px">-</button>
-						</form>
-						<span th:id="'span-add'+ ${index.index+1}"> </span>
-					</td>
-					
-				</tr>	
-		</table>
-	
-	</div>
 
 
 </body>

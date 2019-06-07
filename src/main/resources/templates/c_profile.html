@@ -3,12 +3,29 @@
 <head lang="en">
 <title>Payless-Consumer</title>
 <th:block th:include="layout/headerConsumer"></th:block>
-<script type="text/javascript"
-	src="http://code.jquery.com/jquery-1.10.2.js"> </script>
-<script type="text/javascript"
-	src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"> </script>
-<link rel="stylesheet"
-	href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.js"> </script>
+<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"> </script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $("#city").change(function(){
+	  getZones(); 
+  });
+});
+
+
+function getZones() {
+    var url = "/consumer/address/zones?idcity=";
+    alert($('#city').val());
+	 if ($('#city').val() != 0) {
+        url = url + $('#city').val();
+  	    $('#zone').load(url);  //load fragment and replace content
+    }
+}
+
+
+</script>
 </head>
 
 
@@ -88,7 +105,7 @@
 	
 	<br>
 
-	<span th:text="${consumer}"></span>
+	
 	<div id="div_reg" class="form-group" th:if="${ not #lists.isEmpty(consumer)}" >
 		<form action="/consumer/upaddress" method="get" >
 		<table border=0 style="display: table;  margin: 0 auto;position: absolute; top:80%; left:30%;">
@@ -101,15 +118,32 @@
 						th:value="${consumer.address.description}" /></td>
 				</tr>
 				<tr>
-					<td>City:</td>
-					<td><input type="text" th:if="${consumer.address!=null}" id="city" name="city"
-						th:value="${consumer.address.city}" /></td>
+					<td><label>Select City</label></td>
+						<td>
+						<select id="city" name="city" class="custom-select">
+                            <option >Select an City</option>
+                            <option th:each="city : ${city}"
+                                    th:selected="${city.id == consumer.address.city.id}" 
+                                    th:value="${city.id}"
+                                    th:text="${city.name}">
+                            </option>
+                       	</select>
+                       	</td>
 				</tr>
 				<tr>
 					<td>Zone:</td>
-					<td><input type="text" th:if="${consumer.address!=null}" id="zona" name="zona"
-						th:value="${consumer.address.zona}" /></td>
+					<td>
+						<select id="zone" name="zone" class="custom-select">
+                            <option >Select an Zone</option>
+                            <option th:each="zone : ${zone}" 
+                            	 	th:selected="${zone.id == consumer.address.zone.id}" 
+                            	 	th:value="${zone.id}"
+                                  	th:text="${zone.name}"> 
+                           	</option>
+                        </select>
+                    </td>
 				</tr>
+			
 				<tr>
 					<td><button type="submit" class="btn btn-primary">Update My Address Information</button></td>
 				</tr>

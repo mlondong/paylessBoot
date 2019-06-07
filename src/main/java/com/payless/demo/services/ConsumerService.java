@@ -7,6 +7,8 @@ import org.springframework.data.repository.query.Param;
 
 import com.payless.demo.model.Consumer;
 import com.payless.demo.model.Invoice;
+import com.payless.demo.model.Product;
+import com.payless.demo.model.StockProducts;
 import com.payless.demo.model.Trader;
 
 public interface ConsumerService {
@@ -39,4 +41,5 @@ public interface ConsumerService {
 	void deleteAll();
 	
 	
+		
 }

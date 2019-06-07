@@ -26,18 +26,17 @@ public class Address {
 	private Long id; 
 	
 	@NotNull
-	@Size(min=2, max=30)
 	@Column(name="DESCRIPTION")
 	private String description;
 	
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "CITY_ID")
 	@JsonManagedReference
 	private City city;
 
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "ZONE_ID")
 	@JsonManagedReference
 	private Zone zone;

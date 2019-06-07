@@ -127,26 +127,6 @@ public class ConsumerService {
 
 
 
-	/***FIND ALL PRODUCTS BY DESCRIPTION IN ZONE CONSUMER*/
-	@GetMapping(path = "/consumer/resulproducts",produces={MediaType.APPLICATION_JSON_VALUE})
-	public List<StockProducts> resultSearchProducts(@RequestParam("description") String desc ,	@RequestParam("zone") int zone,	@RequestParam("city") int city){
-
-		/*TRADERS IN ZONE OF CONSUMER*/
-		List<Trader> traders = traderServiceImp.queryByParametersCityZone(zone, city);
-		/*RESULT OF PRODUCTS FIND IT*/
-		List<Product> findProducts = productServiceImp.findByContainDescription(desc);
-		/*MATCH BETWEEN PRODUCTS AND TRADERS IN ZONE*/
-		List<StockProducts> matchStockProducts= new ArrayList<StockProducts>(); 
-		for(Trader trader: traders){
-			for(Product product: findProducts){
-				matchStockProducts.add(trader.getStock().findProductInOwnStock(product));
-			}
-
-		}
-
-		return matchStockProducts;
-	}
-
 
 	/**PUT SCORE FOR PRODUCT IN INVOICE BY CONSUMER**/
 	@GetMapping(path = "/consumer/addscoreinproduct/{idprod}/invoice/{idinvoice}/score/{score}/comment/{comment}")
