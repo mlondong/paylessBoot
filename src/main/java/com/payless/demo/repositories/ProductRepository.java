@@ -13,8 +13,6 @@ import com.payless.demo.model.Product;
 @Transactional
 public interface ProductRepository extends BaseProductRepository<Product>{
 
-//	@Query("Select c from Consumer c where c.firstName like %:firstName%")
-
 	@Query(value = "select p from Product p where p.description like %:description% ")
 	List<Product>findByContainDescription(@Param("description") String description);
 		

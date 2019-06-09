@@ -136,9 +136,11 @@ public class StockProducts {
 	@Override
 	public String toString() {
 		return "StockProducts [id=" + id + ", stock=" + stock + ", product=" + product + ", quantity=" + quantity
-				+ ", date=" + date + "]";
+				+ ", salesprice=" + salesprice + ", date=" + date + "]";
 	}
 
+
+	
 
 
 }

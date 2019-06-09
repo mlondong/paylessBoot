@@ -28,7 +28,6 @@ $(document).ready(function(){
 				<table>
 					<tbody>
 						<tr>
-							
 							<td><label>By Description:</label></td>
 							<td>
 							<label for="description"></label> 
@@ -38,11 +37,6 @@ $(document).ready(function(){
 								<button type="button" id="btn_search" class="btn btn-primary">Search</button>
 							</td>
 						</tr>
-						<tr>
-							<td></td>
-							<td><span id="data"> </span></td>
-						</tr>
-						
 					</tbody>
 				</table>
 			</div>
@@ -50,7 +44,41 @@ $(document).ready(function(){
 	</div>
 
 
+	<div th:if="${stockProducts!=null}" >
+		<table class="table">
+			<thead class="thead-dark">
+			<tr>
+				<th>Found in near me</th>
+				<th>Product description</th>
+				<th>Quantity</th>
+				<th>Price</th>
+				<th>Buy</th>
+				
+			</tr>
+			</thead>
+			<tbody>
+				<tr th:each="product : ${stockProducts}">
+					<td th:text="${product.stock.trader.nameEnterprise}"></td>
+					<td th:text="${product.product.description +' - '+product.product.producer +' ('+product.product.code+')'}"></td>
+					<td th:text="${product.quantity}"></td>
+					<td th:text="${'$ '+product.salesprice}"></td>
+					<td>
+					<a th:href="@{/consumer/car?stock={stock}&product={product} (stock=${product.stock.id}, product=${product.product.id} )}" > 
+					<img src="/images/buy-ico.png" height="30px" width="30px"	alt="Buy" title="Buy" />
+					</a>
+					</td>
+				</tr>
+			</tbody>
+		
+		
+		</table>
+		
+	</div>
 
+
+	<div th:if="${error}">
+		<h2 th:text="${error}"></h2>
+	</div>
 
 </body>
 </html>

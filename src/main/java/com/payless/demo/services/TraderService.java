@@ -21,6 +21,6 @@ public interface TraderService {
 	
 	
 	Trader queryFindByUserName(String firstName);
-	List<Trader> queryByParametersCityZone(long zone, long city, List<Long> idsProducts);
+	List<Trader> queryByParametersCityZone(long zone, long city);
 	
 }

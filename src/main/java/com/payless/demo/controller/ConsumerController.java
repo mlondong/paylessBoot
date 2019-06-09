@@ -24,12 +24,15 @@ import com.payless.demo.model.Invoice;
 import com.payless.demo.model.InvoiceProduct;
 import com.payless.demo.model.Product;
 import com.payless.demo.model.Rating;
+import com.payless.demo.model.Stock;
 import com.payless.demo.model.StockProducts;
 import com.payless.demo.model.Trader;
 import com.payless.demo.services.CityServiceImp;
 import com.payless.demo.services.ConsumerServiceImp;
 import com.payless.demo.services.InvoiceServiceImp;
 import com.payless.demo.services.ProductServiceImp;
+import com.payless.demo.services.StockProductsServiceImp;
+import com.payless.demo.services.StockServiceImp;
 import com.payless.demo.services.TraderServiceImp;
 import com.payless.demo.services.ZoneServiceImp;
 import com.payless.demo.util.Passgenerator;
@@ -41,21 +44,20 @@ public class ConsumerController {
 
 	@Autowired
 	private  ConsumerServiceImp consumerServiceImp;
-	
 	@Autowired
 	private  ProductServiceImp productServiceImp;
-	
 	@Autowired
 	private  TraderServiceImp traderServiceImp;
-	
 	@Autowired
 	private  InvoiceServiceImp invoiceServiceImp;
-	
 	@Autowired
 	private CityServiceImp cityServiceImp;
-	
 	@Autowired
 	private ZoneServiceImp zoneServiceImp;
+	@Autowired
+	private StockServiceImp stockServiceImp;
+	@Autowired
+	private StockProductsServiceImp stockProductsServiceImp;
 	
 	
 	
@@ -243,24 +245,59 @@ public class ConsumerController {
 	public ModelAndView  resultSearchProducts(@RequestParam("description") String description ){
 
 		ModelAndView modelAndView = new ModelAndView("c_findProducts");
-
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 	    Consumer consumer = consumerServiceImp.queryFindByUserName(auth.getName());
+		modelAndView.addObject("consumer", consumer);
 	    
+	   /*find product stockproducts in of traders*/  
 	    List<Product> productToFind = productServiceImp.findByContainDescription(description);
 	    List<Long> idsProducts =productToFind.stream().map(d->d.getId()).collect(Collectors.toList());
-	    
-		System.out.println("city " + consumer.getAddress().getCity().getId() +" zone "+consumer.getAddress().getZone().getId());
-		System.out.println(" productos " + idsProducts);
-		
-		List<Trader> traders =  traderServiceImp.queryByParametersCityZone(consumer.getAddress().getZone().getId(), consumer.getAddress().getCity().getId(), idsProducts ); 
-		System.out.println("traders--> " + traders);
-		
-		
+	 
+	   if(!idsProducts.isEmpty()){
+		   /*find traders in zone and city of consumer*/ 
+		    List<Trader> traders =  traderServiceImp.queryByParametersCityZone(consumer.getAddress().getZone().getId(), consumer.getAddress().getCity().getId()); 
+		    List<Long> idsTraders = traders.stream().map(d->d.getId()).collect(Collectors.toList());
+		    List<StockProducts> stockProducts = stockProductsServiceImp.findProductsInTraders(idsProducts, idsTraders);
+		    System.out.println("idsProducts " + idsProducts);
+		    System.out.println("idsTraders " + idsTraders);
+		    System.out.println(stockProducts);
+		    modelAndView.addObject("stockProducts", stockProducts );
+	   }else{
+			modelAndView.addObject("error", "Product Not found it or doesn't exist.");
+	   }
 		return modelAndView;
 	}
 
 
+	/***FIND ALL PRODUCTS BY DESCRIPTION IN ZONE CONSUMER*/
+	@GetMapping(path = "/consumer/car")
+	public ModelAndView  carConsumer(@RequestParam("stock") Long idStock, @RequestParam("product") Long idProduct){
+		ModelAndView modelAndView = new ModelAndView("car");
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    Consumer consumer = consumerServiceImp.queryFindByUserName(auth.getName());
+		modelAndView.addObject("consumer", consumer);
+		
+		Stock stock= stockServiceImp.findById(idStock).get();
+		modelAndView.addObject("stock", stock);
+		
+		List<StockProducts> stockProducts = stockProductsServiceImp.findProductsInStock(idStock);
+		System.out.println("stockProducts  " + stockProducts );
+		modelAndView.addObject("stockProducts", stockProducts );
+		return modelAndView;
+	}	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 }

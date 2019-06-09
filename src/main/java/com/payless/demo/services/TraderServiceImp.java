@@ -78,9 +78,8 @@ public class TraderServiceImp implements TraderService{
 	}
 
 	@Override
-	public List<Trader> queryByParametersCityZone(long zone, long city, List<Long> idsProducts) {
-		System.out.println("llego en metodo " + zone + city);
-		return traderRepository.queryByParametersCityZone(zone, city, idsProducts);
+	public List<Trader> queryByParametersCityZone(long zone, long city) {
+		return traderRepository.queryByParametersCityZone(zone, city);
 	}
 
 
