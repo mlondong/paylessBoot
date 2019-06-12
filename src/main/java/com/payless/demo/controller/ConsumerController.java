@@ -287,7 +287,17 @@ public class ConsumerController {
 	}	
 	
 	
+	@RequestMapping("/consumer/buy")
+	public ModelAndView  buyProduct(@RequestParam Long idTrader, @RequestParam String item_code, @RequestParam String item_values){
+		ModelAndView modelAndView = new ModelAndView("c_invoice");
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    Consumer consumer = consumerServiceImp.queryFindByUserName(auth.getName());
+	    modelAndView.addObject("consumer", consumer);
 	
+	    /*aca viene la logica del stock  el descuento del producto*/
+	    
+	    return modelAndView;
+	}
 	
 	
 	
