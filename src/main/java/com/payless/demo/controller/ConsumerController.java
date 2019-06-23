@@ -2,7 +2,9 @@ package com.payless.demo.controller;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -58,6 +60,7 @@ public class ConsumerController {
 	private StockServiceImp stockServiceImp;
 	@Autowired
 	private StockProductsServiceImp stockProductsServiceImp;
+
 	
 	
 	
@@ -281,27 +284,24 @@ public class ConsumerController {
 		modelAndView.addObject("stock", stock);
 		
 		List<StockProducts> stockProducts = stockProductsServiceImp.findProductsInStock(idStock);
-		System.out.println("stockProducts  " + stockProducts );
+		modelAndView.addObject("productid", idProduct );
 		modelAndView.addObject("stockProducts", stockProducts );
 		return modelAndView;
 	}	
 	
 	
-	@RequestMapping("/consumer/buy")
-	public ModelAndView  buyProduct(@RequestParam Long idTrader, @RequestParam String item_code, @RequestParam String item_values){
+	
+	
+	@RequestMapping("/consumer/newinvoice")
+	public ModelAndView viewInvoiceGenerated(@RequestParam Long numInvoice){
 		ModelAndView modelAndView = new ModelAndView("c_invoice");
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	    Consumer consumer = consumerServiceImp.queryFindByUserName(auth.getName());
-	    modelAndView.addObject("consumer", consumer);
-	
-	    /*aca viene la logica del stock  el descuento del producto*/
-	    
-	    return modelAndView;
+		Consumer consumer = consumerServiceImp.queryFindByUserName(auth.getName());
+		modelAndView.addObject("consumer", consumer);
+		
+		modelAndView.addObject("invoice", invoiceServiceImp.findByNumInvoice(numInvoice).get());
+		return modelAndView;
 	}
-	
-	
-	
-	
 	
 	
 	

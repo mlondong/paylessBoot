@@ -29,7 +29,7 @@ if(data.products.length>0){
 
 	
 	for(var i=0; i<data.products.length;i++){
-		 subtotal=data.products[i].poduct.priceUnit*data.products[i].quantity
+		 subtotal=data.products[i].pricebuy * data.products[i].quantity
 	     total+=subtotal;
 		 units+=data.products[i].quantity;
 	     
@@ -39,7 +39,7 @@ if(data.products.length>0){
 	    	    '<td>'+data.products[i].poduct.code+'</td>'+
 	    	    '<td>'+data.products[i].poduct.description+'</td>'+
 	    	    '<td>'+data.products[i].poduct.producer+'</td>'+
-	    	    '<td align=center>'+data.products[i].poduct.priceUnit+'</td>'+
+	    	    '<td align=center>'+data.products[i].pricebuy+'</td>'+
 	    	    '<td align=center>'+data.products[i].quantity+'</td>'+
 	    	    '<td align=right>$ '+subtotal+'</td>'+
 	    		'</tr>');
@@ -133,7 +133,7 @@ function putBlack2(){
 					<td
 						th:text="${#aggregates.sum(invoice.getProducts().![quantity]) + '  Und.'}"></td>
 					<td
-						th:text="${'$ '+#aggregates.sum(invoice.getProducts().![quantity * poduct.priceUnit])}"></td>
+						th:text="${'$ '+#aggregates.sum(invoice.getProducts().![quantity * pricebuy])}"></td>
 					<td><a data-toggle="modal" data-target="#umodal"
 						th:onclick="'getInvoice(\''+${invoice.numInvoice}+ '\' );'"> <img
 							src="/images/see-ico-yellow.png" height="30px" width="30px"

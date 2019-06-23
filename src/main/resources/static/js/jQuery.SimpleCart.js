@@ -69,9 +69,9 @@
                                             <div><i class='fa fa-dollar total-cart-cost'>0</i></div>\n\
                                             </div>\n\
                                             <div class='cart-checkout'>\n\
-                                               <form action='#'>\n\
-                                                <button type='button' class='btn btn-primary sc-send-form'>Buy</button>\n\
-                                              </form>\n\
+                                            \n\
+                                                <button id='submitbuy' type='submit' class='btn btn-primary sc-send-form'>Buy</button>\n\
+                                            \n\
                                         </div>\n\
                                  </div>");
         },
@@ -100,9 +100,11 @@
                 var code= $(this).attr("data-code");
                 var name = $(this).attr("data-name");
                 var cost = Number($(this).attr("data-price"));
+                var quantity = Number($(this).attr("data-quantity"));
                 
                 
-                mi._addItemToCart(name, cost, 1, code);
+                
+                mi._addItemToCart(name, cost, 1, code, quantity);
                 mi._updateCartDetails();
             });
 
@@ -116,7 +118,6 @@
             	var item_price = [];
             	var idTrader= $("#label-trader").attr("data-trader");
             	
-            	alert(idTrader);
             	
             	$("#quantityContainer > input").each(function(){
             		item_code.push($(this).attr("data-code"));
@@ -125,24 +126,35 @@
             		item_price.push(Number($(this).attr("data-price")));
             	});
            
-            	/*send via ajax*/
-            	$.ajax({
-            			url: "/consumer/buy",
-            			method:"GET",
-            			data: { 
-            					"idTrader":idTrader,
-            					item_code: decodeURIComponent(item_code),
-            					item_values: decodeURIComponent(item_values),
-            				  },
-            			success: function(data) {
-            				console.log(data);
-            			},
-            			error: function(request, status, errorThrown) {
-            				console.log(request);
-            				console.log(status);
-            				console.log(errorThrown);
-            			}
-            	});
+            	
+            	if(item_code.length>0){
+		            	/*send via ajax*/
+		            	$.ajax({
+		            			url: "/services/consumer/buy",
+		            			method:"GET",
+		            			dataType: "json",
+		            	        data: { 
+		            					"idTrader":idTrader,
+		            					item_code: decodeURIComponent(item_code),
+		            					item_values: decodeURIComponent(item_values),
+		            				  },
+		            				  success: function(data) {
+				            				console.log(data);
+				            				 window.location= '/consumer/newinvoice?numInvoice='+data.idinvoice;
+				            		  },
+		            				  error: function(request, status, errorThrown) {
+				            				console.log(request);
+				            				console.log(status);
+				            				console.log(errorThrown);
+				            			}
+		            				  
+		            	});
+		            	
+            	}else{
+            			alert("Yo need to choose an product to buy!.");
+            		}	
+		            	
+            	
             	
             	
             });  
@@ -163,19 +175,30 @@
         
         
         /* Helper Functions */
-        _addItemToCart: function (name, price, count , code) {
-            for (var i in this.cart) {
-                if (this.cart[i].name === name) {
-                	this.cart[i].code = code;
-                	this.cart[i].count++;
-                    this.cart[i].price = price * this.cart[i].count;
-                    this._saveCart();
-                    return;
-                }
+        _addItemToCart: function (name, price, count , code, quantity) {
+           var flag=true;
+        	
+        	for (var i in this.cart) {
+            	if (quantity != this.cart[i].count) {
+            		if (this.cart[i].name === name) {
+            			this.cart[i].code = code;
+            			this.cart[i].count++;
+            			this.cart[i].price = price * this.cart[i].count;
+            			this._saveCart();
+            			return;
+            		}
+            	}else{
+            			flag=false;
+            			alert("Imposible to add.. more elemets of " + name);
+            	     }	
             }
-            var item = new Item(name, price, count, code);
-            this.cart.push(item);
-            this._saveCart();
+          
+        	if(flag==true){
+        		var item = new Item(name, price, count, code);
+        		this.cart.push(item);
+        		this._saveCart();
+        	}	
+        
         },
         
         

@@ -24,5 +24,12 @@ public class StockProductsServiceImp implements StockProductsService{
 		return stockProductsRepository.findProductsInStock(idStock);
 	}
 
+	@Override
+	public Iterable<StockProducts> findAll() {
+		return stockProductsRepository.findAll();
+	}
+
+	
+	
 	
 }

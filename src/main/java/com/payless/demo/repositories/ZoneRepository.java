@@ -16,7 +16,7 @@ import com.payless.demo.model.Zone;
 public interface ZoneRepository extends CrudRepository<Zone, Long>{
 
 	
-	Optional<Zone> findById(Long arg0);
+	Optional<Zone> findById(long arg0);
 	List<Zone> findAll();
 	
 	@Query("Select z from Zone z where z.city.id=:idCity order by z.name")

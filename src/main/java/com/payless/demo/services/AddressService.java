@@ -1,17 +1,8 @@
 package com.payless.demo.services;
 
-import java.util.List;
 import java.util.Optional;
 
 import com.payless.demo.model.Address;
-
-
-
-
-
-
-
-
 
 
 public interface AddressService {

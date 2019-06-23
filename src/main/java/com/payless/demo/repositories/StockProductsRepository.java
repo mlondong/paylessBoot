@@ -18,12 +18,19 @@ import com.payless.demo.model.StockProducts;
 public interface StockProductsRepository extends CrudRepository<StockProducts, Long>{
 
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
-	@Query(value="  Select SP FROM StockProducts SP inner join SP.stock S where SP.product.id in (:products) and S.trader.id in (:traders) order by SP.salesprice " )
+	@Query(value="  Select SP FROM StockProducts SP inner join SP.stock S where SP.product.id in (:products) and S.trader.id in (:traders) and SP.quantity>0 order by SP.product,SP.salesprice " )
 	List<StockProducts> findProductsInTraders(@Param("products") List<Long> idProducts, @Param("traders") List<Long> idTraders);
 
 	
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
-	@Query(value="  Select SP FROM StockProducts SP inner join SP.stock S where SP.stock.id=:idStock" )
+	@Query(value="  Select SP FROM StockProducts SP inner join SP.stock S where SP.stock.id=:idStock and SP.quantity>0" )
 	List<StockProducts> findProductsInStock(@Param("idStock") Long idStock);
 
+
+	@Override
+	Iterable<StockProducts> findAll();
+	
+	
+	
+	
 }

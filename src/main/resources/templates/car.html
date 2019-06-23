@@ -29,7 +29,7 @@
 	<div class="panel panel-default" id="content1">
 	  <div class="panel-heading">
 	  <div th:if="${stock!=null}">
-		<h2>
+		<h2 style='font-weight: bold; background-color:#FFAE33'>
 			Market <label id="label-trader" th:attr="data-trader=${stock.trader.id}"  th:text="${stock.trader.nameEnterprise +' '+stock.trader.cuit}">	</label>
 		</h2>
 	 </div>
@@ -39,8 +39,11 @@
       	 <div class="panel-body">
            <div class="row">
 			<div class="col-md-3" th:each="product : ${stockProducts}">
-				<div class="menu-item-container">
-					<div class="item-description"><label th:text="${product.product.code}"></label></div>
+				<div class="menu-item-container" th:style="${productid == product.product.id } ? 'border-style: solid': ''">
+					<div class="item-description">
+						<label th:text="${product.product.code}"></label>
+						<img th:if="${productid == product.product.id }" src="/images/start-ico.png" height="30px" width="30px" />
+					</div>
 					<div class="item-description"><label th:text="${product.product.description +' '+product.product.producer}"></label></div>
 					<div class="item-quantity">Available:<label th:text="${product.quantity}"></label></div>
 					<div class="item-quantity">
@@ -62,15 +65,16 @@
         </div>
      </div>
  </div>
- 
- 
-		
 
+
+ 
 <!-- //Menu and categories -->
 <!-- Cart Grid -->
 	<div class="col-md-3">
 		<div id="cart"></div>
     </div>
 <!-- //Cart Grid -->
+
+
 
 </body>

@@ -18,8 +18,11 @@ public class ProductServiceImp implements ProductService {
 	private ProductRepository productRepository;
 
 	
-	
-
+	@Override
+	public Product findByCode(String code) {
+		// TODO Auto-generated method stub
+		return productRepository.findByCode(code);
+	}
 
 	@Override
 	public List<Product> findByContainDescription(String description) {
@@ -27,23 +30,17 @@ public class ProductServiceImp implements ProductService {
 		return productRepository.findByContainDescription(description);
 	}
 
-
-
 	@Override
 	public Optional<Product> findById(Long id) {
 		// TODO Auto-generated method stub
 		return productRepository.findById(id);
 	}
 
-
-
 	@Override
 	public boolean existsById(Long id) {
 		// TODO Auto-generated method stub
 		return productRepository.existsById(id);
 	}
-
-	
 	
 	@Override
 	public Product save(Product product) {

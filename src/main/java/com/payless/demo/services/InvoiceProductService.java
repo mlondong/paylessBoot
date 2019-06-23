@@ -6,5 +6,6 @@ import com.payless.demo.model.InvoiceProduct;
 
 public interface InvoiceProductService {
 
-	Optional<InvoiceProduct> findById(Long arg0); 
+	Optional<InvoiceProduct> findById(long arg0);
+	
 }

@@ -1,16 +1,11 @@
 package com.payless.demo.repositories;
 
 import java.awt.print.Pageable;
-import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.Repository;
-import org.springframework.stereotype.Indexed;
 
-import com.payless.demo.model.Trader;
 import com.payless.demo.model.Usser;
 
 

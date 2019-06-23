@@ -1,6 +1,5 @@
 package com.payless.demo.services;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,18 +10,13 @@ import com.payless.demo.repositories.AddressRepository;
 
 @Service
 public class AddressServiceImp implements AddressService {
-
-	
 	
 	@Autowired
 	private AddressRepository addressRepository;
 	
-
-	
 	
 	@Override
 	public Iterable<Address> findAll() {
-		// TODO Auto-generated method stub
 		return addressRepository.findAll();
 	}
 

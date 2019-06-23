@@ -8,15 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.payless.demo.model.City;
 import com.payless.demo.model.Consumer;
-import com.payless.demo.model.Zone;
 import com.payless.demo.repositories.CareProductRepository;
-import com.payless.demo.repositories.CityRepository;
 import com.payless.demo.repositories.ConsumerRepository;
 import com.payless.demo.repositories.MeatProductRepository;
 import com.payless.demo.repositories.MilkProductRepository;
-import com.payless.demo.repositories.TraderRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -38,11 +34,6 @@ public class PaylessBootApplicationTests {
 	private ConsumerRepository consumerRepository;
 
 	
-	@Autowired
-	private TraderRepository traderRepository;
-
-	@Autowired
-	private CityRepository cityRepository;
 
 	
 	

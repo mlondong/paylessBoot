@@ -1,14 +1,10 @@
 package com.payless.demo.restfull;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,24 +14,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.payless.demo.model.Consumer;
 import com.payless.demo.model.Invoice;
 import com.payless.demo.model.InvoiceProduct;
-import com.payless.demo.model.Product;
 import com.payless.demo.model.Rating;
-import com.payless.demo.model.StockProducts;
-import com.payless.demo.model.Trader;
 import com.payless.demo.repositories.ConsumerRepository;
-import com.payless.demo.repositories.RatingRepository;
 import com.payless.demo.services.ConsumerServiceImp;
 import com.payless.demo.services.InvoiceServiceImp;
-//import com.payless.demo.repositories.PurchaseRepository;
-import com.payless.demo.services.ProductServiceImp;
 import com.payless.demo.services.RatingServiceImp;
-import com.payless.demo.services.TraderServiceImp;
 
 
 /**
@@ -62,12 +50,7 @@ public class ConsumerService {
 	@Autowired
 	private ConsumerRepository consumerRepository;
 
-	@Autowired
-	private  ProductServiceImp productServiceImp;
-
-	@Autowired
-	private  TraderServiceImp traderServiceImp;
-
+	
 	@Autowired
 	private  ConsumerServiceImp consumerServiceImp;
 

@@ -1,14 +1,9 @@
 package com.payless.demo.repositories;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.QueryHint;
 import org.springframework.stereotype.Repository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.payless.demo.model.Usser;

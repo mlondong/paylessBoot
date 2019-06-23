@@ -1,7 +1,7 @@
 package com.payless.demo.model;
 
 import java.util.Collection;
-import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,14 +11,10 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author root ESTABLA TABLA ES DE MUCHOS A MUCHOS A TRAVES DELA TABLA
@@ -47,6 +43,12 @@ public class InvoiceProduct  {
 	@Column(name = "CUANTITY")
 	private int quantity;
 
+	@Column(name = "PRICE_BUY")
+	private int pricebuy;
+	
+	
+	
+	
 	@OneToMany(mappedBy = "invoiceProduct", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonManagedReference
 	private Collection<Rating> ratings;
@@ -56,12 +58,12 @@ public class InvoiceProduct  {
 	public InvoiceProduct() {
 	}
 
-	public InvoiceProduct(Invoice invoice, Product poduct, int quantity) {
-		super();
+	public InvoiceProduct(Invoice invoice, Product poduct, int quantity, int price) {
 		this.invProdId = new InvoiceProductId(invoice.getId(), poduct.getId());
 		this.invoice = invoice;
 		this.poduct = poduct;
 		this.quantity = quantity;
+		this.pricebuy=price;
 	}
 
 	public Collection<Rating> getRatings() {
@@ -104,11 +106,27 @@ public class InvoiceProduct  {
 		this.quantity = quantity;
 	}
 
+	
+	public int getPricebuy() {
+		return pricebuy;
+	}
+
+	public void setPricebuy(int pricebuy) {
+		this.pricebuy = pricebuy;
+	}
+
+	public void  orderInvoiceProduct(List<InvoiceProduct> list) {
+		/*aca estoy debo filtrar el array*/
+	}
+
 	@Override
 	public String toString() {
 		return "InvoiceProduct [invProdId=" + invProdId + ", invoice=" + invoice + ", poduct=" + poduct + ", quantity="
-				+ quantity + ", ratings=" + ratings + "]";
+				+ quantity + ", pricebuy=" + pricebuy + ", ratings=" + ratings + "]";
 	}
+	
+	
+
 
 	
 	

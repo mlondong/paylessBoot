@@ -5,8 +5,6 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 /**
  * @author root
  * ESTA TABLA ES UNA TABLAID de ESTRATEGIA MUCHOS A MUCHOS CON CAMPOS ADICIONALES 

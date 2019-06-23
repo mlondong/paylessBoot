@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *  @Configuration, @EnableAutoConfiguration, and @ComponentScan,
  *   and these annotations are frequently used together. 
  * */
-
+//@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
 @SpringBootApplication
 public class PaylessBootApplication {
 

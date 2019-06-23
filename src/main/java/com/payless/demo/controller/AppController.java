@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.payless.demo.model.Consumer;
+import com.payless.demo.model.Rating;
 import com.payless.demo.model.Trader;
 import com.payless.demo.services.ConsumerServiceImp;
+import com.payless.demo.services.RatingServiceImp;
 import com.payless.demo.services.TraderServiceImp;
 
 @Controller
@@ -18,12 +20,11 @@ public class AppController {
 	
 	@Autowired
 	private ConsumerServiceImp consumerServiceImp;
-	
 	@Autowired
 	private TraderServiceImp traderServiceImp;
-	
-	
-	
+	@Autowired	
+	private RatingServiceImp ratingServiceImp;
+
 	
 	@GetMapping({"/","/login"})
 	public String index() {
@@ -60,19 +61,27 @@ public class AppController {
         Consumer consumer = consumerServiceImp.queryFindByUserName(auth.getName());
         modelAndView.addObject("userName", "Welcome " + consumer.getFirstName() + " " + consumer.getLastName() + " (" + consumer.getDni() + ")");
         modelAndView.addObject("consumer", consumer);
+           
+        /*get all acumulated prices*/
+        modelAndView.addObject("pricesAcumulated", consumer.getAllAcumulatedPrices());
+        
+        /*get all acumulated products*/
+        modelAndView.addObject("consumeAcumulated", consumer.getAllAcumulatedProducts());
+      
+        /*get places more visied*/
+        modelAndView.addObject("placesVisited",  consumer.getMoreVisited() );
+
+        /*get my ratings*/
+        modelAndView.addObject("myRatings",  consumer.getAllMyRatings() );
+        
+        /*get general ratings*/
+        Iterable<Rating> rating = ratingServiceImp.findAll();
+        modelAndView.addObject("generalRatings",  consumer.getAllGerenalRatings(rating) );
+        
         return modelAndView;
 	}
 	
-	
-	
-	/*
-	@GetMapping("/menu")
-	public String menu() {
-		return "menu";
-	}*/
-	
-		
-	
+
 	
 	
 	

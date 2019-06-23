@@ -1,8 +1,6 @@
 package com.payless.demo.services;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -15,14 +13,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-
-import com.payless.demo.repositories.TraderRepository;
-import com.payless.demo.repositories.ConsumerRepository;
-import com.payless.demo.repositories.UsserRepository;
 import com.payless.demo.model.Consumer;
 import com.payless.demo.model.Role;
 import com.payless.demo.model.Trader;
 import com.payless.demo.model.Usser;
+import com.payless.demo.repositories.ConsumerRepository;
+import com.payless.demo.repositories.TraderRepository;
 
 
 /*PARA ESTE CASO ES POSIBLE REAIZAR

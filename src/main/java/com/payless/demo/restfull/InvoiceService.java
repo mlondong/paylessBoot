@@ -1,6 +1,5 @@
 package com.payless.demo.restfull;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -9,25 +8,28 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.gson.JsonObject;
 import com.payless.demo.model.Consumer;
 import com.payless.demo.model.Invoice;
+import com.payless.demo.model.InvoiceProduct;
 import com.payless.demo.model.Product;
 import com.payless.demo.model.Rating;
+import com.payless.demo.model.Stock;
+import com.payless.demo.model.StockProducts;
 import com.payless.demo.model.Trader;
-import com.payless.demo.model.InvoiceProduct;
 import com.payless.demo.repositories.ConsumerRepository;
 import com.payless.demo.repositories.InvoiceRepository;
 import com.payless.demo.repositories.ProductRepository;
+import com.payless.demo.repositories.StockRepository;
 import com.payless.demo.repositories.TraderRepository;
 import com.payless.demo.services.InvoiceServiceImp;
 
@@ -62,7 +64,10 @@ public class InvoiceService {
 	@Autowired
 	private  InvoiceServiceImp invoiceServiceImp;
 
+	@Autowired
+	private  StockRepository stockRepository;
 
+	
 
 	@GetMapping(path = "/invoice/commentproduct", produces={MediaType.APPLICATION_JSON_VALUE})
 	public Collection<Rating> getCommenstInProduct(@RequestParam("idProduct") Long idProd, @RequestParam("idInvoice") Long idInvoice){
@@ -70,6 +75,47 @@ public class InvoiceService {
 		InvoiceProduct invP = invoice.getInvoiceProductWithProduct(idProd);
 		return invP.getRatings();
 	}
+	
+	
+	@GetMapping(path="/consumer/buy", produces={MediaType.APPLICATION_JSON_VALUE})
+	public Map<String,String> buyProduct(@RequestParam Long idTrader, @RequestParam String item_code, @RequestParam String item_values){
+	   
+		System.out.println(idTrader +" -- "+ item_code+"-- "+ item_values);
+		Map<String,String> map = new HashMap<String,String>();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Consumer consumer = consumerRepository.queryFindByUserName(auth.getName());
+	
+		Trader trader =   traderRepository.findById(idTrader).get();
+	    Invoice invoice = new  Invoice(trader, consumer);
+		   
+	    String [] codes  = item_code.split(",");
+	    String[] values = item_values.split(",");
+	    Stock stockTrader = trader.getStock();    
+	    
+	    for(int i=0;  i < codes.length;  i++){
+	    	StockProducts stockProduct =  stockTrader.findProductInOwnStock(codes[i]);
+	    	invoice.addInvoiceProduct(stockProduct.getProduct()   , Integer.parseInt(values[i]), stockProduct.getSalesprice()  );
+	   	}
+	    /*save the invoice*/
+	    invoiceServiceImp.save(invoice);
+	    
+	    /*update quantity in products*/
+	    for(int i=0;  i < codes.length;  i++){
+	    	StockProducts stockProduct =  stockTrader.findProductInOwnStock(codes[i]);
+	    	int quantityUpdated = stockProduct.getQuantity() - Integer.parseInt(values[i]);
+	    	stockProduct.setQuantity(quantityUpdated);
+	    }  
+	    stockRepository.save(stockTrader);
+	    System.out.println("NUMINVOICE --> " + invoice.getNumInvoice()); 
+	    map.put("idinvoice", String.valueOf(invoice.getNumInvoice()));
+	    
+	    
+	    // ModelAndView modelAndView = new ModelAndView("redirect:/consumer/newinvoice?numInvoice="+invoice.getNumInvoice());
+	    // ModelAndView modelAndView = new ModelAndView("redirect:/consumer");
+	    
+        return map;
+	}
+	
 	
 	
 	
@@ -146,12 +192,12 @@ public class InvoiceService {
 			List<Invoice> listInvoices = (List<Invoice>) traderdb.getInvoice();
 
 			if(isIdInListInvoices(listInvoices, idinvoice) == true){
-				Invoice dbinvoice = invoiceRepository.findById(idinvoice).get();
+				/*Invoice dbinvoice = invoiceRepository.findById(idinvoice).get();
 				dbinvoice.setTrader(traderdb);
 				Product dbproduct = productRepository.findById(idprod).get();
-				dbinvoice.addInvoiceProduct(dbproduct, cantidad);				
+				dbinvoice.addInvoiceProduct(dbproduct, cantidad, );				
 				invoiceRepository.save(dbinvoice);
-				flag=true;
+				flag=true;*/
 			}
 		}
 

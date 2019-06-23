@@ -1,32 +1,21 @@
 package com.payless.demo.restfull;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.payless.demo.model.CareProduct;
-import com.payless.demo.model.MeatProduct;
-import com.payless.demo.model.MilkProduct;
 import com.payless.demo.model.Product;
 import com.payless.demo.model.Stock;
 import com.payless.demo.model.StockProducts;
 import com.payless.demo.model.Trader;
-import com.payless.demo.repositories.CareProductRepository;
-import com.payless.demo.repositories.MeatProductRepository;
-import com.payless.demo.repositories.MilkProductRepository;
 import com.payless.demo.repositories.ProductRepository;
-import com.payless.demo.repositories.BaseProductRepository;
 import com.payless.demo.repositories.StockRepository;
 import com.payless.demo.repositories.TraderRepository;
 

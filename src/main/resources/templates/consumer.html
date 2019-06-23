@@ -10,5 +10,102 @@
 		<h3 th:text="${userName}"></h3>
 	</div>
 
+<div th:if="${consumeAcumulated!= null}">
+<div>
+		<table border=1 >
+				
+				<tr>
+					<td>Code</td>
+					<td>Description</td>
+					<td>Quantities acumulated</td>
+				</tr>
+					
+			
+			<tr th:each="invoiceproduct,iterator : ${consumeAcumulated}" >
+				<td th:text="${invoiceproduct.value.code}"></td>
+				<td th:text="${invoiceproduct.value.description}"></td>
+				<td th:text="${invoiceproduct.key}"></td>
+				
+			</tr>
+		</table>
+</div>
+</div>
+
+
+<div th:if="${pricesAcumulated!= null}">
+<div>
+		<table border=1 >
+				
+				<tr>
+					<td>Code</td>
+					<td>Description</td>
+					<td>Value acumulated ($)</td>
+				</tr>
+					
+			
+			<tr th:each="invoiceproduct,iterator : ${pricesAcumulated}" >
+				<td th:text="${invoiceproduct.value.code}"></td>
+				<td th:text="${invoiceproduct.value.description}"></td>
+				<td th:text="${invoiceproduct.key}"></td>
+				
+			</tr>
+		</table>
+</div>
+</div>
+
+
+
+<div th:if="${placesVisited!= null}">
+<div>
+		<table border=1 >
+			<tr>
+					<td>Trader</td>
+					<td>Number of Visited</td>
+			</tr>
+			<tr th:each="trader, iterator: ${placesVisited}" >
+				<td th:text="${trader.value.nameEnterprise +' ('+trader.value.cuit+')'}"></td>
+				<td th:text="${trader.key}"></td>
+			</tr>
+		</table>
+</div>
+</div>
+
+<div th:if="${myRatings!= null}">
+<div>
+		<table border=1 >
+			<tr>
+					<td>Code</td>
+					<td>Product</td>
+					<td>Average voted</td>
+			</tr>
+			<tr th:each="trader, iterator: ${myRatings}" >
+				<td th:text="${trader.value.code}"></td>
+				<td th:text="${trader.value.description}"></td>
+				<td th:text="${trader.key}"></td>
+			</tr>
+		</table>
+</div>
+</div>
+
+
+<div th:if="${generalRatings!= null}">
+<div>
+		<table border=1 >
+			<tr>
+					<td>Code</td>
+					<td>Product</td>
+					<td>Consumers voted (average)</td>
+			</tr>
+			<tr th:each="trader, iterator: ${generalRatings}" >
+				<td th:text="${trader.value.code}"></td>
+				<td th:text="${trader.value.description}"></td>
+				<td th:text="${trader.key}"></td>
+			
+			</tr>
+		</table>
+</div>
+</div>
+
+
 </body>
 </html>

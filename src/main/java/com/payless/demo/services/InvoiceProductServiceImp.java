@@ -12,12 +12,14 @@ import com.payless.demo.repositories.InvoiceProductRepository;
 public class InvoiceProductServiceImp implements InvoiceProductService {
 
 	@Autowired
-	private InvoiceProductRepository InvoiceProductRepository;
+	private InvoiceProductRepository invoiceProductRepository;
 	
 	@Override
-	public Optional<InvoiceProduct> findById(Long arg0) {
-
-		return InvoiceProductRepository.findById(arg0);
+	public Optional<InvoiceProduct> findById(long arg0) {
+		return invoiceProductRepository.findById(arg0);
 	}
 
+
+	
+	
 }

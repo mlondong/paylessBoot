@@ -5,14 +5,11 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.payless.demo.model.Consumer;
 import com.payless.demo.model.Invoice;
-import com.payless.demo.model.Stock;
 
 
 
@@ -24,7 +21,7 @@ public interface InvoiceRepository extends CrudRepository<Invoice, Long>{
 
 	<S extends Invoice> Iterable<S> saveAll(Iterable<S> entities);
 
-	Optional<Invoice> findById(Long id);
+	Optional<Invoice> findById(long id);
 	
 	Optional<Invoice> findByNumInvoice(long numInvoice);
 	
@@ -50,5 +47,7 @@ public interface InvoiceRepository extends CrudRepository<Invoice, Long>{
 				   " inner join dbpayless.product p on p.product_id= ip.poduct_product_id  where i.num_invoice= :numInvoice",  nativeQuery = true)
 	Optional<Invoice> findInvoiceDetails(@Param("numInvoice") Long numInvoice);
 	
-
+	
+	
+	
 }

@@ -2,9 +2,6 @@ package com.payless.demo.model;
 
 import javax.persistence.Entity;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-
 @Entity
 public class MilkProduct extends Product {
 

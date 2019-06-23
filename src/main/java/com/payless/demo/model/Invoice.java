@@ -3,8 +3,6 @@ package com.payless.demo.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -67,10 +65,9 @@ public class Invoice {
 	private Collection<InvoiceProduct> products;
 	
 	
-	
-	
 	@Column(name="NUM_INVOICE", updatable=false, nullable=false, unique=true)
 	private long numInvoice;
+	
 	
 	
 	
@@ -108,8 +105,8 @@ public class Invoice {
 	 * SACADO DEL EJEMPLO DE HIBERNATE*
 	 * https://vladmihalcea.com/the-best-way-to-map-a-many-to-many-association-with-extra-columns-when-using-jpa-and-hibernate/*/
 	
-	public void addInvoiceProduct(Product p, int quantity){
-		InvoiceProduct invoideProducts = new InvoiceProduct(this, p, quantity);
+	public void addInvoiceProduct(Product p, int quantity, int price){
+		InvoiceProduct invoideProducts = new InvoiceProduct(this, p, quantity, price);
 		products.add(invoideProducts);
 	}
 	

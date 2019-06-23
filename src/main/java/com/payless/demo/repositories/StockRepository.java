@@ -3,7 +3,6 @@ package com.payless.demo.repositories;
 import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +16,7 @@ public interface StockRepository extends CrudRepository<Stock, Long>{
 
 	<S extends Stock> Iterable<S> saveAll(Iterable<S> entities);
 
-	Optional<Stock> findById(Long id);
+	Optional<Stock> findById(long id);
 
 	boolean existsById(Long id);
 

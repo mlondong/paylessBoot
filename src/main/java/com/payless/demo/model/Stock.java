@@ -2,7 +2,6 @@ package com.payless.demo.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -20,10 +19,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.assertj.core.internal.Lists;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
 
@@ -95,7 +91,18 @@ public class Stock {
 		 }
 	}
 	
-	
+
+	public StockProducts findProductInOwnStock(String code){
+		List<StockProducts> stockProductsList= (List<StockProducts>) this.stockproducts; 
+		StockProducts stproduct=null;
+		for(StockProducts sp : stockProductsList){
+			if(sp.getProduct().getCode().equals(code)){
+				stproduct= sp;
+			}
+		}
+		return stproduct;
+	}
+
 	
 	public StockProducts findProductInOwnStock(long idProduct){
 		List<StockProducts> stockProductsList= (List<StockProducts>) this.stockproducts; 
@@ -105,10 +112,8 @@ public class Stock {
 				stproduct= sp;
 			}
 		}
-		
 		return stproduct;
 	}
-	
 	
 	
 	public StockProducts findProductInOwnStock(Product product){

@@ -1,11 +1,7 @@
 package com.payless.demo.services;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.data.repository.query.Param;
-
-import com.payless.demo.model.Stock;
 import com.payless.demo.model.Trader;
 
 public interface TraderService {

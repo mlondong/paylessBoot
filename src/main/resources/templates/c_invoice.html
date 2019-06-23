@@ -9,5 +9,80 @@
 </head>
 <body>
 
+
+
+
+	<div id="div_stock" th:if="${invoice}">
+			<h2 style='font-weight: bold; background-color:#FFAE33'>Invoice Generated: </h2>
+			<table class="table-active" >
+				<tr>
+					<td style="color: red">Num Invoice:</td>
+					<td th:text="${invoice.getNumInvoice()}" align="right"></td>
+					<td></td> 
+					<td style="color: red"> Date Invoice:</td>
+					<td th:text="${invoice.getDateInvoice()}" align="right"></td>
+				</tr>
+				<tr>
+					<td style="color: red">Consumer:</td> 
+					<td th:text="${invoice.consumer.firstName + ' ' +invoice.consumer.lastName}" align="right"></td>
+					<td></td>
+					<td style="color: red">DNI:</td> 
+					<td th:text="${invoice.consumer.dni}" align="right"></td>
+				</tr>
+				<tr>	
+					<td style="color: red">Trader:</td>
+					<td th:text="${invoice.trader.nameEnterprise +' '+ invoice.trader.cuit}" align="right"></td>
+					<td></td>
+					<td style="color: red">Email:</td>					
+					<td th:text="${invoice.trader.email}" align="right"></td>
+				</tr>
+			</table>
+	</div>
+<br>
+
+<div th:if="${not #lists.isEmpty(invoice.getProducts())}">
+		<table class="table" style="border-collapse: collapse" border=1>
+			<thead class="thead-dark">
+				<tr>
+					<th>Code</th>
+					<th>Description</th>
+					<th>Branch</th>
+					<th>Price</th>
+					<th>Units</th>
+					<th>Subtotal</th>
+				</tr>
+			</thead>
+			<tr th:each="invoiceProduct,index : ${invoice.getProducts()}" th:with="total=${total}">
+				<td th:text="${invoiceProduct.poduct.code}"></td>
+				<td th:text="${invoiceProduct.poduct.description}"></td>
+				<td th:text="${invoiceProduct.poduct.producer}"></td>
+				<td th:text="${invoiceProduct.pricebuy}"></td>
+				<td th:text="${invoiceProduct.quantity}"></td>
+				<td	th:text="${invoiceProduct.quantity} * ${invoiceProduct.pricebuy}"></td>
+				
+			</tr>
+			<tr>
+				<th></th>
+				<th></th>
+				<th class="table-primary" scope="col"><h6>Totales</h6></th>
+				<th class="table-primary" scope="col"
+					th:text="${#aggregates.sum(invoice.getProducts().![pricebuy])}"></th>
+				<th class="table-primary"
+					th:text="${#aggregates.sum(invoice.getProducts().![quantity])}"></th>
+				<th class="table-primary"
+					th:text="${#aggregates.sum(invoice.getProducts().![quantity * pricebuy])}"></th>
+			
+			</tr>
+		</table>
+	</div>
+
+
+
+
+
+
+
+
+
 </body>
 </html>

@@ -186,7 +186,6 @@ public class AdminController {
 		return "registerinvoice :: #zone";
 	}
 
-	@SuppressWarnings("null")
 	@RequestMapping(path="/traders",method={RequestMethod.POST, RequestMethod.GET})
 	public String getTraderInZone(@RequestParam("idzone") int idZone,  Model model){
 	
@@ -246,7 +245,6 @@ public class AdminController {
 			return "searchconsumer";
     }
 	
-	@SuppressWarnings("unused")
 	@RequestMapping(path="/consumer/search" , method={RequestMethod.POST, RequestMethod.GET})
 	public String searchConsumer(@RequestParam(value="firstName", required=false, defaultValue="" ) String firstName ,
 								 @RequestParam(value="dni", required=false, defaultValue="0") Long dni, Model model){
@@ -702,7 +700,6 @@ public class AdminController {
 			modelAndView.addObject("Error", "Consumer with dni "+dni+ " is not find it!");
 		}else{
 		
-				@SuppressWarnings("unused")
 				Trader traderdb     = traderServiceImp.getTrader(idTrader);
 				Invoice inv = new  Invoice(traderdb, consumerdb);
 				invoicetServiceImp.save(inv);	
@@ -723,10 +720,11 @@ public class AdminController {
 			modelAndView.addObject("Error", "Invoice not generated ,try in a moment!!!");
 		}else{
 				modelAndView = new ModelAndView("addproductininvoice");
-				Stock stockdb = inv.get().getTrader().getStock();
 				modelAndView.addObject("invoice", inv.get()); 
+				
+				Stock stockdb = inv.get().getTrader().getStock();
 				modelAndView.addObject("stockproducts", stockdb.matchInvoiceStockInTrader(inv.get()));
-				modelAndView.addObject("currentstock", stockdb.getStockproducts());
+				//modelAndView.addObject("currentstock", stockdb.getStockproducts());
 				
 				
 				
@@ -758,7 +756,7 @@ public class AdminController {
 				stockProductDB.setQuantity(newQuantity);
 			
 				Product productdb = productServiceImp.findById(idProduct).get();	
-				invoicedb.get().addInvoiceProduct(productdb, cant);
+				invoicedb.get().addInvoiceProduct(productdb, cant, stockProductDB.getSalesprice());
 				invoicetServiceImp.save(invoicedb.get());
 				
 			    modelAndView = new ModelAndView("addproductininvoice");
@@ -802,7 +800,6 @@ public class AdminController {
 	
 	
 	
-	@SuppressWarnings("deprecation")
 	@RequestMapping(path="/products/update" , method={RequestMethod.POST, RequestMethod.GET})
 	public String updateProductDB(@RequestParam("id") long id, @RequestParam("code") String code, @RequestParam("description") String description,
 			@RequestParam("producer") String producer, @RequestParam("priceUnit") Float priceUnit , @RequestParam(name="typeAnimal", required=false) String typeAnimal,

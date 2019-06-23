@@ -264,7 +264,8 @@ function reload() {
 
 	<p></p>
 
-
+	
+	
 	<div th:if="${not #lists.isEmpty(invoice.getProducts())}">
 		<table class="table" style="border-collapse: collapse" border=1>
 			<thead class="thead-dark">
@@ -283,9 +284,9 @@ function reload() {
 				<td th:text="${invoiceProduct.poduct.code}"></td>
 				<td th:text="${invoiceProduct.poduct.description}"></td>
 				<td th:text="${invoiceProduct.poduct.producer}"></td>
-				<td th:text="${invoiceProduct.poduct.priceUnit}"></td>
+				<td th:text="${invoiceProduct.pricebuy}"></td>
 				<td th:text="${invoiceProduct.quantity}"></td>
-				<td	th:text="${invoiceProduct.quantity} * ${invoiceProduct.poduct.priceUnit}"></td>
+				<td	th:text="${invoiceProduct.quantity} * ${invoiceProduct.pricebuy}"></td>
 				<td>
                     <a data-toggle="modal" 
                        data-target="#umodal" 
@@ -310,11 +311,11 @@ function reload() {
 				<th></th>
 				<th class="table-primary" scope="col"><h6>Totales</h6></th>
 				<th class="table-primary" scope="col"
-					th:text="${#aggregates.sum(invoice.getProducts().![poduct.priceUnit])}"></th>
+					th:text="${#aggregates.sum(invoice.getProducts().![pricebuy])}"></th>
 				<th class="table-primary"
 					th:text="${#aggregates.sum(invoice.getProducts().![quantity])}"></th>
 				<th class="table-primary"
-					th:text="${#aggregates.sum(invoice.getProducts().![quantity * poduct.priceUnit])}"></th>
+					th:text="${#aggregates.sum(invoice.getProducts().![quantity * pricebuy])}"></th>
 				<th class="table-primary"></th>
 				<th class="table-primary"></th>
 
@@ -378,38 +379,7 @@ function reload() {
 	
 
 
-	<p></p>
-
-	<div class="table-success">
-		<p>
-		<h3>Current Stock</h3>
-		</p>
-	</div>
-
-	<table border=1 class="table"
-		style="border-collapse: collapse; overflow: scroll;">
-		<thead>
-			<tr class="table-success">
-				<th>Code</th>
-				<th>Description</th>
-				<th>Branch</th>
-				<th>Price</th>
-				<th>Register date</th>
-				<th>Quantity in Stock</th>
-			</tr>
-		</thead>
-
-		<tr th:each="currentstock : ${currentstock}">
-			<td th:text="${currentstock.product.code}"></td>
-			<td th:text="${currentstock.product.description}"></td>
-			<td th:text="${currentstock.product.producer}"></td>
-			<td th:text="${currentstock.product.priceUnit}"></td>
-			<td th:text="${currentstock.date}"></td>
-			<td th:text="${currentstock.quantity}">
-			</td>
-		</tr>
-	</table>
-
+	
 
 
 

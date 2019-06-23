@@ -10,4 +10,5 @@ import com.payless.demo.model.Rating;
 @Transactional
 public interface RatingRepository extends CrudRepository<Rating, Long> {
 
+	
 }
