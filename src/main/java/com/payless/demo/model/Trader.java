@@ -3,7 +3,10 @@ package com.payless.demo.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -178,8 +181,22 @@ public class Trader extends Usser {
 		this.email = email;
 	}
 
+	public Set<Consumer> getMyconsumers(){
+		Set<Consumer> consumer = new HashSet<>();
+		consumer = this.getInvoice().stream()
+								.map(d-> d.getConsumer())
+								.collect(Collectors.toSet());
+		return consumer;
+	}
 	
-	
+	public List<Invoice> getInvoiceByConsumer(long idConsumer) {
+		Long id= Long.valueOf(idConsumer);
+		List<Invoice>invoice = this.getInvoice().stream()
+										.filter(d-> id.equals(d.getConsumer().getId()))
+										.collect(Collectors.toList());
+		return invoice;
+	}
+
 	
 	
 	@Override
@@ -187,6 +204,7 @@ public class Trader extends Usser {
 		return "Trader [cuit=" + cuit + ", score=" + score + ", stock=" + stock + ", address=" + address + ", invoice="
 				+ invoice + "]";
 	}
+
 
 
 

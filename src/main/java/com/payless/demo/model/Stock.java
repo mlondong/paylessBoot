@@ -3,8 +3,11 @@ package com.payless.demo.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,150 +24,158 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-
-
 /**
- * @author root 
- * ESTA CLASE ES UN COMPOSITE DE PRODUCT QUE ES USADA POR EL TRADER ARA CREAR SU STOCK DE DIFERENTES
- * PRODUCTOS, ADICIONALMENTE USA LA ESTRATEGIA DE MANY TO MANY CONTRA PRODUCT GENERANDO UNA TABLA INTERMEDIA LLAMADA 
- * STOCKPRODUCTS QUE HACE US DE OTRA TABLA DE IDS LLAMADA STOCKPROCTID
- * PERO ABAJO HAY UN CAMBIO EN LOS METODOS DDE ADDPRODUCT Y REMOVEPRODUCT 
- *  */
+ * @author root ESTA CLASE ES UN COMPOSITE DE PRODUCT QUE ES USADA POR EL TRADER
+ *         ARA CREAR SU STOCK DE DIFERENTES PRODUCTOS, ADICIONALMENTE USA LA
+ *         ESTRATEGIA DE MANY TO MANY CONTRA PRODUCT GENERANDO UNA TABLA
+ *         INTERMEDIA LLAMADA STOCKPRODUCTS QUE HACE US DE OTRA TABLA DE IDS
+ *         LLAMADA STOCKPROCTID PERO ABAJO HAY UN CAMBIO EN LOS METODOS DDE
+ *         ADDPRODUCT Y REMOVEPRODUCT
+ */
 
 @Entity
 public class Stock {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="STOCK_ID", nullable=false, unique=true )
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "STOCK_ID", nullable = false, unique = true)
 	private long id;
-	
-	
+
 	@Temporal(TemporalType.DATE)
-	@Column(name="DATE_STOCK", nullable=false)
+	@Column(name = "DATE_STOCK", nullable = false)
 	private Date dateStock;
-	
-	
-	/*ESTA ES UNA ESTRATEGIA DE MANY TO MANY  PARTIR DE UN OBJETO STOCKPRODUCID QUECONTINE AMBOS IDS DE STOCK Y DE PRODUCTS*/
-	@OneToMany(mappedBy="stock", 
-			   cascade=CascadeType.ALL,
-			   orphanRemoval=true)
+
+	/*
+	 * ESTA ES UNA ESTRATEGIA DE MANY TO MANY PARTIR DE UN OBJETO STOCKPRODUCID
+	 * QUECONTINE AMBOS IDS DE STOCK Y DE PRODUCTS
+	 */
+	@OneToMany(mappedBy = "stock", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonBackReference
 	private Collection<StockProducts> stockproducts;
-	
-	
-	@OneToOne(fetch = FetchType.LAZY,orphanRemoval=true,optional=false)
-	@JoinColumn(name = "USER_ID")	
-	@JsonBackReference//esto evita problemas en el json ver el ref en trader
-	private Trader trader;
-	
 
-	
-	
-	
-	
-	public Stock(){
+	@OneToOne(fetch = FetchType.LAZY, orphanRemoval = true, optional = false)
+	@JoinColumn(name = "USER_ID")
+	@JsonBackReference // esto evita problemas en el json ver el ref en trader
+	private Trader trader;
+
+	public Stock() {
 		this.stockproducts = new ArrayList<StockProducts>();
-		this.dateStock= new Date();
+		this.dateStock = new Date();
 	}
-	
-		
 
 	/**********************************************************************************************************************************/
-	/*metodos operacionales*/
-	
-	/*ESTE METODO REEMPLAZA A LA COLLECION DE StockProducts EN LA CLASE PRODUCT,  DEJANDOLO SINGLE SIDE BIDIRECCIONAL, asi mismo
-	 * USA EL METODO REMOVE ABAJO DESCRITO PARA REMOVER LOS STOCKPRODUCTS CON SU PRODUCTO ejemplo tomado de
-	 * https://vladmihalcea.com/the-best-way-to-map-a-many-to-many-association-with-extra-columns-when-using-jpa-and-hibernate/*/
-	
-	public void addProduct(Product p, int quantity, int salesprice){
-		StockProducts stockproducs = new StockProducts(this,p, quantity, salesprice);
+	/* metodos operacionales */
+
+	/*
+	 * ESTE METODO REEMPLAZA A LA COLLECION DE StockProducts EN LA CLASE PRODUCT,
+	 * DEJANDOLO SINGLE SIDE BIDIRECCIONAL, asi mismo USA EL METODO REMOVE ABAJO
+	 * DESCRITO PARA REMOVER LOS STOCKPRODUCTS CON SU PRODUCTO ejemplo tomado de
+	 * https://vladmihalcea.com/the-best-way-to-map-a-many-to-many-association-with-
+	 * extra-columns-when-using-jpa-and-hibernate/
+	 */
+
+	public void addProduct(Product p, int quantity, int salesprice) {
+		StockProducts stockproducs = new StockProducts(this, p, quantity, salesprice);
 		stockproducts.add(stockproducs);
 	}
-	
-	public void removeProduct(Product p){
-		 for (Iterator<StockProducts> iterator = stockproducts.iterator(); iterator.hasNext(); ) {
-			     StockProducts stockproducs = iterator.next();
-		        if (stockproducs.getProduct().equals(this) && stockproducs.getStock().equals(p)) {
-		            iterator.remove();
-		        }
-		 }
-	}
-	
 
-	public StockProducts findProductInOwnStock(String code){
-		List<StockProducts> stockProductsList= (List<StockProducts>) this.stockproducts; 
-		StockProducts stproduct=null;
-		for(StockProducts sp : stockProductsList){
-			if(sp.getProduct().getCode().equals(code)){
-				stproduct= sp;
+	public void removeProduct(Product p) {
+		for (Iterator<StockProducts> iterator = stockproducts.iterator(); iterator.hasNext();) {
+			StockProducts stockproducs = iterator.next();
+
+			if (stockproducs.getProduct().equals(p)) {
+				System.out.println("ecnontrado" + stockproducs.getProduct());
+				iterator.remove();
+			}
+		}
+	}
+
+	public StockProducts findProductInOwnStock(String code) {
+		List<StockProducts> stockProductsList = (List<StockProducts>) this.stockproducts;
+		StockProducts stproduct = null;
+		for (StockProducts sp : stockProductsList) {
+			if (sp.getProduct().getCode().equals(code)) {
+				stproduct = sp;
 			}
 		}
 		return stproduct;
 	}
 
-	
-	public StockProducts findProductInOwnStock(long idProduct){
-		List<StockProducts> stockProductsList= (List<StockProducts>) this.stockproducts; 
-		StockProducts stproduct=null;
-		for(StockProducts sp : stockProductsList){
-			if(sp.getProduct().getId()==idProduct){
-				stproduct= sp;
+	public StockProducts findProductInOwnStock(long idProduct) {
+		List<StockProducts> stockProductsList = (List<StockProducts>) this.stockproducts;
+		StockProducts stproduct = null;
+		for (StockProducts sp : stockProductsList) {
+			if (sp.getProduct().getId() == idProduct) {
+				stproduct = sp;
 			}
 		}
 		return stproduct;
 	}
-	
-	
-	public StockProducts findProductInOwnStock(Product product){
-		List<StockProducts> stockProductsList= (List<StockProducts>) this.stockproducts; 
-		StockProducts stproduct=null;
-		for(StockProducts stp : stockProductsList ){
-			if(stp.getProduct().getCode().equals(product.getCode())){
-				stproduct=stp;  
+
+	public StockProducts findProductInOwnStock(Product product) {
+		List<StockProducts> stockProductsList = (List<StockProducts>) this.stockproducts;
+		StockProducts stproduct = null;
+		for (StockProducts stp : stockProductsList) {
+			if (stp.getProduct().getCode().equals(product.getCode())) {
+				stproduct = stp;
 				break;
 			}
 		}
-		
+
 		return stproduct;
 	}
-	
-	
-	
-	
-	
-	public List<StockProducts> matchInvoiceStockInTrader(Invoice invoice){
-		
-		List<StockProducts> newStockView = new  ArrayList<>();	
+
+	public List<StockProducts> matchInvoiceStockInTrader(Invoice invoice) {
+
+		List<StockProducts> newStockView = new ArrayList<>();
 		List<StockProducts> productsInStock = (List<StockProducts>) this.stockproducts;
-		List<InvoiceProduct>  prodInInvoice = (List<InvoiceProduct>) invoice.getProducts();
-		boolean flag=true;
-		
-		
-		for(StockProducts sp : productsInStock){
-			for(InvoiceProduct ip : prodInInvoice){
-					if( ip.getPoduct().getCode() == sp.getProduct().getCode() ){
-						flag=false;
-					}
+		List<InvoiceProduct> prodInInvoice = (List<InvoiceProduct>) invoice.getProducts();
+		boolean flag = true;
+
+		for (StockProducts sp : productsInStock) {
+			for (InvoiceProduct ip : prodInInvoice) {
+				if (ip.getPoduct().getCode() == sp.getProduct().getCode()) {
+					flag = false;
+				}
 			}
-			
-			if(flag==true){
+
+			if (flag == true) {
 				newStockView.add(sp);
 			}
 
-			flag=true;
-		}	
+			flag = true;
+		}
 
-		
 		return newStockView;
+	}
+
+
+	public Set<Product> getDiferencialWithMyStock(Iterable<Product> allProductsVendor){
+		Set<Product> producsNotIncluded = new HashSet<>();
+		List<Long> idsProductsInMyStock=   this.getStockproducts().stream().map(d-> d.getProduct().getId()).collect(Collectors.toList());
+	
+		for(Product productVendor: allProductsVendor) {
+			if(this.getInvolved(productVendor,idsProductsInMyStock)==true) {
+				producsNotIncluded.add(productVendor);
+			}
+		}	
+		return producsNotIncluded;
 	}
 	
 	
-	
+	private boolean getInvolved(Product productVendor, List<Long> idsProductsInMyStock) {
+		boolean flag=true;
+		for(Long id: idsProductsInMyStock) {
+			if(id.equals(productVendor.getId())) {
+				flag=false;
+			}
+		}
+		return flag;
+	}
+
 	/**********************************************************************************************************************************/
-	/*metodos setter and getter*/
-	
-		
+	/* metodos setter and getter */
+
 	public long getId() {
 		return id;
 	}
@@ -189,26 +200,12 @@ public class Stock {
 		this.dateStock = dateStock;
 	}
 
-
-
 	public Collection<StockProducts> getStockproducts() {
 		return stockproducts;
 	}
-
-
 
 	public void setStockproducts(Collection<StockProducts> stockproducts) {
 		this.stockproducts = stockproducts;
 	}
 
-
-
-
-	
-
-
-		
-	
-		
-	
 }

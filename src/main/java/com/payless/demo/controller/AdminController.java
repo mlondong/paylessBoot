@@ -96,9 +96,11 @@ public class AdminController {
 			model.addAttribute("errors", result.getFieldError() );	
 			return "redirect:/admin/main/formupdate/"+id;
 		}else{
+			Passgenerator p = new Passgenerator(4);
+			String newpass= p.generate(trader.getPassword());
 			Trader taderdb= traderServiceImp.getTrader(id);
 			taderdb.setName(trader.getName());
-			taderdb.setPassword(trader.getPassword());
+			taderdb.setPassword(newpass);
 			taderdb.setState(trader.isState());
 			taderdb.setCuit(trader.getCuit());
 			taderdb.setScore(trader.getScore());
