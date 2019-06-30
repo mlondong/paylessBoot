@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+<title>Payless-Trader</title>
+<th:block th:include="layout/headerTrader"></th:block>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.js"> </script>
+<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"> </script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $("#city").change(function(){
+	  getZones(); 
+  });
+  
+  $("#btn-udpate").click(function(){
+	  
+		var flag=true;
+		var email= $('#email').val();
+    	var nameEnterprise = $('#nameEnterprise').val();
+    	var cuit = parseInt( $('#cuit').val() );
+    	var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+    	
+    	
+    	if(email.length === 0  || nameEnterprise.length === 0  || cuit.length === 0  ){
+    		flag=false;
+	  		$('#span-error').after('<p>Please full fill the fields.</p>')
+		}else if(isNaN(cuit)){
+    		flag=false;
+	  		$('#span-error').after('<p>Please input numbers only.</p>')
+		}else if(!emailReg.test(email)){
+			flag=false;
+			$('#span-error').after('<p>Please input corrent email.</p>')
+		}
+    	
+    	if(flag==true){
+    		$('#frm-update').submit();
+    	}
+    	
+	  
+  });
+  
+  $("#btn-login").click(function(){
+	  
+		var flag=true;
+		var username= $('#username').val();
+  		var password= $('#pass').val();
+  	
+  	
+  	if(password.length === 0  || username.length === 0  ){
+  		flag=false;
+	  	$('#span-error2').after('<p>Please full fill the fields.</p>')
+	}
+  	
+  	if(flag==true){
+  		$('#frm-login').submit();
+  	}
+   });
+
+  
+
+  
+  $("#btn-address").click(function(){
+	  
+		var flag=true;
+		var description= $('#description').val();
+		var city= $('#city').val();
+		var zone= $('#zone').val();
+		
+	if(description.length === 0 ){
+		flag=false;
+	  	$('#span-error3').after('<p>Please full fill the fields.</p>')
+	}else if(city==0){
+		flag=false;
+	  	$('#span-error3').after('<p>Please select a city.</p>')
+	}else if(zone==0){
+		flag=false;
+	  	$('#span-error3').after('<p>Please select a zone.</p>')
+	}
+	
+	
+	if(flag==true){
+		$('#frm-address').submit();
+	}
+ });
+
+  
+  
+});
+
+
+function getZones() {
+    var url = "/trader/address/zones?idcity=";
+    if ($('#city').val() != 0) {
+        url = url + $('#city').val();
+  	    $('#zone').load(url);  //load fragment and replace content
+    }
+}
+
+
+</script>
+</head>
+
+
+<body>
+
+	<div id="div_reg"  th:if="${ not #lists.isEmpty(trader)}" >
+		<form action="/trader/upgeneral" method="get" id="frm-update" >
+				<table border=0 style="display: table;  margin: 0 auto;position: absolute; top:20%; left:3%;">
+					<tr>
+						<td colspan=2 style='font-weight: bold; background-color:#FFAE33'><h5>General information</h5></td>
+					</tr>
+
+					<tr>
+						<td><label>Firts Cuit:</label></td>
+						<td>
+							<input type="text" id="cuit"  name="cuit" th:value="${trader.cuit}" />
+						</td>
+					<tr>
+					<tr>
+						<td><label>Email:</label></td>
+						<td><input type="text" id="email" name="email" th:value="${trader.email}" /></td>
+					</tr>
+					<tr>
+						<td><label>Name Enterprise</label></td>
+						<td><input type="text" id="nameEnterprise"	 name="nameEnterprise" th:value="${trader.nameEnterprise}" /></td>
+					</tr>
+					<tr>
+						<td><button type="button" id="btn-udpate" class="btn btn-primary">Update My General Information</button></td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<span th:if="${Error}" th:text="${Error}"></span> 
+							<span id="span-error"></span> 
+						</td>
+					</tr>
+				</table>
+		</form>		
+		
+		</div>
+
+
+
+		<br>
+
+
+	<div id="div_reg" class="form-group" th:if="${ not #lists.isEmpty(trader)}" >
+		<form action="/trader/uplogin" method="get" id="frm-login" >
+		<table border=0 style="display: table;  margin: 0 auto;position: absolute; top:50%; left:3%;">
+			<tr>
+				<td colspan=2 style='font-weight: bold; background-color:#FFAE33'><h5>Login Information</h5></td>
+			</tr>
+			<tr>
+				<td><label>UserName:</label></td>
+				<td><input type="text" id="username" name="username" 	th:value="${trader.getName()}" /></td>
+			</tr>
+			<tr>
+				<td><label>Actual Password:</label></td>
+				<td><input type="password" disabled="disabled"	th:value="${trader.getPassword()}" /></td>
+			<tr>
+			<tr>
+				<td><label>New Password:</label></td>
+				<td><input type="password" id="pass"  name="pass"  /></td>
+			</tr>
+			<tr>
+				<td><button type="button" id="btn-login" class="btn btn-primary">Update My Login Information</button></td>
+			</tr>
+			<tr>
+						<td colspan="2">
+						<span th:if="${Error}" th:text="${Error}"></span> 
+						<span id="span-error2"></span> 
+					</td>		
+			</tr>	
+		</table>
+	</form>
+	</div>
+	
+	<br>
+
+	
+	  
+	<div id="div_reg" class="form-group" th:if="${ not #lists.isEmpty(trader)}" >
+		<form action="/trader/newaddress" method="get" id="frm-address" >
+		<table border=0 style="display: table;  margin: 0 auto;position: absolute; top:20%; left:40%;">
+			<tr>
+				<td colspan=2 style='font-weight: bold; background-color:#FFAE33'><h5>Add Another Address</h5></td>
+			</tr>
+				<tr>
+					<td>Description:</td>
+					<td><input type="text"  name="description"	id="description" /></td>
+				</tr>
+				<tr>
+					<td><label>Select City</label></td>
+						<td>
+						<select id="city" name="city" class="custom-select">
+                            <option value="0" >Select an City</option>
+                            <option th:each="city : ${city}"
+                                    th:value="${city.id}"
+                                    th:text="${city.name}">
+                            </option>
+                       	</select>
+                       	</td>
+				</tr>
+				<tr>
+					<td>Zone:</td>
+					<td>
+						<select id="zone" name="zone" class="custom-select">
+                            <option value="0">Select an Zone</option>
+                            <option th:each="zone : ${zone}" 
+                            	 	th:value="${zone.id}"
+                                  	th:text="${zone.name}"> 
+                           	</option>
+                        </select>
+                    </td>
+				</tr>
+			
+				<tr>
+					<td><button type="button" id="btn-address" class="btn btn-primary">Add another Address</button></td>
+				</tr>
+				<tr>
+				<td colspan="2">
+					<span th:if="${Error}" th:text="${Error}"></span> 
+					<span id="span-error3"></span> 
+				</td>
+				</tr>
+			</table>
+	
+		</form>	
+	</div>
+
+	<div id="div_reg" class="form-group" th:if="${ not #lists.isEmpty(trader.address)}" >
+		<table border=1 style="display: table;  margin: 0 auto; position: absolute; top:110%; top:50%; left:40%; width:50%">
+			<tr>
+				<td colspan=4 style='font-weight: bold; background-color:#FFAE33'><h5>List of Address</h5></td>
+			</tr>
+			<tr>
+				<td style='font-weight: bold; color: white ; background-color:black'><h5>Description</h5></td>
+				<td style='font-weight: bold; color: white ; background-color:black'><h5>City</h5></td>
+				<td style='font-weight: bold; color: white ; background-color:black'><h5>Zone</h5></td>
+				<td style='font-weight: bold; color: white ; background-color:black'></td>
+				
+			</tr>
+			
+			<tr th:each="addres,index : ${trader.address}">
+				<td th:text="${addres.description}"></td>
+				<td th:text="${addres.city.name}"></td>
+				<td th:text="${addres.zone.name}"></td>
+				<td>
+					<a th:href="@{/trader/delete-address?indice={indice}  (indice=${index.index}) }">
+					<img src="/images/eliminar-ico.png" height="25px" width="25px" alt="Delete" title="Delete Address"/>
+					</a>
+				</td> 
+			</tr>
+		</table>
+	</div>
+
+</body>
+</html>

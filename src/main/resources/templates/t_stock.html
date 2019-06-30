@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+<title>Payless-Trader</title>
+<th:block th:include="layout/headerTrader"></th:block>
+<script type="text/javascript"
+	src="http://code.jquery.com/jquery-1.10.2.js">
+	
+</script>
+<script type="text/javascript"
+	src="http://code.jquery.com/ui/1.10.3/jquery-ui.js">
+	
+</script>
+<link rel="stylesheet"
+	href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+</head>
+
+<script th:inline="javascript">
+function closeModal(name) {
+    $(name).modal('toggle');
+	setTimeout(reload, 300);	
+}
+
+function showEditModal(idprod, cant) {
+	var url = "/invoice/getInvoiceProduct?idprod="+idprod;
+	 $.getJSON(url, {}, function (data) {
+		    $('#update-idprod').val(idprod);
+			$('#update-quantity').val(cant);
+		    $('#update-code').text(data.code);
+		    $('#update-branch').text(data.producer);
+		    $('#update-description').text(data.description);
+	 });
+}
+
+
+$(document).ready(function () { 
+
+
+	$('#save-product').on('click', function(){
+		var newCant = parseInt($('#update-quantity').val());
+		var flag2=true;
+		
+		if(newCant==0){
+			flag2=false;
+	  		$('#span-update').after('Please insert a correct value.')
+		}else if(isNaN(newCant)){
+			flag2=false;
+	  		$('#span-update').after('Please input numbers only.')
+		}else if(newCant<0){
+			flag2=false;
+	  		$('#span-update').after('Please input only positifs numbers.')
+		}
+	
+		if(flag2==true){
+			$('#edit-form').submit();
+		}
+	});		
+	
+	$('#btn-add').on('click', function(){
+		var quantity= $('#quantity').val();
+    	var price= $('#salesprice').val();
+    	var flag=true;
+    	
+    	if(isNaN(quantity)){
+    		flag=false;
+	  		$('#span-error').after('<p>Please input numbers only.</p>')
+		}else if(isNaN(price)){
+	 		flag=false;
+	  		$('#span-error').after('<p>Please input numbers only.</p>')
+		}
+    	
+    	alert("okkk");
+    	
+    	if(flag==true){
+			$('#frm-add').submit();
+    	}
+    	
+	});		
+		
+	
+	
+});	
+
+
+
+</script>
+
+
+
+
+<body>
+
+
+
+<!--MODAL FOR UPDATE  -->
+<div th:id="umodal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Update Product</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-form" role="form" action="/trader/updateprod" method="GET">
+                    <input id="update-idprod" name="update-idprod" type="hidden" />
+                    <fieldset class="form-group">
+                        <table width="100%">
+                        <tr>
+                        	<td>Code: </td>
+                        	<td><label id="update-code"></label></td>
+                       </tr>
+                       <tr>
+                        	<td>Description: </td>
+                        	<td><label  id="update-description"></label></td>
+                       </tr>
+                       <tr>
+                        	<td>Branch: </td>
+                        	<td><label  id="update-branch" name="update-branch"></label></td>
+                        </tr>
+                       <tr>
+                        	<td>Quantity: </td>
+                        	<td>
+                        		<input type="text" id="update-quantity" name="update-quantity">
+                        	</td>
+                        </tr>
+                        </table>
+                   		<div  id="span-update"></div>
+                    </fieldset>
+                    
+                    <div class="form-group">
+                        <button class="btn btn-success" id="save-product" type="button">Save</button>
+                		<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            	    </div>
+            	    
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+
+
+	<div id="div_search">
+		<h2 style='font-weight: bold; background-color: #FFAE33'>Information Products</h2>
+	</div>
+
+	<div th:if="${not #lists.isEmpty(stock)}">
+
+		<table border=1  style="display: table;  margin: 0 auto;position: absolute; top:25%; left:2%; width:40%">
+			<thead>
+				<tr>
+						<td colspan=8 style='font-weight: bold; background-color:#FFAE33'><h5>My Stock</h5></td>
+				</tr>
+				<tr>
+					<th><h6>#</h6></th>
+					<th><h6>Date</h6></th>
+					<th><h6>Product Code</h6></th>
+					<th><h6>Description</h6></th>
+					<th>Units</th>
+					<th>Sales Price</th>
+					<th></th>
+					<th></th>
+					
+				</tr>
+			</thead>
+
+			<tr th:each="products, index : ${stock.stockproducts}">
+				<td th:text="${index.index+1}"></td>
+				<td th:text="${products.date}"></td>
+				<td th:text="${products.product.code}"></td>
+				<td th:text="${products.product.description}"></td>
+				<td th:text="${products.quantity}"></td>
+				<td th:text="${'$ '+ products.salesprice}"></td>
+				
+				<td><a data-toggle="modal" data-target="#umodal"
+					th:onclick="'showEditModal(\''+${products.product.id}+ '\' , \''+${products.quantity}+ '\');'">
+						<img src="/images/see-ico-yellow.png" height="30px" width="30px"
+						alt="Update" title="See details" />
+				</a></td>
+				<td><a
+					    th:href="@{/trader/deleteproduct/{idprod} (idprod=${products.product.id}) }">
+						<img src="/images/eliminar-ico.png" height="30px" width="30px"
+						alt="Delete" title="Delete Product" />
+				</a></td>
+
+			</tr>
+		</table>
+	</div>
+<br>
+	<div id="div_stock" th:if="${products}">
+		<table  border=1  style="display: table;  margin: 0 auto;position: absolute; top:25%; left:47%;">
+			<thead>
+				<tr>
+						<td colspan=8 style='font-weight: bold; background-color:#AED6F1'><h5>General Vendor Stock for all Traders (select your products)</h5></td>
+				</tr>
+			
+			<tr>
+				<th>Id</th>
+				<th>Code</th>
+				<th>Description</th>
+				<th>Branch</th>
+				<th>Price in vendor</th>
+				<th colspan="7">Add Values and Quantity in Product</th>
+				
+			</tr>
+			</thead>
+
+			<tr th:each="product : ${products}">
+				<td th:text="${product.id}"></td>
+				<td th:text="${product.code}"></td>
+				<td th:text="${product.description}"></td>
+				<td th:text="${product.producer}"></td>
+				<td th:text="${product.priceUnit}"></td>
+			
+				<td  align="left">
+						<div>
+						<form action="/trader/addproductinmystock" id="frm-add" method="get">
+							Units
+							<input type="hidden" th:value="${product.id}" id="idproduct" name="idproduct"/>
+							<input type="text" size=5  name="quantity" id="quantity" />
+							Sales Price
+							<input type="text" size=5  name="salesprice" id="salesprice" />
+							<button type="button" id="btn-add" name="btn-add" class="btn btn-success">Add</button>							
+						</form>
+						</div>
+				</td>
+			</tr>
+			<tr><td colspan="8">
+					<span id="span-error"></span> 
+			</td></tr>
+		</table>
+	</div>
+
+
+</body>
+</html>
