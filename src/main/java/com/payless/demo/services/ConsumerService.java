@@ -2,6 +2,9 @@ package com.payless.demo.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
+import org.springframework.data.repository.query.Param;
 
 import com.payless.demo.model.Consumer;
 
@@ -34,6 +37,7 @@ public interface ConsumerService {
 	void delete(Consumer entity);
 	void deleteAll();
 	
-	
+	List<Consumer> queryByParametersCityZone(Set<Long> cities, Set<Long> zones);
+
 		
 }

@@ -1,5 +1,9 @@
 package com.payless.demo.controller;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -49,6 +53,25 @@ public class AppController {
         Trader trader = traderServiceImp.queryFindByUserName(auth.getName());
         modelAndView.addObject("userName", "Welcome " + trader.getNameEnterprise() + " (" + trader.getCuit() + ")");
         modelAndView.addObject("trader", trader);
+        /*get my best sales products*/
+        modelAndView.addObject("traderAcumulated", trader.getMyBestMySalesProducts());
+        /*get my ratings*/
+        modelAndView.addObject("myRatings",  trader.getMyRatings() );
+        /*more visied*/
+        modelAndView.addObject("moreVisited",  trader.getVisited()  );
+        /*more visied*/
+        modelAndView.addObject("myneighborhood",  trader.getAddress()  );
+        /*clients in my zones*/
+        Set<Long> cities= trader.getAddress().stream().map(d-> d.getCity().getId()).collect(Collectors.toSet());
+        Set<Long> zones= trader.getAddress().stream().map(d-> d.getZone().getId()).collect(Collectors.toSet());
+        List<Consumer> consumersInMyZone=  consumerServiceImp.queryByParametersCityZone(cities, zones); 
+	    modelAndView.addObject("customersinmyzone",  consumersInMyZone );
+	    /*competitors in my zones*/
+	    List<Trader> tradersInMyZone=  traderServiceImp.queryByParametersCityZone(cities, zones); 
+	    modelAndView.addObject("competitorsinmyzone",  tradersInMyZone );
+	    
+        
+        
         return modelAndView;
 	}
 	

@@ -12,10 +12,14 @@
 
 <div th:if="${consumeAcumulated!= null}">
 <div>
-		<table border=1 >
-				
+		<table border=1 style="display: table;  margin: 0 auto;position: absolute; top:22%; left:1%;">
 				<tr>
+					<td colspan=4 style='font-weight: bold; background-color:#AED6F1'><h5>My History Products acumulated (Und.)</h5></td>
+				</tr>
+				
+				<tr style='font-weight: bold; background-color:#CCD1D1'>
 					<td>Code</td>
+					<td>Branch</td>
 					<td>Description</td>
 					<td>Quantities acumulated</td>
 				</tr>
@@ -23,8 +27,9 @@
 			
 			<tr th:each="invoiceproduct,iterator : ${consumeAcumulated}" >
 				<td th:text="${invoiceproduct.value.code}"></td>
+				<td th:text="${invoiceproduct.value.producer}"></td>
 				<td th:text="${invoiceproduct.value.description}"></td>
-				<td th:text="${invoiceproduct.key}"></td>
+				<td align="center" th:text="${invoiceproduct.key+ ' Und.' }"></td>
 				
 			</tr>
 		</table>
@@ -34,10 +39,14 @@
 
 <div th:if="${pricesAcumulated!= null}">
 <div>
-		<table border=1 >
-				
+		<table border=1  style="display: table;  margin: 0 auto;position: absolute; top:22%; left:30%;">
 				<tr>
+					<td colspan=4 style='font-weight: bold; background-color:#AED6F1'><h5>My History Cost acumulated ($)</h5></td>
+				</tr>
+				
+				<tr style='font-weight: bold; background-color:#CCD1D1'>
 					<td>Code</td>
+					<td>Branch</td>
 					<td>Description</td>
 					<td>Value acumulated ($)</td>
 				</tr>
@@ -45,8 +54,9 @@
 			
 			<tr th:each="invoiceproduct,iterator : ${pricesAcumulated}" >
 				<td th:text="${invoiceproduct.value.code}"></td>
+				<td th:text="${invoiceproduct.value.producer}"></td>
 				<td th:text="${invoiceproduct.value.description}"></td>
-				<td th:text="${invoiceproduct.key}"></td>
+				<td align="center" th:text="${'$ ' + invoiceproduct.key}"></td>
 				
 			</tr>
 		</table>
@@ -57,14 +67,18 @@
 
 <div th:if="${placesVisited!= null}">
 <div>
-		<table border=1 >
+		<table border=1 style="display: table;  margin: 0 auto;position: absolute; top:70%; left:1%;">
 			<tr>
+					<td colspan=2 style='font-weight: bold; background-color:#CD6155'><h5>My History visit acumulated</h5></td>
+				</tr>
+				
+			<tr style='font-weight: bold; background-color:#CCD1D1'>
 					<td>Trader</td>
 					<td>Number of Visited</td>
 			</tr>
 			<tr th:each="trader, iterator: ${placesVisited}" >
 				<td th:text="${trader.value.nameEnterprise +' ('+trader.value.cuit+')'}"></td>
-				<td th:text="${trader.key}"></td>
+				<td align="center" th:text="${trader.key}"></td>
 			</tr>
 		</table>
 </div>
@@ -72,16 +86,29 @@
 
 <div th:if="${myRatings!= null}">
 <div>
-		<table border=1 >
+		<table border=1 style="display: table;  margin: 0 auto;position: absolute; top:22%; left:60%;">
+				<tr>
+				<td colspan=5 style='font-weight: bold; background-color:#AED6F1'><h5>My History Products voted</h5></td>
+				</tr>
 			<tr>
-					<td>Code</td>
-					<td>Product</td>
-					<td>Average voted</td>
+			<tr style='font-weight: bold; background-color:#CCD1D1'>
+				<td>Code</td>
+				<td>Branch</td>
+				<td>Product</td>
+				<td>Average voted (1-5)</td>
+				<td></td>
+				
 			</tr>
 			<tr th:each="trader, iterator: ${myRatings}" >
 				<td th:text="${trader.value.code}"></td>
+				<td th:text="${trader.value.producer}"></td>
 				<td th:text="${trader.value.description}"></td>
-				<td th:text="${trader.key}"></td>
+				<td align="center" th:text="${trader.key+' pts'}"></td>
+				<td>
+						<img th:if="${trader.key >= 4}" src="/images/arrow-green-ico.png" height="30px" width="30px" title="Good Rating"/>
+						<img th:if="${trader.key < 4}" src="/images/arrow-red-ico.png" height="30px" width="30px" title="Bad Rating"/>
+				</td>
+			
 			</tr>
 		</table>
 </div>
@@ -90,16 +117,28 @@
 
 <div th:if="${generalRatings!= null}">
 <div>
-		<table border=1 >
-			<tr>
+		<table border=1 style="display: table;  margin: 0 auto;position: absolute; top:70%; left:30%; width:55%">
+				<tr>
+				<td colspan=5 style='font-weight: bold; background-color:#FFAE33'><h5>Consumers Product voted in in my zone</h5></td>
+				</tr>
+	
+			<tr style='font-weight: bold; background-color:#CCD1D1'>
 					<td>Code</td>
+					<td>Branch</td>
 					<td>Product</td>
-					<td>Consumers voted (average)</td>
+					<td align="center">Consumers voted (1-5)</td>
+					<td></td>
+					
 			</tr>
 			<tr th:each="trader, iterator: ${generalRatings}" >
 				<td th:text="${trader.value.code}"></td>
+				<td th:text="${trader.value.producer}"></td>
 				<td th:text="${trader.value.description}"></td>
-				<td th:text="${trader.key}"></td>
+				<td align="center" th:text="${trader.key+' pts.'}"></td>
+				<td>
+						<img th:if="${trader.key >= 4}" src="/images/arrow-green-ico.png" height="30px" width="30px" title="Good Rating"/>
+						<img th:if="${trader.key < 4}" src="/images/arrow-red-ico.png" height="30px" width="30px" title="Bad Rating"/>
+				</td>
 			
 			</tr>
 		</table>

@@ -1,6 +1,9 @@
 package com.payless.demo.services;
 
 import java.util.List;
+import java.util.Set;
+
+import org.springframework.data.repository.query.Param;
 
 import com.payless.demo.model.Trader;
 
@@ -18,5 +21,7 @@ public interface TraderService {
 	
 	Trader queryFindByUserName(String firstName);
 	List<Trader> queryByParametersCityZone(long zone, long city);
+	List<Trader> queryByParametersCityZone(Set<Long> zones, Set<Long>cities);
+
 	
 }

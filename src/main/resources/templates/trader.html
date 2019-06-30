@@ -6,9 +6,153 @@
 </head>
 <body>
 
-	<div th:if="${userName!= null}">
+<div th:if="${userName!= null}">
 		<h3 th:text="${userName}"></h3>
-	</div>
+</div>
+	
+	
+<div th:if="${traderAcumulated!= null}">
+<div>
+		<table border=1 style="display: table;  margin: 0 auto;position: absolute; top:22%; left:1%;">
+				<tr>
+					<td colspan=4 style='font-weight: bold; background-color:#27AE60'><h5>My Best Sales Products (Und.)</h5></td>
+				</tr>
+				
+				<tr style='font-weight: bold; background-color:#CCD1D1'>
+					<td>Code</td>
+					<td>Branch</td>
+					<td>Description</td>
+					<td>Quantities acumulated</td>
+				</tr>
+					
+			
+			<tr th:each="invoiceproduct,iterator : ${traderAcumulated}" >
+				<td th:text="${invoiceproduct.value.code}"></td>
+				<td th:text="${invoiceproduct.value.producer}"></td>
+				<td th:text="${invoiceproduct.value.description}"></td>
+				<td align="center" th:text="${invoiceproduct.key+ ' Und.' }"></td>
+				
+			</tr>
+		</table>
+</div>
+</div>
+	
+	
+<div th:if="${moreVisited!= null}">
+<div>
+		<table border=1 style="display: table;  margin: 0 auto;position: absolute; top:22%; left:53%;">
+			<tr>
+					<td colspan=3 style='font-weight: bold; background-color:#CD6155'><h5>My Customers History in visits</h5></td>
+				</tr>
+				
+			<tr style='font-weight: bold; background-color:#CCD1D1'>
+					<td>Dni</td>
+					<td>Consumer</td>
+					<td>Number of Visited</td>
+			</tr>
+			<tr th:each="consumer, iterator: ${moreVisited}" >
+				<td th:text="${consumer.value.dni}"></td>
+				<td th:text="${consumer.value.firstName +' '+consumer.value.lastName}"></td>
+				<td align="center" th:text="${consumer.key}"></td>
+			</tr>
+		</table>
+</div>
+</div>
+	
+	
+	
+<div th:if="${myRatings!= null}">
+<div>
+		<table border=1 style="display: table;  margin: 0 auto;position: absolute; top:22%; left:28%;">
+				<tr>
+				<td colspan=5 style='font-weight: bold; background-color:#AED6F1'><h5>My Products Ratings</h5></td>
+				</tr>
+			<tr>
+			<tr style='font-weight: bold; background-color:#CCD1D1'>
+				<td>Code</td>
+				<td>Branch</td>
+				<td>Product</td>
+				<td>Average voted (1-5)</td>
+				<td></td>
+			
+			</tr>
+			<tr th:each="trader, iterator: ${myRatings}" >
+				<td th:text="${trader.value.code}"></td>
+				<td th:text="${trader.value.producer}"></td>
+				<td th:text="${trader.value.description}"></td>
+				<td align="center" th:text="${trader.key+' pts'}">	</td>
+				<td>
+						<img th:if="${trader.key >= 4}" src="/images/arrow-green-ico.png" height="30px" width="30px" title="Good Rating"/>
+						<img th:if="${trader.key < 4}" src="/images/arrow-red-ico.png" height="30px" width="30px" title="Bad Rating"/>
+				</td>
+			</tr>
+		</table>
+</div>
+</div>
+	
+	
+<div th:if="${myneighborhood!= null}">
+<div>
+		<table border=1 style="display: table;  margin: 0 auto;position: absolute; top:70%; left:1%; width:25%">
+				<tr>
+				<td colspan=4 style='font-weight: bold; background-color:#AED6F1'><h5>My Address</h5></td>
+				</tr>
+			<tr>
+			<tr style='font-weight: bold; background-color:#CCD1D1'>
+				<td>Description</td>
+				<td>City</td>
+				<td>Zone</td>
+			</tr>
+			<tr th:each="address, iterator: ${myneighborhood}" >
+				<td th:text="${address.description}"></td>
+				<td th:text="${address.city.name}"></td>
+				<td th:text="${address.zone.name}"></td>
+			</tr>
+		</table>
+</div>
+</div>
+
+
+<div th:if="${customersinmyzone!= null}">
+<div>
+		<table border=1 style="display: table;  margin: 0 auto;position: absolute; top:70%; left:30%;">
+				<tr>
+				<td colspan=4 style='font-weight: bold; background-color:#AED6F1'><h5>Clients in my Zones</h5></td>
+				</tr>
+			<tr>
+			<tr style='font-weight: bold; background-color:#CCD1D1'>
+				<td>DNi</td>
+				<td>Address</td>
+				<td>City</td>
+				<td>Zone</td>
+			</tr>
+			<tr th:each="consumer, iterator: ${customersinmyzone}" >
+				<td th:text="${consumer.dni}"></td>
+				<td th:text="${consumer.address.description}"></td>
+				<td th:text="${consumer.address.city.name}"></td>
+				<td th:text="${consumer.address.zone.name}"></td>
+			</tr>
+		</table>
+</div>
+</div>
+
+<div th:if="${competitorsinmyzone!= null}">
+<div>
+		<table border=1 style="display: table;  margin: 0 auto;position: absolute; top:70%; left:57%;">
+				<tr>
+				<td colspan=4 style='font-weight: bold; background-color:#AED6F1'><h5>Competitors in my Zones</h5></td>
+				</tr>
+			<tr>
+			<tr style='font-weight: bold; background-color:#CCD1D1'>
+				<td>Name</td>
+			</tr>
+			<tr th:each="trader, iterator: ${competitorsinmyzone}" >
+				<td th:text="${trader.nameEnterprise}"></td>
+			</tr>
+		</table>
+</div>
+</div>
+	
 
 </body>
 </html>

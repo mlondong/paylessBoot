@@ -67,9 +67,11 @@ $(document).ready(function () {
 		}else if(isNaN(price)){
 	 		flag=false;
 	  		$('#span-error').after('<p>Please input numbers only.</p>')
+		}else if (quantity.length==0 || price.length==0){
+	 		flag=false;
+	  		$('#span-error').after('<p>Please input numbers only.</p>')
 		}
     	
-    	alert("okkk");
     	
     	if(flag==true){
 			$('#frm-add').submit();

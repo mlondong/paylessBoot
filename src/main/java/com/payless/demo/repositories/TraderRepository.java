@@ -2,6 +2,7 @@ package com.payless.demo.repositories;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -32,7 +33,14 @@ public interface TraderRepository extends BaseUserRepository<Trader>{
 				 +  "where a.zone_id=?1 and a.city_id=?2 " , nativeQuery = true)
 	List<Trader> queryByParametersCityZone(@Param("zone") long zona, @Param("city") long ciudad);
 
-	
+	/*Queries*/
+	@Query(value=" Select * FROM trader T "
+				 +  "inner join usser U ON U.user_id = T.user_id "
+				 +  "inner join trader_address AD ON U.user_id = AD.user_id "  
+				 +  "inner join address A on A.address_id = AD.address_id "  
+				 +  "where a.zone_id in (?1) and a.city_id in (?2) " , nativeQuery = true)
+	List<Trader> queryByParametersCityZone(@Param("zones") Set<Long> zones, @Param("cities") Set<Long>cities);
+
 
 	/*Queries*/
 	@Query(value= "select * from dbpayless.usser u"+ 

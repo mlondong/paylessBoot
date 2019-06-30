@@ -2,6 +2,7 @@ package com.payless.demo.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,11 @@ public class ConsumerServiceImp implements ConsumerService{
 	
 	
 	
+	@Override
+	public List<Consumer> queryByParametersCityZone(Set<Long> cities, Set<Long> zones) {
+		return consumerRepository.queryByParametersCityZone(cities, zones);
+	}
+
 	@Override
 	public Consumer findByNameIslike(long dni) {
 		return null;

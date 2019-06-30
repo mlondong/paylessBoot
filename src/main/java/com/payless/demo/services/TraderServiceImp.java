@@ -3,6 +3,7 @@ package com.payless.demo.services;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,12 @@ public class TraderServiceImp implements TraderService{
 	private TraderRepository traderRepository;
 	
 	
+	
+	@Override
+	public List<Trader> queryByParametersCityZone(Set<Long> zones, Set<Long> cities) {
+		return traderRepository.queryByParametersCityZone(zones, cities);
+	}
+
 	@Override
 	public Trader queryFindByUserName(String firstName) {
 		return traderRepository.queryFindByUserName(firstName);

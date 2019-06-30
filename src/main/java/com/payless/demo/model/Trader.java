@@ -3,9 +3,13 @@ package com.payless.demo.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
@@ -23,109 +27,90 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-
 @Entity
 public class Trader extends Usser {
-	
-	@Column(name="CUIT",nullable=false, updatable=true, unique=true)
+
+	@Column(name = "CUIT", nullable = false, updatable = true, unique = true)
 	private long cuit;
 
-    @Size(min=5, max=30)
-	@Column(name="NAME_ENTERPRISE",nullable=false, updatable=true)
+	@Size(min = 5, max = 30)
+	@Column(name = "NAME_ENTERPRISE", nullable = false, updatable = true)
 	private String nameEnterprise;
 
-	
-    @NotNull
-    @Email
-    @Column(name="EMAIL",nullable=false, updatable=true)
+	@NotNull
+	@Email
+	@Column(name = "EMAIL", nullable = false, updatable = true)
 	private String email;
 
 	@Max(5)
-	@Column(name="SCORE",nullable=false,updatable=true)
-	private int score=0;
+	@Column(name = "SCORE", nullable = false, updatable = true)
+	private int score = 0;
 
-
-	/*SE CREA UN SOLO STOCK POR TRADER Y SE AGREGAR PRODUCTOS AL STOCK*/
-	@OneToOne(mappedBy="trader",
-			fetch=FetchType.LAZY,
-			cascade=CascadeType.ALL)
-	@JsonManagedReference//esto evita mal formacion en el json como es el ref de stock en trader
+	/* SE CREA UN SOLO STOCK POR TRADER Y SE AGREGAR PRODUCTOS AL STOCK */
+	@OneToOne(mappedBy = "trader", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonManagedReference // esto evita mal formacion en el json como es el ref de stock en trader
 	private Stock stock;
 
-		
-	/*MAPEO BIDIRECCIONAL DE 1 TRADER A MUCHOS INVOICES*/
-	@OneToMany(mappedBy="trader", 
-			 fetch=FetchType.LAZY,
-			 cascade = CascadeType.ALL, 
-			 orphanRemoval = true)
-	@JsonManagedReference//esto evita mal formacion en el json como es el ref de stock en trader
+	/* MAPEO BIDIRECCIONAL DE 1 TRADER A MUCHOS INVOICES */
+	@OneToMany(mappedBy = "trader", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference // esto evita mal formacion en el json como es el ref de stock en trader
 	private Collection<Invoice> invoice = new ArrayList<>();
-	
-	/*MAPEO A MUCHAS DIRECCIONES*/
+
+	/* MAPEO A MUCHAS DIRECCIONES */
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinTable( name = "TRADER_ADDRESS",
-	            joinColumns = @JoinColumn(name = "USER_ID"),
-	            inverseJoinColumns = @JoinColumn(name = "ADDRESS_ID") )
+	@JoinTable(name = "TRADER_ADDRESS", joinColumns = @JoinColumn(name = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "ADDRESS_ID"))
 	@JsonManagedReference
 	private List<Address> address = new ArrayList<Address>();
 
-	
-	
-	
-	
-	public Trader(){}
-
-	public Trader(String _name, String _pass, long _cuit, List<Address> _address){
-		super(_name, _pass);
-		this.address=_address;
-		this.cuit=_cuit;
+	public Trader() {
 	}
 
-	public Trader(String _name, String _pass, long _cuit){
+	public Trader(String _name, String _pass, long _cuit, List<Address> _address) {
 		super(_name, _pass);
-		this.cuit=_cuit;
+		this.address = _address;
+		this.cuit = _cuit;
 	}
 
-	
-	/*METODOS ADD REMOVE Y CREAATE STOCK EN TRADER*/
-	public void createStock(){
-		this.stock = new  Stock();
+	public Trader(String _name, String _pass, long _cuit) {
+		super(_name, _pass);
+		this.cuit = _cuit;
+	}
+
+	/* METODOS ADD REMOVE Y CREAATE STOCK EN TRADER */
+	public void createStock() {
+		this.stock = new Stock();
 		this.stock.setDateStock(new Date());
 		this.stock.setTrader(this);
 	}
 
-	public void addStockProducts(Product p, int quantity, int salesprice){
+	public void addStockProducts(Product p, int quantity, int salesprice) {
 		this.stock.addProduct(p, quantity, salesprice);
 	}
 
-	public void removeStockProducts(Product p){
+	public void removeStockProducts(Product p) {
 		this.stock.removeProduct(p);
 	}
 
-	
-	/*METODOS PARA ADICIONAR ASDRESS A TRADER*/
+	/* METODOS PARA ADICIONAR ASDRESS A TRADER */
 
-	public void addAddress(Address ad){
+	public void addAddress(Address ad) {
 		this.address.add(ad);
 	}
 
-	public void removeAddress(Address ad){
+	public void removeAddress(Address ad) {
 		this.address.remove(ad);
 	}
 
-	/*METODOS PARA ADICIONAR INVOICES*/
-	public void addInvoice(Invoice i){
+	/* METODOS PARA ADICIONAR INVOICES */
+	public void addInvoice(Invoice i) {
 		this.invoice.add(i);
 	}
-	
-	public void removeInvoice(Invoice i){
+
+	public void removeInvoice(Invoice i) {
 		this.invoice.remove(i);
 	}
-	
 
-	
-	
-	/*METODOS GETTER AND SETER*/
+	/* METODOS GETTER AND SETER */
 
 	public Collection<Invoice> getInvoice() {
 		return invoice;
@@ -138,6 +123,7 @@ public class Trader extends Usser {
 	public long getCuit() {
 		return cuit;
 	}
+
 	public List<Address> getAddress() {
 		return address;
 	}
@@ -157,14 +143,15 @@ public class Trader extends Usser {
 	public void setCuit(long cuit) {
 		this.cuit = cuit;
 	}
+
 	public int getScore() {
 		return score;
 	}
+
 	public void setScore(int score) {
 		this.score = score;
 	}
 
-	
 	public String getNameEnterprise() {
 		return nameEnterprise;
 	}
@@ -181,35 +168,95 @@ public class Trader extends Usser {
 		this.email = email;
 	}
 
-	public Set<Consumer> getMyconsumers(){
+	public Set<Consumer> getMyconsumers() {
 		Set<Consumer> consumer = new HashSet<>();
-		consumer = this.getInvoice().stream()
-								.map(d-> d.getConsumer())
-								.collect(Collectors.toSet());
+		consumer = this.getInvoice().stream().map(d -> d.getConsumer()).collect(Collectors.toSet());
 		return consumer;
 	}
-	
+
 	public List<Invoice> getInvoiceByConsumer(long idConsumer) {
-		Long id= Long.valueOf(idConsumer);
-		List<Invoice>invoice = this.getInvoice().stream()
-										.filter(d-> id.equals(d.getConsumer().getId()))
-										.collect(Collectors.toList());
+		Long id = Long.valueOf(idConsumer);
+		List<Invoice> invoice = this.getInvoice().stream().filter(d -> id.equals(d.getConsumer().getId()))
+				.collect(Collectors.toList());
 		return invoice;
 	}
 
-	
-	
+	public Collection<InvoiceProduct> getAllMyInvoices() {
+		Collection<InvoiceProduct> invoiceProduc = new ArrayList<InvoiceProduct>();
+		for (Invoice invoice : this.getInvoice()) {
+			for (InvoiceProduct inp : invoice.getProducts()) {
+				invoiceProduc.add(inp);
+			}
+		}
+		return invoiceProduc;
+	}
+
 	@Override
 	public String toString() {
 		return "Trader [cuit=" + cuit + ", score=" + score + ", stock=" + stock + ", address=" + address + ", invoice="
 				+ invoice + "]";
 	}
 
+	public TreeMap<Integer, Product> getMyBestMySalesProducts() {
+		Map<Integer, Product> productsList = new HashMap<Integer, Product>();
+		Collection<InvoiceProduct> invoiceProdct = this.getAllMyInvoices();
+		List<String> codes = invoiceProdct.stream().map(d -> d.getPoduct().getCode()).collect(Collectors.toList());
+		Set<String> setCodes = new HashSet<String>(codes);
+		for (String code : setCodes) {
+			int acumQuantity = invoiceProdct.stream().filter(d -> code.equals(d.getPoduct().getCode()))
+					.mapToInt(d -> d.getQuantity()).sum();
+			Optional<InvoiceProduct> invoiceProduct = invoiceProdct.stream()
+					.filter(d -> code.equals(d.getPoduct().getCode())).findFirst();
+			productsList.put(acumQuantity, invoiceProduct.get().getPoduct());
+		}
+		return new TreeMap<Integer, Product>(productsList);
+	}
 
+	public Map<Long, Product> getMyRatings() {
 
+		Collection<InvoiceProduct> invoiceProdct = this.getAllMyInvoices();
+		Collection<Rating> ratings = new ArrayList<>();
+		Map<Long, Product> myRatings = new HashMap<Long, Product>();
 
+		for (InvoiceProduct i : invoiceProdct) {
+			for (Rating r : i.getRatings())
+				ratings.add(r);
+		}
 
+		List<Long> idsProducts = ratings.stream().map(d -> d.getInvoiceProduct().getPoduct().getId())
+				.collect(Collectors.toList());
 
+		for (Long id : idsProducts) {
+			Long cant = ratings.stream().filter(d -> id.equals(d.getInvoiceProduct().getPoduct().getId())).count();
+			int sumScore = ratings.stream().filter(d -> id.equals(d.getInvoiceProduct().getPoduct().getId()))
+					.mapToInt(temp -> temp.getScore()).sum();
+			Optional<Rating> rating = ratings.stream().filter(d -> id.equals(d.getInvoiceProduct().getPoduct().getId()))
+					.findFirst();
+			long porcentaje = sumScore / cant;
+			myRatings.put(porcentaje, rating.get().getInvoiceProduct().getPoduct());
+		}
+		return myRatings;
+	}
 
+	public Map<Long, Consumer> getVisited() {
+		Collection<Invoice> invoices = this.getInvoice();
+		List<Long> idsConsumers = invoices.stream().map(d-> d.getConsumer().getId()).collect(Collectors.toList());				
+		return this.getConsumersInvolvedInMySales(idsConsumers);
+	}
 
+	public Map<Long, Consumer> getConsumersInvolvedInMySales(List<Long> idsConsumers) {
+		Map<Long, Consumer> consumers= new HashMap<Long, Consumer>();
+		
+		for(Long id: idsConsumers) {
+				Long cant= this.getInvoice().stream().filter(d-> id.equals(d.getConsumer().getId() )).count();
+				Optional<Invoice>invoice = this.getInvoice().stream().filter(d-> id.equals(d.getConsumer().getId())).findFirst();
+				consumers.put(cant, invoice.get().getConsumer()); 
+		}
+				
+		return consumers;
+	}
+	
+	
+	
+	
 }
