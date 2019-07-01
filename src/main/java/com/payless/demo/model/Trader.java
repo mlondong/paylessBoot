@@ -215,6 +215,7 @@ public class Trader extends Usser {
 	public Map<Long, Product> getMyRatings() {
 
 		Collection<InvoiceProduct> invoiceProdct = this.getAllMyInvoices();
+		
 		Collection<Rating> ratings = new ArrayList<>();
 		Map<Long, Product> myRatings = new HashMap<Long, Product>();
 
@@ -223,18 +224,20 @@ public class Trader extends Usser {
 				ratings.add(r);
 		}
 
+		
 		List<Long> idsProducts = ratings.stream().map(d -> d.getInvoiceProduct().getPoduct().getId())
 				.collect(Collectors.toList());
 
+		
 		for (Long id : idsProducts) {
 			Long cant = ratings.stream().filter(d -> id.equals(d.getInvoiceProduct().getPoduct().getId())).count();
-			int sumScore = ratings.stream().filter(d -> id.equals(d.getInvoiceProduct().getPoduct().getId()))
-					.mapToInt(temp -> temp.getScore()).sum();
-			Optional<Rating> rating = ratings.stream().filter(d -> id.equals(d.getInvoiceProduct().getPoduct().getId()))
-					.findFirst();
+			int sumScore = ratings.stream().filter(d -> id.equals(d.getInvoiceProduct().getPoduct().getId())).mapToInt(temp -> temp.getScore()).sum();
+			Optional<Rating> rating = ratings.stream().filter(d -> id.equals(d.getInvoiceProduct().getPoduct().getId())).findFirst();
 			long porcentaje = sumScore / cant;
 			myRatings.put(porcentaje, rating.get().getInvoiceProduct().getPoduct());
+					
 		}
+		System.out.println("ratings " + myRatings);
 		return myRatings;
 	}
 
